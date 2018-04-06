@@ -32,7 +32,7 @@ https://arxiv.org/abs/1802.02263
 INSTALLATION AND USAGE
 
 To install:
- - Download a .zip copy of the directory containing this file from 
+ - Download a .zip copy of (the desired version of) the directory containing this file from 
          https://github.com/jcschindler01/xhorizon
  - Unpack the directory to any location.
  - Make the directory available to your python path 
