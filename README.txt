@@ -4,6 +4,7 @@ XHORIZON
 Jan 2018
 Joseph C Schindler
 jcschind@ucsc.edu
+https://github.com/jcschindler01/xhorizon
 -------------------------------------------------
 
 -------------------------------------------------
@@ -25,6 +26,35 @@ Jan 2018
 arXiv:1802.02263
 
 https://arxiv.org/abs/1802.02263
+-------------------------------------------------
+
+-------------------------------------------------
+INSTALLATION AND USAGE
+
+To install:
+ - Download a .zip copy of the directory containing this file from 
+         https://github.com/jcschindler01/xhorizon
+ - Unpack the directory to any location.
+ - Make the directory available to your python path 
+         (e.g. by editing your PYTHONPATH environment variable).
+ - Done! The xhorizon tools are now available for import like any other package.
+
+To use:
+ - Import the package using standard import commands:
+         >>> import xhorizon
+ - All set! Call xhorizon's tools from the package as necessary.
+-------------------------------------------------
+
+-------------------------------------------------
+DOCUMENTATION AND TUTORIAL
+
+Docs:
+There is currently no documentation external to the source code.
+However, all modules contain detailed commentary and documentation in the source.
+We hope to provide external documentation soon!
+
+Tutorial:
+A tutorial and set of examples should be provided soon. Stay tuned!
 -------------------------------------------------
 
 -------------------------------------------------
@@ -53,7 +83,7 @@ and be aware of possible color compatibility issues.
 -------------------------------------------------
 MODULE DEPENDENCY TREE
 
-See __init__.py.
+See xhorizon.__init__.py.
 -------------------------------------------------
 
 
