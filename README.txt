@@ -1,10 +1,30 @@
 
+-------------------------------------------------
+XHORIZON
+Jan 2018
+Joseph C Schindler
+jcschind@ucsc.edu
+-------------------------------------------------
 
 -------------------------------------------------
-XHORIZON DOCUMENTATION
+XHORIZON is a python package for the explicit computation and drawing of Penrose diagrams.
+
+Diagrams can be generated numerically and plotted for any spacetime in the following classes:
+ (A) "Strongly spherically symmetric" spacetimes, which have a metric of the form  
+     ds^2 = - f(r) dt^2 + f(r)^{-1} dr^2 + r^2 d\Omega^2.
+ (B) Spacetimes which are composed piecewise from an arbitrary finite number of SSS regions
+     joined across null shell junctions.
+This includes the Minkowski, Schwarzschild, Reissner-Nordstrom, 2D Kerr, de Sitter, Anti de 
+Sitter, and Schwarzschild-dS metrics, among many others.
+
+The method is based on the article:
+
+"Algorithms for the explicit computation of Penrose diagrams"
+JC Schindler, A Aguirre
 Jan 2018
-Joseph Schindler
-jcschind@ucsc.edu
+arXiv:1802.02263
+
+https://arxiv.org/abs/1802.02263
 -------------------------------------------------
 
 -------------------------------------------------
