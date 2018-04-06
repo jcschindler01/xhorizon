@@ -40,7 +40,8 @@ To install:
  - Done! The xhorizon tools are now available for import like any other package.
 
 To use:
- - Import the package using standard import commands:
+ - Import the package in python using standard import commands:
+         $ python
          >>> import xhorizon
  - All set! Call xhorizon's tools from the package as necessary.
 -------------------------------------------------
