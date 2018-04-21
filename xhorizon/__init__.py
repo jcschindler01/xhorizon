@@ -1,7 +1,7 @@
 
 
 """
-This file imports subroutines and modules into the xhorizon2 namespace.
+This file imports subroutines and modules into the xhorizon namespace.
 Only functions and modules needed by the user should be imported here.
 """
 
