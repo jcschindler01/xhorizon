@@ -138,8 +138,9 @@ def test2():
 	## create initial region
 	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False)]
 	## create accreted regions
-	reglist += xh.evap.accrete(reglist.pop(), v1=0., v2=-1., R2=0.8)
-	reglist += xh.evap.accrete(reglist.pop(), v1=1., v2=-1., R2=1.)
+	reglist += xh.evap.accrete(reglist.pop(), v1=0., v2=0., R2=0.8)
+	reglist += xh.evap.accrete(reglist.pop(), v1=.5, v2=.5, R2=.9)
+	reglist += xh.evap.accrete(reglist.pop(), v1=1., v2=1., R2=1.)
 	## add lines
 	xh.evap.colorlines(reglist)
 	## draw
@@ -157,7 +158,7 @@ def test2():
 
 
 if __name__=='__main__':
-	#test1()
+	test1()
 	test2()
 
 
