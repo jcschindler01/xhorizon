@@ -22,7 +22,7 @@ The method is based on the article:
 
 "Algorithms for the explicit computation of Penrose diagrams"
 JC Schindler, A Aguirre
-Jan 2018
+2018 Class. Quantum Grav. 35 105019
 arXiv:1802.02263
 
 https://arxiv.org/abs/1802.02263
