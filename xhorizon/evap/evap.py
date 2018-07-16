@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import xhorizon as xh
 
 
-def accrete(reg1, v1=0., v2=0., R2=1., L2=0.1, rparams2={}, rlines=False, boundary=True):
+def accrete(reg1, v1=0., v2=0., R2=1., L2=0.1, rparams2={}, rlines=False, boundary=False):
 	"""
 	Accrete a Hayward of outer radius R2 onto the region reg1 on a line of constant v by 
 	slicing reg1 at v1 and the new region reg2 at v2.
@@ -81,6 +81,15 @@ def get_rinf_uv0(reglist, v0=[], u0=[]):
 	return r0
 				
 
+def boundarylines(reglist, npoints=5001, sty={}):
+	"""
+	Add boundary lines to regions in reglist.
+	"""
+	for reg in reglist:
+		for b in reg.blocks:
+			style = dict(lw=0.9, c='0.5', zorder=2000)
+			style.update(sty)
+			b.add_curves_uv(xh.cm.block_boundary(b, sty=style, npoints=npoints))
 
 
 def colorlines(reglist, rmin=0.05, rmax=3., dr=.2, sty={}, npoints=2001, inf=25.):
@@ -98,6 +107,49 @@ def colorlines(reglist, rmin=0.05, rmax=3., dr=.2, sty={}, npoints=2001, inf=25.
 				style.update(sty)
 				b.add_curves_tr(xh.cm.rlines([rvals[i]], sty=style, npoints=npoints, inf=inf))
 	return reglist
+
+
+
+
+def accretion(m, v, l=0.1, rparams={}):
+	"""
+	Stars with minkowski space, then adds a series of accretions as specified.
+
+	Inputs:
+		v = 1d length n array of v0 values for accretion disks
+		m = 1d length n array for series of masses for the hayward spaces
+
+	Returns:
+		reglist = list of regions
+	"""
+	## initial minkowski region
+	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False, boundary=False)]
+	## accrete
+	for i in range(len(v)):
+		vx, Rx = 1.*v[i], 2.*m[i]
+		reglist += xh.evap.accrete(reglist.pop(), v1=vx, v2=vx, R2=Rx, L2=l, rlines=False, boundary=False, rparams2=rparams)
+	## return
+	return reglist
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -136,13 +188,14 @@ def test2():
 	##
 	print "\nTEST 2\n"
 	## create initial region
-	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False)]
+	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False,boundary=False)]
 	## create accreted regions
 	reglist += xh.evap.accrete(reglist.pop(), v1=0., v2=0., R2=0.8)
 	reglist += xh.evap.accrete(reglist.pop(), v1=.5, v2=.5, R2=.9)
 	reglist += xh.evap.accrete(reglist.pop(), v1=1., v2=1., R2=1.)
 	## add lines
 	xh.evap.colorlines(reglist)
+	xh.evap.boundarylines(reglist)
 	## draw
 	plt.figure()
 	plt.gca().set_aspect('equal')
@@ -154,12 +207,34 @@ def test2():
 
 
 
+def test3():
+	"""
+	Test functionality of accretion.
+	"""
+	##
+	print "\nTEST 3\n"
+	## params
+	v = [0.,.5,1.,1.5,2.]
+	m = [.8,.9,1.,1.1,1.15]
+	## create initial region
+	reglist = accretion(m,v)
+	## add lines
+	xh.evap.colorlines(reglist)
+	xh.evap.boundarylines(reglist)
+	## draw
+	plt.figure()
+	plt.gca().set_aspect('equal')
+	for reg in reglist:
+		reg.rplot()
+	plt.show()
+	##
+	print "\nEND TEST 3\n"
 
 
 
 if __name__=='__main__':
-	test1()
-	test2()
-
+	#test1()
+	#test2()
+	test3()
 
 
