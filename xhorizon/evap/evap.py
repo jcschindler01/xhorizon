@@ -12,10 +12,13 @@ import matplotlib.pyplot as plt
 import xhorizon as xh
 
 
-def accrete(reg1, v1=0., v2=0., r0=3., R2=1., L2=0.1, rparams2={}, rlines=False, boundary=True):
+def accrete(reg1, v1=0., v2=0., R2=1., L2=0.1, rparams2={}, rlines=False, boundary=True):
 	"""
 	Accrete a Hayward of outer radius R2 onto the region reg1 on a line of constant v by 
 	slicing reg1 at v1 and the new region reg2 at v2.
+
+	Use a corner junction at radius r0=rinf (as close to r->inf as possible withouth causing
+	slice matching problems).
 
 	Inputs:
 		reg1 = existing region to accrete onto
@@ -33,6 +36,8 @@ def accrete(reg1, v1=0., v2=0., r0=3., R2=1., L2=0.1, rparams2={}, rlines=False,
 	## create new region
 	func2 = xh.mf.hayward(R=R2,l=L2)
 	reg2 = xh.reg.EFreg(func2, rparams=rparams2, boundary=boundary, rlines=rlines)
+	## choose r0 value for corner junction
+	r0 = get_rinf_uv0([reg1,reg2],v0=[v1,v2])
 	## edit uvbounds
 	for b in reg1.blocks:
 		b.uvbounds.update(dict(vmax=v1))
@@ -56,6 +61,25 @@ def accrete(reg1, v1=0., v2=0., r0=3., R2=1., L2=0.1, rparams2={}, rlines=False,
 	return [reg1, reg2]
 
 
+def get_rinf_uv0(reglist, v0=[], u0=[]):
+	"""
+	Given a list of regions, assume that `outermost' region has index [-1].
+	Assume r->inf as u->-inf.
+	Find the r0 value corresponding to (v=v0 and u=2.*s0) in each region.
+	Take minimum r0 over reglist.
+	Return a value slightly less than r0.
+	"""
+	r0 = np.nan * np.ones(len(reglist))
+	for i in range(len(reglist)):
+		reg = reglist[i]
+		for b in [reg.blocks[-1]]:
+			u = np.array([-2.*reg.rparams['s0']])
+			v = np.array([v0[i]])
+			uv = np.array([u,v])
+			r0[i] = b.tr_of_uv(uv)[1]
+	r0 = .95*np.min(r0)
+	return r0
+				
 
 
 
@@ -74,4 +98,67 @@ def colorlines(reglist, rmin=0.05, rmax=3., dr=.2, sty={}, npoints=2001, inf=25.
 				style.update(sty)
 				b.add_curves_tr(xh.cm.rlines([rvals[i]], sty=style, npoints=npoints, inf=inf))
 	return reglist
+
+
+
+
+"""
+Tests.
+Run if __name__='__main__'.
+"""
+
+def test1():
+	"""
+	Test functionality of get_rinf_uv0.
+	"""
+	##
+	print "\nTEST 1\n"
+	## regions
+	reg1 = xh.reg.EFreg(xh.mf.schwarzschild())
+	reg2 = xh.reg.EFreg(xh.mf.hayward())
+	reg3 = xh.reg.EFreg(xh.mf.minkowski())
+	reglist = [reg1,reg2,reg3]
+	## v values
+	v0 = [-1.,1.,0.]
+	## get
+	rinf = get_rinf_uv0(reglist,v0=v0)
+	## print
+	print rinf
+	##
+	print "\nEND TEST 1\n"
+
+
+
+def test2():
+	"""
+	Test functionality of accrete.
+	"""
+	##
+	print "\nTEST 2\n"
+	## create initial region
+	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False)]
+	## create accreted regions
+	reglist += xh.evap.accrete(reglist.pop(), v1=0., v2=-1., R2=0.8)
+	reglist += xh.evap.accrete(reglist.pop(), v1=1., v2=-1., R2=1.)
+	## add lines
+	xh.evap.colorlines(reglist)
+	## draw
+	plt.figure()
+	plt.gca().set_aspect('equal')
+	for reg in reglist:
+		reg.rplot()
+	plt.show()
+	##
+	print "\nEND TEST 2\n"
+
+
+
+
+
+
+if __name__=='__main__':
+	#test1()
+	test2()
+
+
 

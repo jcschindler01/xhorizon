@@ -16,8 +16,8 @@ Helpers.
 def set_ruv0(reg, r0=np.nan, u0=np.nan, v0=np.nan):
 	"""
 	Self-consistently fill all three values based on input.
-	For a corner junction, r0 should be nan and (u0 xor v0) should be finite.
-	For a shell junction, r0 should be finite and (u0 xor v0) should be finite.
+	For a shell junction, r0 should be nan and (u0 xor v0) should be finite.
+	For a corner junction, r0 should be finite and (u0 xor v0) should be finite.
 	Region arg is needed to provide c and F(r).
 	If invalid, warn and return all nan values.
 	"""
@@ -179,10 +179,8 @@ def slicecheck(sl,reg):
 	if (np.abs(sl.u0)>=2.*reg.rparams['s0']) or (np.abs(sl.v0)>=2.*reg.rparams['s0']):
 		print "Error: u0 or v0 out of range."
 		print sl.u0, sl.v0
-		return None, None
-	else:
-		return sl, reg
-		
+		sl, reg = None, None
+	return sl, reg
 
 
 
