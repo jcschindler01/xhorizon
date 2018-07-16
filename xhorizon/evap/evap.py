@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import xhorizon as xh
 
 
-def accrete(reg1, v1=0., v2=0., R2=1., L2=0.1, rparams2={}, rlines=False, boundary=True):
+def accrete(reg1, v1=0., v2=0., r0=3., R2=1., L2=0.1, rparams2={}, rlines=False, boundary=True):
 	"""
 	Accrete a Hayward of outer radius R2 onto the region reg1 on a line of constant v by 
 	slicing reg1 at v1 and the new region reg2 at v2.
@@ -39,19 +39,21 @@ def accrete(reg1, v1=0., v2=0., R2=1., L2=0.1, rparams2={}, rlines=False, bounda
 	for b in reg2.blocks:
 		b.uvbounds.update(dict(vmin=v2))
 	## passive slice of reg1
-	pslice = xh.junc.pslice(reg1, vblocks=range(len(reg1.blocks)), v0=v1)
+	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), v0=v1, r0=r0)
+	## warn if bad u0 or v0 value
+	pslice, reg1 = xh.junc.slicecheck(pslice, reg1)
 	## set U0(r) and V0(r) for target coords
 	U0 = lambda r: pslice.U_of_r_at_v0(r)
+	V0 = lambda r: pslice.V_of_r_at_u0(r)
 	## active slice of reg2
-	aslice = xh.junc.aslice(reg2, vblocks=[0,1,2], v0=v2, U0=U0)
+	aslice = xh.junc.aslice(reg2, ublocks=[2], vblocks=[0,1,2], v0=v2, r0=r0, U0=U0, V0=V0)
+	## warn if bad u0 or v0 value
+	aslice, reg2 = xh.junc.slicecheck(aslice, reg2)
 	## update coordinate transformations
-	## update coord transformations
 	reg2.U_of_udl = aslice.U_of_udl_at_v0
+	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
 	## return
 	return [reg1, reg2]
-
-
-
 
 
 

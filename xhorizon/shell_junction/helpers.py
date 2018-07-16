@@ -175,7 +175,14 @@ def schwarz_dtr_masses(m, r0=1.):
 
 
 
-
+def slicecheck(sl,reg):
+	if (np.abs(sl.u0)>=2.*reg.rparams['s0']) or (np.abs(sl.v0)>=2.*reg.rparams['s0']):
+		print "Error: u0 or v0 out of range."
+		print sl.u0, sl.v0
+		return None, None
+	else:
+		return sl, reg
+		
 
 
 
