@@ -28,32 +28,57 @@ def evap(reg1, r0=np.nan, u1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False
 	func2 = xh.mf.hayward(R=R2,l=L2)
 	reg2 = xh.reg.EFreg(func2, rparams=rparams2, boundary=boundary, rlines=rlines)
 	## choose r0 value for corner junction
-	r0 = get_rinf_uv0([reg1,reg2],v0=[u1,u2])
-	## edit uvbounds
-	for b in reg1.blocks:
-		b.uvbounds.update(dict(vmax=u1))
-	for b in reg2.blocks:
-		b.uvbounds.update(dict(vmin=u2))
+	r0 = get_rhawk(reg1,reg2)
 	## passive slice of reg1
-	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), v0=u1, r0=r0)
+	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), u0=u1, r0=r0)
+	v1 = pslice.v0
 	## warn if bad u0 or v0 value
 	pslice, reg1 = xh.junc.slicecheck(pslice, reg1)
 	## set U0(r) and V0(r) for target coords
 	U0 = lambda r: pslice.U_of_r_at_v0(r)
 	V0 = lambda r: pslice.V_of_r_at_u0(r)
 	## active slice of reg2
-	aslice = xh.junc.aslice(reg2, ublocks=[2], vblocks=[0,1,2], v0=u2, r0=r0, U0=U0, V0=V0)
+	aslice = xh.junc.aslice(reg2, ublocks=[2], vblocks=[0,1,2], u0=u2, r0=r0, U0=U0, V0=V0)
+	v2 = aslice.v0
 	## warn if bad u0 or v0 value
 	aslice, reg2 = xh.junc.slicecheck(aslice, reg2)
 	## update coordinate transformations
 	reg2.U_of_udl = aslice.U_of_udl_at_v0
 	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
+	## create another copy of region 1
+	reg1b = xh.reg.EFreg(reg1.metfunc, rparams=reg1.rparams, boundary=boundary, rlines=rlines)
+	for i in range(len(reg1b.blocks)):
+		reg1b.blocks[i].uvbounds.update(reg1.blocks[i].uvbounds)
+	reg1b.blocks = [reg1b.blocks[2]]
+	## edit uvbounds
+	## reg1
+	for b in reg1.blocks:
+		b.uvbounds.update(dict(vmax=v1))
+	## reg1b
+	for b in reg1b.blocks:
+		b.uvbounds.update(dict(vmin=v1,umax=u1))
+	## reg2
+	for b in reg2.blocks:
+		b.uvbounds.update(dict(vmin=v2))
+	for b in [reg2.blocks[2]]:
+		b.uvbounds.update(dict(umin=u2))
 	## return
-	return [reg1, reg2]
+	return [reg1,reg1b,reg2]
 
 
 
-
+def get_rhawk(reg1,reg2):
+	"""
+	Sets hawking radiation corner radius to just outside outermost horizon.
+	"""
+	Ra = reg1.metfunc.rj[-2]
+	Rb = reg2.metfunc.rj[-2]
+	r0 = 1.05 * np.max([Ra,Rb])
+	print Ra
+	print Rb
+	print r0
+	## return
+	return r0
 
 
 
@@ -138,7 +163,7 @@ def boundarylines(reglist, npoints=5001, sty={}):
 			b.add_curves_uv(xh.cm.block_boundary(b, sty=style, npoints=npoints))
 
 
-def colorlines(reglist, rmin=0.05, rmax=3., dr=.2, sty={}, npoints=2001, inf=25.):
+def colorlines(reglist, rmin=0.05, rmax=5., dr=.2, sty={}, npoints=2001, inf=25.):
 	"""
 	Add colorscaled lines of constant radius to region.
 	Useful to check for matching.
@@ -271,14 +296,20 @@ def test3():
 
 def test4():
 	"""
-	Test functionality of accrete.
+	Test functionality of evap.
 	"""
 	##
 	print "\nTEST 4\n"
 	## create initial region
-	reglist = [xh.reg.EFreg(xh.mf.hayward(R=1.),rlines=False,boundary=False)]
+	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
+	for b in reg0.blocks:
+		b.uvbounds.update(dict(vmin=-5.))
+	for b in [reg0.blocks[2]]:
+		b.uvbounds.update(dict(umin=-5.))
+	reglist = [reg0]
 	## create evaporated regions
-	reglist += xh.evap.evap(reglist.pop(), u1=0., u2=0., R2=0.8)
+	reglist += xh.evap.evap(reglist.pop(), u1=3., u2=3., R2=0.9)
+	reglist += xh.evap.evap(reglist.pop(), u1=6., u2=6., R2=0.8)
 	## add lines
 	xh.evap.colorlines(reglist)
 	xh.evap.boundarylines(reglist)
@@ -287,6 +318,14 @@ def test4():
 	plt.gca().set_aspect('equal')
 	for reg in reglist:
 		reg.rplot()
+	## fill
+	for reg in reglist:
+		x = 0.99 * reg.metfunc.fparams['R'] / np.max([rgn.metfunc.fparams['R'] for rgn in reglist])
+		for b in reg.blocks:
+			col = plt.cm.hsv_r(x)
+			sty = dict(fc=col, alpha=.2)
+			b.fill(sty=sty)
+	## show plot
 	plt.show()
 	##
 	print "\nEND TEST 4\n"
