@@ -8,6 +8,7 @@ guts of xhorizon rely on this.
 
 import numpy as np
 import matplotlib.pyplot as plt
+import copy
 
 import xhorizon as xh
 
@@ -46,9 +47,7 @@ def evap(reg1, r0=np.nan, u1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False
 	reg2.U_of_udl = aslice.U_of_udl_at_v0
 	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
 	## create another copy of region 1
-	reg1b = xh.reg.EFreg(reg1.metfunc, rparams=reg1.rparams, boundary=boundary, rlines=rlines)
-	for i in range(len(reg1b.blocks)):
-		reg1b.blocks[i].uvbounds.update(reg1.blocks[i].uvbounds)
+	reg1b = copy.deepcopy(reg1)
 	reg1b.blocks = [reg1b.blocks[2]]
 	## edit uvbounds
 	## reg1
@@ -63,7 +62,7 @@ def evap(reg1, r0=np.nan, u1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False
 	for b in [reg2.blocks[2]]:
 		b.uvbounds.update(dict(umin=u2))
 	## return
-	return [reg1,reg1b,reg2]
+	return [reg1b, reg1, reg2]
 
 
 
@@ -302,14 +301,15 @@ def test4():
 	print "\nTEST 4\n"
 	## create initial region
 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
-	for b in reg0.blocks:
-		b.uvbounds.update(dict(vmin=-5.))
-	for b in [reg0.blocks[2]]:
-		b.uvbounds.update(dict(umin=-5.))
+	# for b in reg0.blocks:
+	# 	b.uvbounds.update(dict(vmin=-5.))
+	# for b in [reg0.blocks[2]]:
+	# 	b.uvbounds.update(dict(umin=-5.))
 	reglist = [reg0]
 	## create evaporated regions
 	reglist += xh.evap.evap(reglist.pop(), u1=3., u2=3., R2=0.9)
 	reglist += xh.evap.evap(reglist.pop(), u1=6., u2=6., R2=0.8)
+	reglist += xh.evap.evap(reglist.pop(), u1=9., u2=9., R2=0.7)
 	## add lines
 	xh.evap.colorlines(reglist)
 	xh.evap.boundarylines(reglist)
