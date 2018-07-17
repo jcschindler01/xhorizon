@@ -29,7 +29,7 @@ def evap(reg1, r0=np.nan, u1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False
 	func2 = xh.mf.hayward(R=R2,l=L2)
 	reg2 = xh.reg.EFreg(func2, rparams=rparams2, boundary=boundary, rlines=rlines)
 	## choose r0 value for corner junction
-	r0 = get_rhawk(reg1,reg2)
+	r0 = get_rhawk_u0([reg1,reg2], u0=[u1,u2])
 	## passive slice of reg1
 	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), u0=u1, r0=r0)
 	v1 = pslice.v0
@@ -66,19 +66,26 @@ def evap(reg1, r0=np.nan, u1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False
 
 
 
-def get_rhawk(reg1,reg2):
-	"""
-	Sets hawking radiation corner radius to just outside outermost horizon.
-	"""
-	Ra = reg1.metfunc.rj[-2]
-	Rb = reg2.metfunc.rj[-2]
-	r0 = 1.05 * np.max([Ra,Rb])
-	print Ra
-	print Rb
-	print r0
-	## return
-	return r0
 
+def get_rhawk_u0(reglist, u0=[]):
+	"""
+	Given a list of regions, assume that `outermost' region has index [-1].
+	Assume r->inf as u->-inf.
+	Find the r0 value corresponding to (u=v0 and u=2.*s0) in each region.
+	Take maximum r0 over reglist.
+	Return a value slightly more than r0.
+	"""
+	r0 = np.nan * np.ones(len(reglist))
+	for i in range(len(reglist)):
+		reg = reglist[i]
+		for b in [reg.blocks[-1]]:
+			u = np.array([u0[i]])
+			v = np.array([-2.*reg.rparams['s0']])
+			uv = np.array([u,v])
+			r0[i] = b.tr_of_uv(uv)[1]
+	r0 = 1.05*np.max(r0)
+	print r0
+	return r0
 
 
 
@@ -307,12 +314,14 @@ def test4():
 	# 	b.uvbounds.update(dict(umin=-5.))
 	reglist = [reg0]
 	## create evaporated regions
-	reglist += xh.evap.evap(reglist.pop(), u1=3., u2=3., R2=0.9)
-	reglist += xh.evap.evap(reglist.pop(), u1=6., u2=6., R2=0.8)
-	reglist += xh.evap.evap(reglist.pop(), u1=9., u2=9., R2=0.7)
+	reglist += xh.evap.evap(reglist.pop(), u1=0., u2=0., R2=0.9)
+	reglist += xh.evap.evap(reglist.pop(), u1=1., u2=1., R2=0.8)
+	reglist += xh.evap.evap(reglist.pop(), u1=2., u2=2., R2=0.7)
 	## add lines
 	xh.evap.colorlines(reglist)
 	xh.evap.boundarylines(reglist)
+	## plot list
+	reglist = reglist[0:3]
 	## draw
 	plt.figure()
 	plt.gca().set_aspect('equal')
