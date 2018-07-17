@@ -12,6 +12,52 @@ import matplotlib.pyplot as plt
 import xhorizon as xh
 
 
+
+
+def evap(reg1, r0=np.nan, u1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False, boundary=False):
+	"""
+	Given reg1 = a Hayward region.
+	Create an evaporation event at corner radius r0.
+	Create a new Hayward region reg2 with outer radius R2 and inner radius L2, using rparams2 and other options.
+	Match to r0,u1 in reg1 and to r0,u2 in reg2.
+	Must split reg1 into two new regions.
+	Return [reg1a,reg1b,reg2] = list of new regions to be incorporated into diagram.
+	Intended use looks like reglist += evap(args). 
+	"""
+	## create new region
+	func2 = xh.mf.hayward(R=R2,l=L2)
+	reg2 = xh.reg.EFreg(func2, rparams=rparams2, boundary=boundary, rlines=rlines)
+	## choose r0 value for corner junction
+	r0 = get_rinf_uv0([reg1,reg2],v0=[u1,u2])
+	## edit uvbounds
+	for b in reg1.blocks:
+		b.uvbounds.update(dict(vmax=u1))
+	for b in reg2.blocks:
+		b.uvbounds.update(dict(vmin=u2))
+	## passive slice of reg1
+	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), v0=u1, r0=r0)
+	## warn if bad u0 or v0 value
+	pslice, reg1 = xh.junc.slicecheck(pslice, reg1)
+	## set U0(r) and V0(r) for target coords
+	U0 = lambda r: pslice.U_of_r_at_v0(r)
+	V0 = lambda r: pslice.V_of_r_at_u0(r)
+	## active slice of reg2
+	aslice = xh.junc.aslice(reg2, ublocks=[2], vblocks=[0,1,2], v0=u2, r0=r0, U0=U0, V0=V0)
+	## warn if bad u0 or v0 value
+	aslice, reg2 = xh.junc.slicecheck(aslice, reg2)
+	## update coordinate transformations
+	reg2.U_of_udl = aslice.U_of_udl_at_v0
+	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
+	## return
+	return [reg1, reg2]
+
+
+
+
+
+
+
+
 def accrete(reg1, v1=0., v2=0., R2=1., L2=0.1, rparams2={}, rlines=False, boundary=False):
 	"""
 	Accrete a Hayward of outer radius R2 onto the region reg1 on a line of constant v by 
@@ -145,15 +191,6 @@ def accretion(m, v, l=0.1, rparams={}):
 
 
 
-
-
-
-
-
-
-
-
-
 """
 Tests.
 Run if __name__='__main__'.
@@ -214,8 +251,8 @@ def test3():
 	##
 	print "\nTEST 3\n"
 	## params
-	v = [0.,.5,1.,1.5,2.]
-	m = [.8,.9,1.,1.1,1.15]
+	v = np.linspace(0,1,5)
+	m = .2 + .8*v
 	## create initial region
 	reglist = accretion(m,v)
 	## add lines
@@ -232,9 +269,33 @@ def test3():
 
 
 
+def test4():
+	"""
+	Test functionality of accrete.
+	"""
+	##
+	print "\nTEST 4\n"
+	## create initial region
+	reglist = [xh.reg.EFreg(xh.mf.hayward(R=1.),rlines=False,boundary=False)]
+	## create evaporated regions
+	reglist += xh.evap.evap(reglist.pop(), u1=0., u2=0., R2=0.8)
+	## add lines
+	xh.evap.colorlines(reglist)
+	xh.evap.boundarylines(reglist)
+	## draw
+	plt.figure()
+	plt.gca().set_aspect('equal')
+	for reg in reglist:
+		reg.rplot()
+	plt.show()
+	##
+	print "\nEND TEST 4\n"
+
+
 if __name__=='__main__':
 	#test1()
 	#test2()
-	test3()
+	#test3()
+	test4()
 
 
