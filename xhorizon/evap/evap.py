@@ -11,9 +11,49 @@ import matplotlib.pyplot as plt
 import copy
 
 import xhorizon as xh
+from helpers import *
 
 
+"""
+Evaporation.
+From highest to lowest level functions.
+"""
 
+###############################################################################################################3
+
+######## chain of evap steps with cap #############
+
+def evaporation(m, u, reg0, l=0.1, rparams={}):
+	"""
+	Starts with region reg0, evaporates away to minkowski space, with intermediate masses m at times u.
+
+	Last m should be zero, if not zero it will be replaced by zero and ignored.
+
+	Inputs:
+		reg0 = initial hayward region
+		u = 1d length n array of u0 values for accretion disks
+		m = 1d length n array for series of masses for the hayward spaces
+
+	Returns:
+		reglist = list of regions
+	"""
+	## reglist
+	reglist = [reg0]
+	## iteration values
+	ivals = range(len(u))
+	## evap steps
+	for i in ivals[:-1]:
+		ux, Rx = 1.*u[i], 2.*m[i]
+		reglist += xh.evap.evap(reglist.pop(), u1=ux, u2=ux, R2=Rx, L2=l, rlines=False, boundary=False, rparams2=rparams)
+	## final minkowski region
+	for i in ivals[-1:]:
+		ux = 1.*u[i]
+		reglist += xh.evap.evap_final(reglist.pop(), u1=6., u2=6., rlines=False, boundary=False, rparams2=rparams)
+	## return
+	return reglist
+
+
+############ individual evap steps #################
 
 def evap(reg1, r0=np.nan, u1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False, boundary=False):
 	"""
@@ -65,6 +105,7 @@ def evap(reg1, r0=np.nan, u1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False
 	return [reg1b, reg1, reg2]
 
 
+############ final evap step #########################
 
 def evap_final(reg1, r0=np.nan, u1=0., u2=0., rparams2={}, rlines=False, boundary=False):
 	"""
@@ -117,62 +158,41 @@ def evap_final(reg1, r0=np.nan, u1=0., u2=0., rparams2={}, rlines=False, boundar
 	return [reg1b, reg1, reg2]
 
 
+##################################################################################################################
 
 
+"""
+Accretion.
+From highest to lowest level functions.
+"""
 
-def evaporation(m, u, reg0, l=0.1, rparams={}):
+##################################################################################################################
+
+
+######### chain of accretion steps with initial cap ##################3
+
+def accretion(m, v, l=0.1, rparams={}):
 	"""
-	Starts with region reg0, evaporates away to minkowski space, with intermediate masses m at times u.
-
-	Last m should be zero, if not zero it will be replaced by zero and ignored.
+	Stars with minkowski space, then adds a series of accretions as specified.
 
 	Inputs:
-		reg0 = initial hayward region
-		u = 1d length n array of u0 values for accretion disks
+		v = 1d length n array of v0 values for accretion disks
 		m = 1d length n array for series of masses for the hayward spaces
 
 	Returns:
 		reglist = list of regions
 	"""
-	## reglist
-	reglist = [reg0]
-	## iteration values
-	ivals = range(len(u))
-	## evap steps
-	for i in ivals[:-1]:
-		ux, Rx = 1.*u[i], 2.*m[i]
-		reglist += xh.evap.evap(reglist.pop(), u1=ux, u2=ux, R2=Rx, L2=l, rlines=False, boundary=False, rparams2=rparams)
-	## final minkowski region
-	for i in ivals[-1:]:
-		ux = 1.*u[i]
-		reglist += xh.evap.evap_final(reglist.pop(), u1=6., u2=6., rlines=False, boundary=False, rparams2=rparams)
+	## initial minkowski region
+	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False, boundary=False,rparams=rparams)]
+	## accrete
+	for i in range(len(v)):
+		vx, Rx = 1.*v[i], 2.*m[i]
+		reglist += xh.evap.accrete(reglist.pop(), v1=vx, v2=vx, R2=Rx, L2=l, rlines=False, boundary=False, rparams2=rparams)
 	## return
 	return reglist
 
 
-
-
-def get_rhawk_u0(reglist, u0=[]):
-	"""
-	Given a list of regions, assume that `outermost' region has index [-1].
-	Assume r->inf as u->-inf.
-	Find the r0 value corresponding to (u=v0 and u=2.*s0) in each region.
-	Take maximum r0 over reglist.
-	Return a value slightly more than r0.
-	"""
-	r0 = np.nan * np.ones(len(reglist))
-	for i in range(len(reglist)):
-		reg = reglist[i]
-		for b in [reg.blocks[-1]]:
-			u = np.array([u0[i]])
-			v = np.array([-2.*reg.rparams['s0']])
-			uv = np.array([u,v])
-			r0[i] = b.tr_of_uv(uv)[1]
-	r0 = 1.05*np.max(r0)
-	print r0
-	return r0
-
-
+############### individual accretion steps ########################
 
 def accrete(reg1, v1=0., v2=0., R2=1., L2=0.1, rparams2={}, rlines=False, boundary=False):
 	"""
@@ -223,103 +243,11 @@ def accrete(reg1, v1=0., v2=0., R2=1., L2=0.1, rparams2={}, rlines=False, bounda
 	return [reg1, reg2]
 
 
-def get_rinf_uv0(reglist, v0=[], u0=[]):
-	"""
-	Given a list of regions, assume that `outermost' region has index [-1].
-	Assume r->inf as u->-inf.
-	Find the r0 value corresponding to (v=v0 and u=2.*s0) in each region.
-	Take minimum r0 over reglist.
-	Return a value slightly less than r0.
-	"""
-	r0 = np.nan * np.ones(len(reglist))
-	for i in range(len(reglist)):
-		reg = reglist[i]
-		for b in [reg.blocks[-1]]:
-			u = np.array([-2.*reg.rparams['s0']])
-			v = np.array([v0[i]])
-			uv = np.array([u,v])
-			r0[i] = b.tr_of_uv(uv)[1]
-	r0 = .95*np.min(r0)
-	return r0
-				
-
-def boundarylines(reglist, npoints=5001, sty={}):
-	"""
-	Add boundary lines to regions in reglist.
-	"""
-	for reg in reglist:
-		for b in reg.blocks:
-			style = dict(lw=0.9, c='0.5', zorder=2000)
-			style.update(sty)
-			b.add_curves_uv(xh.cm.block_boundary(b, sty=style, npoints=npoints))
 
 
-def colorlines(reglist, rmin=0.05, rmax=5., dr=.2, sty={}, npoints=2001, inf=25.):
-	"""
-	Add colorscaled lines of constant radius to region.
-	Useful to check for matching.
-	"""
-	rvals = np.arange(rmin,rmax,dr)
-	colvals = (rvals - np.min(rvals)) / (np.max(rvals) - np.min(rvals))
-	cols = plt.cm.hsv_r(colvals)
-	for reg in reglist:
-		for b in reg.blocks:
-			for i in range(len(rvals)):
-				style = dict(c=cols[i], lw=.5, zorder=1500)
-				style.update(sty)
-				b.add_curves_tr(xh.cm.rlines([rvals[i]], sty=style, npoints=npoints, inf=inf))
-	return reglist
 
 
-def fillcols_by_R(reglist):
-	"""
-	Get fill color values based on radius.
-	"""
-	## get rvals
-	Rvals = np.zeros(len(reglist))
-	for i, reg in enumerate(reglist):
-		if 'R' in reg.metfunc.fparams.keys():
-			x = reg.metfunc.fparams['R']
-			Rvals[i] = x
-	## get colvals
-	norm = np.max(Rvals)
-	colvals = 0.2 + 0.7 * Rvals / norm
-	print(colvals)
-	## return
-	return colvals
-
-
-def accretion(m, v, l=0.1, rparams={}):
-	"""
-	Stars with minkowski space, then adds a series of accretions as specified.
-
-	Inputs:
-		v = 1d length n array of v0 values for accretion disks
-		m = 1d length n array for series of masses for the hayward spaces
-
-	Returns:
-		reglist = list of regions
-	"""
-	## initial minkowski region
-	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False, boundary=False,rparams=rparams)]
-	## accrete
-	for i in range(len(v)):
-		vx, Rx = 1.*v[i], 2.*m[i]
-		reglist += xh.evap.accrete(reglist.pop(), v1=vx, v2=vx, R2=Rx, L2=l, rlines=False, boundary=False, rparams2=rparams)
-	## return
-	return reglist
-
-
-def fill_by_R(reglist, cm=plt.cm.prism):
-	colvals = fillcols_by_R(reglist)
-	for i in range(len(reglist)):
-		reg = reglist[i]
-		col = cm(colvals[i])
-		for b in reg.blocks:
-			sty = dict(fc=col, alpha=.2)
-			b.fill(sty=sty)
-
-
+##################################################################################################################
 
 
 
@@ -328,111 +256,6 @@ Tests.
 Run if __name__='__main__'.
 """
 
-def test1():
-	"""
-	Test functionality of get_rinf_uv0.
-	"""
-	##
-	print "\nTEST 1\n"
-	## regions
-	reg1 = xh.reg.EFreg(xh.mf.schwarzschild())
-	reg2 = xh.reg.EFreg(xh.mf.hayward())
-	reg3 = xh.reg.EFreg(xh.mf.minkowski())
-	reglist = [reg1,reg2,reg3]
-	## v values
-	v0 = [-1.,1.,0.]
-	## get
-	rinf = get_rinf_uv0(reglist,v0=v0)
-	## print
-	print rinf
-	##
-	print "\nEND TEST 1\n"
-
-
-
-def test2():
-	"""
-	Test functionality of accrete.
-	"""
-	##
-	print "\nTEST 2\n"
-	## create initial region
-	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False,boundary=False)]
-	## create accreted regions
-	reglist += xh.evap.accrete(reglist.pop(), v1=0., v2=0., R2=0.8)
-	reglist += xh.evap.accrete(reglist.pop(), v1=.5, v2=.5, R2=.9)
-	reglist += xh.evap.accrete(reglist.pop(), v1=1., v2=1., R2=1.)
-	## add lines
-	xh.evap.colorlines(reglist)
-	xh.evap.boundarylines(reglist)
-	## draw
-	plt.figure()
-	plt.gca().set_aspect('equal')
-	for reg in reglist:
-		reg.rplot()
-	plt.show()
-	##
-	print "\nEND TEST 2\n"
-
-
-
-def test3():
-	"""
-	Test functionality of accretion.
-	"""
-	##
-	print "\nTEST 3\n"
-	## params
-	v = np.linspace(0,1,5)
-	m = .2 + .8*v
-	## create initial region
-	reglist = accretion(m,v)
-	## add lines
-	xh.evap.colorlines(reglist)
-	xh.evap.boundarylines(reglist)
-	## draw
-	plt.figure()
-	plt.gca().set_aspect('equal')
-	for reg in reglist:
-		reg.rplot()
-	plt.show()
-	##
-	print "\nEND TEST 3\n"
-
-
-
-def test4():
-	"""
-	Test functionality of evap and evap_final.
-	"""
-	##
-	print "\nTEST 4\n"
-	## create initial region
-	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
-	# for b in reg0.blocks:
-	# 	b.uvbounds.update(dict(vmin=-5.))
-	# for b in [reg0.blocks[2]]:
-	# 	b.uvbounds.update(dict(umin=-5.))
-	reglist = [reg0]
-	## create evaporated regions
-	reglist += xh.evap.evap(reglist.pop(), u1=3., u2=3., R2=0.9)
-	reglist += xh.evap.evap_final(reglist.pop(), u1=6., u2=6.)
-	## add lines
-	xh.evap.colorlines(reglist)
-	xh.evap.boundarylines(reglist)
-	## plot list
-	#reglist = reglist[0:3]
-	## draw
-	plt.figure()
-	plt.gca().set_aspect('equal')
-	for reg in reglist:
-		reg.rplot()
-	## fill
-	fill_by_R(reglist)
-	## show plot
-	plt.show()
-	##
-	print "\nEND TEST 4\n"
 
 
 def test5():
@@ -464,11 +287,9 @@ def test5():
 	##
 	print "\nEND TEST 5\n"
 
+
 if __name__=='__main__':
-	#test1()
-	#test2()
-	#test3()
-	#test4()
 	test5()
+
 
 
