@@ -66,6 +66,91 @@ def evap(reg1, r0=np.nan, u1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False
 
 
 
+def evap_final(reg1, r0=np.nan, u1=0., u2=0., rparams2={}, rlines=False, boundary=False):
+	"""
+	Final evaporation step.
+	Given reg1 = a Hayward region.
+	Create an evaporation event at corner radius r0.
+	Create a new MInkowski region reg2.
+	Match to r0,u1 in reg1 and to r0,u2 in reg2.
+	Must split reg1 into two new regions.
+	Return [reg1a,reg1b,reg2] = list of new regions to be incorporated into diagram.
+	Intended use looks like reglist += evap(args). 
+	"""
+	## create new region
+	func2 = xh.mf.minkowski()
+	reg2 = xh.reg.EFreg(func2, rparams=rparams2, boundary=boundary, rlines=rlines)
+	## choose r0 value for corner junction
+	r0 = get_rhawk_u0([reg1], u0=[u1])
+	## passive slice of reg1
+	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), u0=u1, r0=r0)
+	v1 = pslice.v0
+	## warn if bad u0 or v0 value
+	pslice, reg1 = xh.junc.slicecheck(pslice, reg1)
+	## set U0(r) and V0(r) for target coords
+	U0 = lambda r: pslice.U_of_r_at_v0(r)
+	V0 = lambda r: pslice.V_of_r_at_u0(r)
+	## active slice of reg2
+	aslice = xh.junc.aslice(reg2, ublocks=[0], vblocks=[0], u0=u2, r0=r0, U0=U0, V0=V0)
+	v2 = aslice.v0
+	## warn if bad u0 or v0 value
+	aslice, reg2 = xh.junc.slicecheck(aslice, reg2)
+	## update coordinate transformations
+	reg2.U_of_udl = aslice.U_of_udl_at_v0
+	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
+	## create another copy of region 1
+	reg1b = copy.deepcopy(reg1)
+	reg1b.blocks = [reg1b.blocks[2]]
+	## edit uvbounds
+	## reg1
+	for b in reg1.blocks:
+		b.uvbounds.update(dict(vmax=v1))
+	## reg1b
+	for b in reg1b.blocks:
+		b.uvbounds.update(dict(vmin=v1,umax=u1))
+	## reg2
+	for b in reg2.blocks:
+		b.uvbounds.update(dict(vmin=v2))
+	for b in [reg2.blocks[-1]]:
+		b.uvbounds.update(dict(umin=u2))
+	## return
+	return [reg1b, reg1, reg2]
+
+
+
+
+
+def evaporation(m, u, reg0, l=0.1, rparams={}):
+	"""
+	Starts with region reg0, evaporates away to minkowski space, with intermediate masses m at times u.
+
+	Last m should be zero, if not zero it will be replaced by zero and ignored.
+
+	Inputs:
+		reg0 = initial hayward region
+		u = 1d length n array of u0 values for accretion disks
+		m = 1d length n array for series of masses for the hayward spaces
+
+	Returns:
+		reglist = list of regions
+	"""
+	## reglist
+	reglist = [reg0]
+	## iteration values
+	ivals = range(len(u))
+	## evap steps
+	for i in ivals[:-1]:
+		ux, Rx = 1.*u[i], 2.*m[i]
+		reglist += xh.evap.evap(reglist.pop(), u1=ux, u2=ux, R2=Rx, L2=l, rlines=False, boundary=False, rparams2=rparams)
+	## final minkowski region
+	for i in ivals[-1:]:
+		ux = 1.*u[i]
+		reglist += xh.evap.evap_final(reglist.pop(), u1=6., u2=6., rlines=False, boundary=False, rparams2=rparams)
+	## return
+	return reglist
+
+
+
 
 def get_rhawk_u0(reglist, u0=[]):
 	"""
@@ -186,6 +271,22 @@ def colorlines(reglist, rmin=0.05, rmax=5., dr=.2, sty={}, npoints=2001, inf=25.
 	return reglist
 
 
+def fillcols_by_R(reglist):
+	"""
+	Get fill color values based on radius.
+	"""
+	## get rvals
+	Rvals = np.zeros(len(reglist))
+	for i, reg in enumerate(reglist):
+		if 'R' in reg.metfunc.fparams.keys():
+			x = reg.metfunc.fparams['R']
+			Rvals[i] = x
+	## get colvals
+	norm = np.max(Rvals)
+	colvals = 0.2 + 0.7 * Rvals / norm
+	print(colvals)
+	## return
+	return colvals
 
 
 def accretion(m, v, l=0.1, rparams={}):
@@ -200,7 +301,7 @@ def accretion(m, v, l=0.1, rparams={}):
 		reglist = list of regions
 	"""
 	## initial minkowski region
-	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False, boundary=False)]
+	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False, boundary=False,rparams=rparams)]
 	## accrete
 	for i in range(len(v)):
 		vx, Rx = 1.*v[i], 2.*m[i]
@@ -209,14 +310,14 @@ def accretion(m, v, l=0.1, rparams={}):
 	return reglist
 
 
-
-
-
-
-
-
-
-
+def fill_by_R(reglist, cm=plt.cm.prism):
+	colvals = fillcols_by_R(reglist)
+	for i in range(len(reglist)):
+		reg = reglist[i]
+		col = cm(colvals[i])
+		for b in reg.blocks:
+			sty = dict(fc=col, alpha=.2)
+			b.fill(sty=sty)
 
 
 
@@ -302,7 +403,7 @@ def test3():
 
 def test4():
 	"""
-	Test functionality of evap.
+	Test functionality of evap and evap_final.
 	"""
 	##
 	print "\nTEST 4\n"
@@ -314,36 +415,60 @@ def test4():
 	# 	b.uvbounds.update(dict(umin=-5.))
 	reglist = [reg0]
 	## create evaporated regions
-	reglist += xh.evap.evap(reglist.pop(), u1=0., u2=0., R2=0.9)
-	reglist += xh.evap.evap(reglist.pop(), u1=1., u2=1., R2=0.8)
-	reglist += xh.evap.evap(reglist.pop(), u1=2., u2=2., R2=0.7)
+	reglist += xh.evap.evap(reglist.pop(), u1=3., u2=3., R2=0.9)
+	reglist += xh.evap.evap_final(reglist.pop(), u1=6., u2=6.)
 	## add lines
 	xh.evap.colorlines(reglist)
 	xh.evap.boundarylines(reglist)
 	## plot list
-	reglist = reglist[0:3]
+	#reglist = reglist[0:3]
 	## draw
 	plt.figure()
 	plt.gca().set_aspect('equal')
 	for reg in reglist:
 		reg.rplot()
 	## fill
-	for reg in reglist:
-		x = 0.99 * reg.metfunc.fparams['R'] / np.max([rgn.metfunc.fparams['R'] for rgn in reglist])
-		for b in reg.blocks:
-			col = plt.cm.hsv_r(x)
-			sty = dict(fc=col, alpha=.2)
-			b.fill(sty=sty)
+	fill_by_R(reglist)
 	## show plot
 	plt.show()
 	##
 	print "\nEND TEST 4\n"
 
 
+def test5():
+	"""
+	Test functionality of evaporation().
+	"""
+	##
+	print "\nTEST 5\n"
+	## create initial region
+	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
+	reglist = [reg0]
+	## params
+	m = 0.5 * np.array([.9,0.])
+	u = np.array([.3,.6])
+	## create evaporated regions
+	reglist += xh.evap.evaporation(m, u, reg0, l=0.1, rparams={})
+	## add lines
+	xh.evap.colorlines(reglist)
+	xh.evap.boundarylines(reglist)
+	## draw
+	plt.figure()
+	plt.gca().set_aspect('equal')
+	for reg in reglist:
+		reg.rplot()
+	## fill
+	fill_by_R(reglist)
+	## show plot
+	plt.show()
+	##
+	print "\nEND TEST 5\n"
+
 if __name__=='__main__':
 	#test1()
 	#test2()
 	#test3()
-	test4()
+	#test4()
+	test5()
 
 
