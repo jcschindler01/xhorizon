@@ -103,7 +103,8 @@ def fillcols_by_R(reglist):
 	## get colvals
 	norm = np.max(Rvals)
 	colvals = 0.2 + 0.7 * Rvals / norm
-	print(colvals)
+	print "Rvals = %s"%(Rvals)
+	#print "colvals = %s"%(colvals)
 	## return
 	return colvals
 

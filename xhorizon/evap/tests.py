@@ -108,13 +108,11 @@ def test4():
 	# 	b.uvbounds.update(dict(umin=-5.))
 	reglist = [reg0]
 	## create evaporated regions
-	reglist += xh.evap.evap(reglist.pop(), u1=3., u2=3., R2=0.9)
+	reglist += xh.evap.evap(reglist.pop(), u1=2., u2=2., R2=0.8)
 	reglist += xh.evap.evap_final(reglist.pop(), u1=6., u2=6.)
 	## add lines
 	xh.evap.colorlines(reglist)
 	xh.evap.boundarylines(reglist)
-	## plot list
-	#reglist = reglist[0:3]
 	## draw
 	xh.newfig(tex=False,sqaxis=3)
 	plt.title("Test 4")
@@ -138,10 +136,10 @@ def test5():
 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
 	reglist = [reg0]
 	## params
-	m = 0.5 * np.array([.9,0.])
-	u = np.array([.3,.6])
+	R = np.array([.8,.0])
+	u = np.array([2.,.6])
 	## create evaporated regions
-	reglist += xh.evap.evaporation(m, u, reglist.pop(), l=0.1, rparams={})
+	reglist += xh.evap.evaporation(R, u, reglist.pop(), l=0.1, rparams={})
 	## add lines
 	xh.evap.colorlines(reglist)
 	xh.evap.boundarylines(reglist)
