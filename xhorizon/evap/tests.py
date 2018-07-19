@@ -116,15 +116,14 @@ def test4():
 	## plot list
 	#reglist = reglist[0:3]
 	## draw
-	plt.figure()
+	xh.newfig(tex=False,sqaxis=3)
 	plt.title("Test 4")
-	plt.gca().set_aspect('equal')
 	for reg in reglist:
 		reg.rplot()
 	## fill
 	fill_by_R(reglist)
 	## show plot
-	#plt.show()
+	plt.savefig("temp-figs/test4.png", dpi=200)
 	##
 	print "\nEND TEST 4\n"
 
@@ -147,15 +146,14 @@ def test5():
 	xh.evap.colorlines(reglist)
 	xh.evap.boundarylines(reglist)
 	## draw
-	plt.figure()
+	xh.newfig(tex=False,sqaxis=3)
 	plt.title('Test 5')
-	plt.gca().set_aspect('equal')
 	for reg in reglist:
 		reg.rplot()
 	## fill
 	fill_by_R(reglist)
 	## show plot
-	plt.show()
+	plt.savefig("temp-figs/test5.png", dpi=200)
 	##
 	print "\nEND TEST 5\n"
 

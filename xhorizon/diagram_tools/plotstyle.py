@@ -8,16 +8,17 @@ import matplotlib.pyplot as plt
 
 
 
-def pubrc():
+def pubrc(tex=True):
 	## if matplotlib version 2, use classic style
 	if int(mpl.__version__.split('.')[0]) > 1:
 		plt.style.use('classic')
 	## set default rc params for diagrams
 	## latex settings
-	plt.rcParams['text.usetex'] = True
-	plt.rcParams['font.family'] = 'serif'
-	plt.rcParams['font.serif'] = []
-	plt.rcParams['text.latex.preamble'] = [r'\renewcommand{\seriesdefault}{\bfdefault}']
+	if tex==True:
+		plt.rcParams['text.usetex'] = True
+		plt.rcParams['font.family'] = 'serif'
+		plt.rcParams['font.serif'] = []
+		plt.rcParams['text.latex.preamble'] = [r'\renewcommand{\seriesdefault}{\bfdefault}']
 	## line params
 	plt.rcParams['lines.linewidth'] = 0.5
 	## font params
@@ -27,9 +28,9 @@ def pubrc():
 
 
 
-def newfig(sqfig=4, sqaxis=4, tilde=False):
+def newfig(sqfig=4, sqaxis=4, tilde=False, tex=True):
 	## set rc params
-	pubrc()
+	pubrc(tex=tex)
 	## new figure
 	plt.figure(figsize=(sqfig,sqfig))
 	## new axes

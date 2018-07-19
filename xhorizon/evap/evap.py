@@ -74,7 +74,7 @@ def evap(reg1, r0=np.nan, u1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False
 	r0 = get_rhawk_u0([reg1,reg2], u0=[u1,u2])
 	## passive slice of reg1
 	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), u0=u1, r0=r0)
-	v1 = pslice.v0
+	v1 = 1.*pslice.v0
 	## warn if bad u0 or v0 value
 	pslice, reg1 = xh.junc.slicecheck(pslice, reg1)
 	## set U0(r) and V0(r) for target coords
@@ -82,7 +82,7 @@ def evap(reg1, r0=np.nan, u1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False
 	V0 = lambda r: pslice.V_of_r_at_u0(r)
 	## active slice of reg2
 	aslice = xh.junc.aslice(reg2, ublocks=[2], vblocks=[0,1,2], u0=u2, r0=r0, U0=U0, V0=V0)
-	v2 = aslice.v0
+	v2 = 1.*aslice.v0
 	## warn if bad u0 or v0 value
 	aslice, reg2 = xh.junc.slicecheck(aslice, reg2)
 	## update coordinate transformations
@@ -164,6 +164,14 @@ def evap_final(reg1, r0=np.nan, u1=0., u2=0., rparams2={}, rlines=False, boundar
 		b.uvbounds.update(dict(vmin=v2))
 	for b in [reg2.blocks[-1]]:
 		b.uvbounds.update(dict(umin=u2))
+	## print announcement
+	print "FINAL_EVAP --- NEW REGION AND SHELL"
+	print "R  = %6.3f"%(0.)
+	print "l  = %6.3f"%(0.)
+	print "r0 = %6.3f"%(r0)
+	print "u1, u2 = %6.3f, %6.3f"%(u1,u2)
+	print "v1, v2 = %6.3f, %6.3f"%(v1,v2)
+	print "\n"
 	## return
 	return [reg1b, reg1, reg2]
 
