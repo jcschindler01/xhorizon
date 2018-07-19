@@ -13,6 +13,14 @@ from evap import *
 from helpers import *
 
 
+def main():
+	#test1()
+	#test2()
+	#test3()
+	test4()
+	test5()
+
+
 def test1():
 	"""
 	Test functionality of get_rinf_uv0.
@@ -109,13 +117,14 @@ def test4():
 	#reglist = reglist[0:3]
 	## draw
 	plt.figure()
+	plt.title("Test 4")
 	plt.gca().set_aspect('equal')
 	for reg in reglist:
 		reg.rplot()
 	## fill
 	fill_by_R(reglist)
 	## show plot
-	plt.show()
+	#plt.show()
 	##
 	print "\nEND TEST 4\n"
 
@@ -133,12 +142,13 @@ def test5():
 	m = 0.5 * np.array([.9,0.])
 	u = np.array([.3,.6])
 	## create evaporated regions
-	reglist += xh.evap.evaporation(m, u, reg0, l=0.1, rparams={})
+	reglist += xh.evap.evaporation(m, u, reglist.pop(), l=0.1, rparams={})
 	## add lines
 	xh.evap.colorlines(reglist)
 	xh.evap.boundarylines(reglist)
 	## draw
 	plt.figure()
+	plt.title('Test 5')
 	plt.gca().set_aspect('equal')
 	for reg in reglist:
 		reg.rplot()
@@ -150,11 +160,4 @@ def test5():
 	print "\nEND TEST 5\n"
 
 
-if __name__=='__main__':
-	#test1()
-	#test2()
-	#test3()
-	#test4()
-	test5()
-
-
+main()
