@@ -176,10 +176,10 @@ def test6():
 	evap_u = [6.,9.]
 	## create evaporated regions
 	reglist = xh.evap.formevap()#accrete_R=accrete_R, accrete_v=accrete_v, evap_R=evap_R, evap_u=evap_u, l=0.1, rparams=dict(c=0., s0=10.))
-	## squish
-	fU = lambda x: 10.*x - 6.
-	fV = lambda x: -x**3
-	reglist = UVcompose(reglist, fU=None, fV=None)
+	## resquish
+	fU = None
+	fV = None
+	reglist = UVcompose(reglist, fU=fU, fV=fV)
 	## add lines
 	xh.evap.colorlines(reglist)
 	xh.evap.boundarylines(reglist)

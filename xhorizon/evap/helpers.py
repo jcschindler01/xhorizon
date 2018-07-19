@@ -75,6 +75,13 @@ def UVcompose(reglist, fU=None, fV=None):
 		reg = UVcompose1(reg, fU=fU, fV=fV)
 	return reglist
 
+def get_uvdl_of_UV(reg):
+	"""
+	"""
+	reg2 = copy.deepcopy(reg)
+	pslice = xh.junc.passive_slice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=np.nan, u0=np.nan, v0=np.nan, mu=0.)
+	return reg
+
 ############################################################################
 
 
