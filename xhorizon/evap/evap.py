@@ -37,6 +37,16 @@ def evaporation(R, u, reg0, l=0.1, rparams={}):
 	Returns:
 		reglist = list of regions
 	"""
+	## check for valid input
+	go = True
+	if not len(R)==len(u):
+		print "\nERROR: Mismatched input array lengths.\n"
+		go = False
+	if not R[-1]==0.:
+		print "\nERROR: Final radius value must be zero.\n"
+		go = False
+	if go==False:
+		return None
 	## reglist
 	reglist = [reg0]
 	## iteration values

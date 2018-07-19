@@ -19,8 +19,9 @@ def main():
 	#test1()
 	#test2()
 	#test3()
-	test4()
-	test5()
+	#test4()
+	#test5()
+	test6()
 
 
 def test1():
@@ -138,7 +139,7 @@ def test5():
 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
 	reglist = [reg0]
 	## params
-	R = np.array([.8,.0])
+	R = np.array([.8,.00])
 	u = np.array([2.,.6])
 	## create evaporated regions
 	reglist += xh.evap.evaporation(R, u, reglist.pop(), l=0.1, rparams={})
@@ -156,6 +157,39 @@ def test5():
 	plt.savefig("temp-figs/test5.png", dpi=200)
 	##
 	print "\nEND TEST 5\n"
+
+
+def test6():
+	"""
+	Test functionality of formevap().
+	"""
+	##
+	print "\nTEST 6\n"
+	## params
+	## create evaporated regions
+	reglist = xh.evap.formevap()
+	## add lines
+	xh.evap.colorlines(reglist)
+	xh.evap.boundarylines(reglist)
+	## draw
+	xh.newfig(tex=False,sqaxis=3)
+	plt.title('Test 6')
+	plt.xlim(0.5,2.5)
+	plt.ylim(-1,1)
+	for reg in reglist:
+		reg.rplot()
+	## fill
+	fill_by_R(reglist)
+	## show plot
+	plt.savefig("temp-figs/test6.png", dpi=200)
+	##
+	print "\nEND TEST 6\n"
+
+
+
+
+
+
 
 
 main()

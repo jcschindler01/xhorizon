@@ -24,7 +24,7 @@ From highest to lowest level functions.
 
 ######### chain of accretion steps with initial cap ##################3
 
-def accretion(m, v, l=0.1, rparams={}):
+def accretion(R, v, l=0.1, rparams={}):
 	"""
 	Stars with minkowski space, then adds a series of accretions as specified.
 
@@ -39,7 +39,7 @@ def accretion(m, v, l=0.1, rparams={}):
 	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False, boundary=False,rparams=rparams)]
 	## accrete
 	for i in range(len(v)):
-		vx, Rx = 1.*v[i], 2.*m[i]
+		vx, Rx = v[i], R[i]
 		reglist += xh.evap.accrete(reglist.pop(), v1=vx, v2=vx, R2=Rx, L2=l, rlines=False, boundary=False, rparams2=rparams)
 	## return
 	return reglist
