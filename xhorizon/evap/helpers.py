@@ -55,11 +55,25 @@ def get_rhawk_u0(reglist, u0=[]):
 
 ############# tools to rescale all coordinates at the end ###################
 
-def squish(reg):
+def UVcompose1(reg, fU=None, fV=None):
+	"""
+	Take the final UV coords for region and compose with a function in each null direction.
+	"""
 	reg2 = copy.deepcopy(reg)
-	reg.U_of_udl = lambda x: 2.*reg2.U_of_udl(x)
+	if not fU==None:
+		reg.U_of_udl = lambda x: fU(reg2.U_of_udl(x))
+	if not fV==None:
+		reg.V_of_vdl = lambda x: fU(reg2.V_of_vdl(x))
 	return reg
 
+def UVcompose(reglist, fU=None, fV=None):
+	"""
+	Take the final UV coords for region and compose with a function in each null direction.
+	Takes list input.
+	"""
+	for reg in reglist:
+		reg = UVcompose1(reg, fU=fU, fV=fV)
+	return reglist
 
 ############################################################################
 
