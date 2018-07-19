@@ -165,23 +165,35 @@ def test6():
 	"""
 	##
 	print "\nTEST 6\n"
-	## params
+	## accrete params
+	N = 1.
+	R0, R= 1., 1.
+	accrete_R = R0 + (R-R0)*np.linspace(0,1,N)
+	v0, v = -1., -.5
+	accrete_v = np.linspace(v0,v,N)
+	## evap params
+	evap_R = [.9,.0]
+	evap_u = [6.,9.]
 	## create evaporated regions
-	reglist = xh.evap.formevap()
+	reglist = xh.evap.formevap()#accrete_R=accrete_R, accrete_v=accrete_v, evap_R=evap_R, evap_u=evap_u, l=0.1, rparams=dict(c=0., s0=10.))
+	## squish
+	if True:
+		for reg in reglist:
+			squish(reg)
 	## add lines
 	xh.evap.colorlines(reglist)
 	xh.evap.boundarylines(reglist)
 	## draw
 	xh.newfig(tex=False,sqaxis=3)
 	plt.title('Test 6')
-	plt.xlim(0.5,2.5)
-	plt.ylim(-1,1)
+	#plt.xlim(0.5,2.5)
+	#plt.ylim(-1,1)
 	for reg in reglist:
 		reg.rplot()
 	## fill
 	fill_by_R(reglist)
 	## show plot
-	plt.savefig("temp-figs/test6.png", dpi=200)
+	plt.savefig("temp-figs/test6.png", dpi=400)
 	##
 	print "\nEND TEST 6\n"
 

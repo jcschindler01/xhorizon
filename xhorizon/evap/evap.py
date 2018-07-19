@@ -60,7 +60,7 @@ def evaporation(R, u, reg0, l=0.1, rparams={}):
 	for i in ivals[-1:]:
 		ux = u[i]
 		print "FINAL EVAP STEP, i=%r, u=%r, R=%r"%(i,ux,0.)
-		reglist += xh.evap.evap_final(reglist.pop(), u1=6., u2=6., rlines=False, boundary=False, rparams2=rparams)
+		reglist += xh.evap.evap_final(reglist.pop(), u1=ux, u2=ux, rlines=False, boundary=False, rparams2=rparams)
 	## return
 	return reglist
 

@@ -4,6 +4,7 @@ This module contains helpers to help with evap code.
 
 import numpy as np
 import matplotlib.pyplot as plt
+import copy
 import xhorizon as xh
 
 ################ tools for choosing junction corner radius ###############
@@ -52,6 +53,15 @@ def get_rhawk_u0(reglist, u0=[]):
 ###############################################################################
 				
 
+############# tools to rescale all coordinates at the end ###################
+
+def squish(reg):
+	reg2 = copy.deepcopy(reg)
+	reg.U_of_udl = lambda x: 2.*reg2.U_of_udl(x)
+	return reg
+
+
+############################################################################
 
 
 ################# tools for drawing ########################################3
