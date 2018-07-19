@@ -1,0 +1,2 @@
+Git won't keep empty directories.
+This file lets git keep it's containing directory while excluding all other files in the directory.

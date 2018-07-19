@@ -1,5 +1,6 @@
 # Custom
-xhorizon/evap/temp-figs/*.*
+xhorizon/evap/temp-figs/*
+!xhorizon/evap/temp-figs/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
