@@ -21,8 +21,8 @@ def main():
 	#test3()
 	#test4()
 	#test5()
-	test6()
-
+	#test6()
+	test7()
 
 def test1():
 	"""
@@ -201,7 +201,39 @@ def test6():
 	print "\nEND TEST 6\n"
 
 
-
+def test7():
+	"""
+	Test functionality of get_uvdl_of_UV().
+	"""
+	##
+	print "\nTEST 7\n"
+	## create evaporated regions
+	reglist = xh.evap.formevap(rparams=dict(s0=10.))
+	## resquish
+	fU, fV = get_uvdl_of_UV(reglist[-1])
+	## plot
+	xx = np.linspace(-2,2,50001)
+	plt.figure()
+	plt.plot(xx, fU(xx), 'rx-')
+	plt.plot(xx, fV(xx), 'bx-')
+	plt.grid()
+	plt.show()
+	## edit regions
+	UVcompose(reglist, fU=fU, fV=fV)
+	## add lines
+	xh.evap.colorlines(reglist)
+	xh.evap.boundarylines(reglist)
+	## draw
+	xh.newfig(tex=False,sqaxis=3)
+	plt.title('Test 7')
+	for reg in reglist:
+		reg.rplot()
+	fill_by_R(reglist)
+	## show plot
+	plt.show()
+	plt.savefig("temp-figs/test7.png", dpi=400)
+	##
+	print "\nEND TEST 7\n"
 
 
 

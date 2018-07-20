@@ -84,12 +84,12 @@ def get_uvdl_of_UV(reg):
 	## copy region
 	reg2 = copy.deepcopy(reg)
 	## get x_ref arrays
-	ss = np.linspace(-5,5,5001)
+	ss = np.linspace(-4,4,50001)
 	uudl = 1.*ss
 	vvdl = 1.*ss
 	## get y_ref arrays
-	UU = reg.U_of_udl(udl)
-	VV = reg.V_of_vdl(vdl)
+	UU = reg.U_of_udl(uudl)
+	VV = reg.V_of_vdl(vvdl)
 	## make functions
 	udl_of_U = lambda U: interp.interp_with_smooth_extrap(U, UU, uudl, mu=0.)
 	vdl_of_V = lambda V: interp.interp_with_smooth_extrap(V, VV, vvdl, mu=0.)
