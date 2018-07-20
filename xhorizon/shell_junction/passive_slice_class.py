@@ -71,12 +71,14 @@ class passive_slice:
 
 	def udl_of_U_at_v0(self, U):
 		"""
+		Untested.
 		Inverse of U(udl).
 		"""
 		return interp.interp_with_smooth_extrap(U, self.UV_v0[0], self.uvdl_v0[0], mu=self.mu)
 
 	def vdl_of_V_at_u0(self, V):
 		"""
+		Untested.
 		Inverse of V(vdl).
 		"""
 		return interp.interp_with_smooth_extrap(V, self.UV_u0[1], self.uvdl_u0[1], mu=self.mu)

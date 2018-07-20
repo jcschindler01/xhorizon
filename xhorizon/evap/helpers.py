@@ -5,7 +5,9 @@ This module contains helpers to help with evap code.
 import numpy as np
 import matplotlib.pyplot as plt
 import copy
+
 import xhorizon as xh
+from xhorizon.shell_junction import interpolators as interp
 
 ################ tools for choosing junction corner radius ###############
 
@@ -77,10 +79,32 @@ def UVcompose(reglist, fU=None, fV=None):
 
 def get_uvdl_of_UV(reg):
 	"""
+	Get current udl_of_U and vdl_of_V for a region by evaluation and interpolation.
 	"""
+	## copy region
 	reg2 = copy.deepcopy(reg)
-	pslice = xh.junc.passive_slice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=np.nan, u0=np.nan, v0=np.nan, mu=0.)
-	return reg
+	## get x_ref arrays
+	ss = np.linspace(-5,5,5001)
+	uudl = 1.*ss
+	vvdl = 1.*ss
+	## get y_ref arrays
+	UU = reg.U_of_udl(udl)
+	VV = reg.V_of_vdl(vdl)
+	## make functions
+	udl_of_U = lambda U: interp.interp_with_smooth_extrap(U, UU, uudl, mu=0.)
+	vdl_of_V = lambda V: interp.interp_with_smooth_extrap(V, VV, vvdl, mu=0.)
+	## return
+	return udl_of_U, vdl_of_V
+
+
+
+
+
+
+
+
+
+
 
 ############################################################################
 

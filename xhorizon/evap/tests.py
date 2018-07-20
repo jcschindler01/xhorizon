@@ -194,7 +194,7 @@ def test6():
 	## fill
 	fill_by_R(reglist)
 	## mink compare
-	xh.reg.EFreg(xh.mf.minkowski()).rplot()
+	#xh.reg.EFreg(xh.mf.minkowski()).rplot()
 	## show plot
 	plt.savefig("temp-figs/test6.png", dpi=400)
 	##
