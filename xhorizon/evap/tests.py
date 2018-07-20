@@ -21,8 +21,8 @@ def main():
 	#test3()
 	#test4()
 	#test5()
-	#test6()
-	test7()
+	test6()
+	#test7()
 
 def test1():
 	"""
@@ -166,8 +166,8 @@ def test6():
 	##
 	print "\nTEST 6\n"
 	## accrete params
-	N = 1.
-	R0, R= 1., 1.
+	N = 4.
+	R0, R = .8, 1.
 	accrete_R = R0 + (R-R0)*np.linspace(0,1,N)
 	v0, v = -1., -.5
 	accrete_v = np.linspace(v0,v,N)
@@ -175,7 +175,7 @@ def test6():
 	evap_R = [.9,.0]
 	evap_u = [6.,9.]
 	## create evaporated regions
-	reglist = xh.evap.formevap()#accrete_R=accrete_R, accrete_v=accrete_v, evap_R=evap_R, evap_u=evap_u, l=0.1, rparams=dict(c=0., s0=10.))
+	reglist = xh.evap.formevap(accrete_R=accrete_R, accrete_v=accrete_v, evap_R=evap_R, evap_u=evap_u, l=0.01, rparams=dict(c=0., s0=10.))
 	## resquish
 	fU = None
 	fV = None
@@ -187,8 +187,8 @@ def test6():
 	xh.newfig(tex=False,sqaxis=3)
 	#plt.figure()
 	plt.title('Test 6')
-	#plt.xlim(0.5,2.5)
-	#plt.ylim(-1,1)
+	plt.xlim(0.5,2.5)
+	plt.ylim(-1,1)
 	for reg in reglist:
 		reg.rplot()
 	## fill
@@ -196,7 +196,7 @@ def test6():
 	## mink compare
 	#xh.reg.EFreg(xh.mf.minkowski()).rplot()
 	## show plot
-	plt.savefig("temp-figs/test6.png", dpi=400)
+	plt.savefig("temp-figs/test6.png", dpi=600)
 	##
 	print "\nEND TEST 6\n"
 
