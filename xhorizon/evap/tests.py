@@ -19,8 +19,8 @@ def main():
 	#test1()
 	#test2()
 	#test3()
-	test4()
-	#test5()
+	#test4()
+	test5()
 	#test6()
 	#test7()
 
@@ -139,23 +139,28 @@ def test5():
 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
 	reglist = [reg0]
 	## params
-	R = np.array([.9,.8,.0])
-	u = np.array([3.,6.,9.])
+	u0 = 0.
+	v0 = 0.
+	R = np.array([.9])
+	du = np.array([3.])
+	dv = np.array([1.])
 	## create evaporated regions
-	reglist += xh.evap.evaporation(R, u, reglist.pop(), l=0.1, rparams={})
-	## add lines
-	xh.evap.colorlines(reglist)
-	xh.evap.boundarylines(reglist)
-	## draw
-	xh.newfig(tex=False,sqaxis=3)
-	plt.title('Test 5')
-	for reg in reglist:
-		reg.rplot()
-	## fill
-	fill_by_R(reglist)
-	## show plot
-	plt.savefig("temp-figs/test5.png", dpi=200)
-	##
+	reglist += xh.evap.evaporation(reg0, R=R, du=du, dv=dv, u0=u0, v0=v0, l=0.1, rparams={})
+	## draw regions?
+	if False:
+		## add lines
+		xh.evap.colorlines(reglist)
+		xh.evap.boundarylines(reglist)
+		## draw
+		xh.newfig(tex=False,sqaxis=3)
+		plt.title('Test 5')
+		for reg in reglist:
+			reg.rplot()
+		## fill
+		fill_by_R(reglist)
+		## show plot
+		plt.savefig("temp-figs/test5.png", dpi=200)
+		##
 	print "\nEND TEST 5\n"
 
 

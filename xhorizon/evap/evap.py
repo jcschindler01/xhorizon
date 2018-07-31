@@ -21,6 +21,40 @@ From highest to lowest level functions.
 
 ###############################################################################################################3
 
+def evaporation(reg0, R=[], du=[], dv=[], u0=0., v0=0., l=0.1, rparams={}):
+	"""
+	"""
+	##
+	print "\nBEGIN EVAPORATION"
+	## print announcement
+	print "\n"
+	print "EVAPORATION"
+	print "reg0 = %r"%(reg0)
+	print "R = %r"%(R)
+	print "du = %r"%(du)
+	print "dv = %r"%(dv)
+	print "u0 = %r"%(u0)
+	print "v0 = %r"%(v0)
+	print "l = %r"%(l)
+	print "rparams = %r"%(rparams)
+	## input checker
+	if not evaporation_input_good(R, du, dv):
+		print "INPUT ERROR"
+		return None
+	## iteration values
+	ii = range(len(R))
+	## reglist
+	reglist = [reg0]
+	## evap steps
+	for i in ii[:-1]:
+		## print announcement
+		print "\nNEXT EVAP STEP, i=%r, R=%r, du=%r, dv=%r"%(i,ux,Rx)
+	## final minkowski region
+	##
+	print "\nEND EVAPORTION"
+	## return
+	return reglist
+
 
 ############ individual evap steps #################
 

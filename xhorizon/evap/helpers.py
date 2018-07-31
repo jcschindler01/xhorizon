@@ -11,6 +11,29 @@ from xhorizon.shell_junction import interpolators as interp
 
 ################ tools for choosing junction corner radius ###############
 
+def evaporation_input_good(R, du, dv):
+	"""
+	"""
+	## initialize
+	good = True
+	## check
+	if not (len(R)==len(du) and len(R)==len(dv)):
+		print "MISMATCHED INPUT ARRAY LENGTHS"
+		good = False
+	if not np.all(R>0.):
+		print "RADIUS MUST BE POSITIVE"
+		good = False
+	## return
+	return good
+
+
+
+
+
+
+
+
+
 def get_rinf_uv0(reglist, v0=[], u0=[]):
 	"""
 	Given a list of regions, assume that `outermost' region has index [-1].
