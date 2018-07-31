@@ -97,9 +97,11 @@ def test3():
 
 
 
+
+
 def test4():
 	"""
-	Test functionality of evap and evap_final.
+	Test functionality of evap.
 	"""
 	##
 	print "\nTEST 4\n"
@@ -107,21 +109,23 @@ def test4():
 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
 	reglist = [reg0]
 	## create evaporated regions
-	reglist += xh.evap.evap(reglist.pop(), u1=2., u2=2., R2=0.8)
-	#reglist += xh.evap.evap_final(reglist.pop(), u1=6., u2=6.)
-	## add lines
-	xh.evap.colorlines(reglist)
-	xh.evap.boundarylines(reglist)
-	## draw
-	xh.newfig(tex=False,sqaxis=3)
-	plt.title("Test 4")
-	for reg in reglist:
-		reg.rplot()
-	## fill
-	fill_by_R(reglist)
-	## show plot
-	plt.savefig("temp-figs/test4.png", dpi=200)
-	##
+	reglist += xh.evap.evap(reglist.pop(), u1=0., v1=0., u2=0., R2=0.99)
+	reglist += xh.evap.evap(reglist.pop(), u1=2., v1=2., u2=0., R2=0.98)
+	## draw diagram?
+	if True:
+		## add lines
+		xh.evap.colorlines(reglist)
+		xh.evap.boundarylines(reglist)
+		## draw
+		xh.newfig(tex=False,sqaxis=3)
+		plt.title("Test 4")
+		for reg in reglist:
+			reg.rplot()
+		## fill
+		fill_by_R(reglist)
+		## show plot
+		plt.savefig("temp-figs/test4.png", dpi=200)
+		##
 	print "\nEND TEST 4\n"
 
 
