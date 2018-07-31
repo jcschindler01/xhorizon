@@ -131,6 +131,9 @@ def evap(reg1, r0=np.nan, u1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False
 	print "r0 = %r"%(r0)
 	print "u1, u2 = %r, %r"%(u1,u2)
 	print "v1, v2 = %r, %r"%(v1,v2)
+	print " reg1.blocks[-1].uvbounds = %s"%( reg1.blocks[-1].uvbounds)
+	print "reg1b.blocks[-1].uvbounds = %s"%(reg1b.blocks[-1].uvbounds)
+	print " reg2.blocks[-1].uvbounds = %s"%( reg2.blocks[-1].uvbounds)
 	print "\n"
 	## return
 	return [reg1b, reg1, reg2]

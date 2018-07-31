@@ -20,8 +20,8 @@ def main():
 	#test2()
 	#test3()
 	#test4()
-	#test5()
-	test6()
+	test5()
+	#test6()
 	#test7()
 
 def test1():
@@ -139,8 +139,8 @@ def test5():
 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
 	reglist = [reg0]
 	## params
-	R = np.array([.8,.00])
-	u = np.array([2.,.6])
+	R = np.array([.9,.8,.0])
+	u = np.array([3.,6.,9.])
 	## create evaporated regions
 	reglist += xh.evap.evaporation(R, u, reglist.pop(), l=0.1, rparams={})
 	## add lines
@@ -172,7 +172,7 @@ def test6():
 	v0, v = -1., -.5
 	accrete_v = np.linspace(v0,v,N)
 	## evap params
-	evap_R = [.9,.0]
+	evap_R = [.9 ,.0]
 	evap_u = [6.,9.]
 	## create evaporated regions
 	reglist = xh.evap.formevap(accrete_R=accrete_R, accrete_v=accrete_v, evap_R=evap_R, evap_u=evap_u, l=0.01, rparams=dict(c=0., s0=10.))

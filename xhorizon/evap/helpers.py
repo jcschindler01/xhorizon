@@ -47,7 +47,7 @@ def get_rhawk_u0(reglist, u0=[]):
 			v = np.array([-2.*reg.rparams['s0']])
 			uv = np.array([u,v])
 			r0[i] = b.tr_of_uv(uv)[1]
-	r0 = 1.05*np.max(r0)
+	r0 = 1.01*np.max(r0)
 	print r0
 	return r0
 
