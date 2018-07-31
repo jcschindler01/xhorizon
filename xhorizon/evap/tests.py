@@ -19,9 +19,9 @@ def main():
 	#test1()
 	#test2()
 	#test3()
-	#test4()
+	test4()
 	#test5()
-	test6()
+	#test6()
 	#test7()
 
 def test1():
@@ -105,14 +105,10 @@ def test4():
 	print "\nTEST 4\n"
 	## create initial region
 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
-	# for b in reg0.blocks:
-	# 	b.uvbounds.update(dict(vmin=-5.))
-	# for b in [reg0.blocks[2]]:
-	# 	b.uvbounds.update(dict(umin=-5.))
 	reglist = [reg0]
 	## create evaporated regions
 	reglist += xh.evap.evap(reglist.pop(), u1=2., u2=2., R2=0.8)
-	reglist += xh.evap.evap_final(reglist.pop(), u1=6., u2=6.)
+	#reglist += xh.evap.evap_final(reglist.pop(), u1=6., u2=6.)
 	## add lines
 	xh.evap.colorlines(reglist)
 	xh.evap.boundarylines(reglist)
