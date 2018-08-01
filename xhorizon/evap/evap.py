@@ -137,12 +137,17 @@ def evap(reg1, func2=None, u1=0., v1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlin
 	print reg2.rparams
 	## get r1 value for corner junction
 	r1 = reg1.blocks[-1].r_of_uv(np.array([[u1],[v1]]))[0]
+	r1 = np.round(r1, 6)
+	r1a = r1.copy()
 	print "\n"
-	print "r1 = %r"%r1
+	print "r1a = %r"%r1a
+	print "r1  = %r"%r1
 	## passive slice of reg1
 	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), u0=u1, r0=r1)
 	## get reg1 uvr values
 	u1, v1, r1 = pslice.u0, pslice.v0, pslice.r0
+	print "r1a = %r"%r1a
+	print "r1  = %r"%r1
 	## print reg1 params
 	print "\n"
 	print pslice
@@ -154,10 +159,14 @@ def evap(reg1, func2=None, u1=0., v1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlin
 	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), u0=u2, r0=r1, U0=U0, V0=V0)
 	## get reg2 uvr values
 	u2, v2, r2 = aslice.u0, aslice.v0, aslice.r0
+	print "r1a = %r"%r1a
+	print "r2  = %r"%r2
 	## print reg2 params
 	print "\n"
 	print aslice
 	print "u2, v2, r2 = %r, %r, %r"%(u2, v2, r2)
+	print "r1a = %r"%r1a
+	print "r2  = %r"%r2
 	## update coordinate transformations
 	reg2.U_of_udl = aslice.U_of_udl_at_v0
 	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
