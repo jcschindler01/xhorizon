@@ -11,27 +11,6 @@ from xhorizon.shell_junction import interpolators as interp
 
 ################ tools for choosing junction corner radius ###############
 
-def evaporation_input_good(R, du, dv):
-	"""
-	"""
-	## initialize
-	good = True
-	## check
-	if not (len(R)==len(du) and len(R)==len(dv)):
-		print "MISMATCHED INPUT ARRAY LENGTHS"
-		good = False
-	if not np.all(R>0.):
-		print "RADIUS MUST BE POSITIVE"
-		good = False
-	## return
-	return good
-
-
-
-
-
-
-
 
 
 def get_rinf_uv0(reglist, v0=[], u0=[]):
@@ -51,27 +30,6 @@ def get_rinf_uv0(reglist, v0=[], u0=[]):
 			uv = np.array([u,v])
 			r0[i] = b.tr_of_uv(uv)[1]
 	r0 = .95*np.min(r0)
-	return r0
-
-
-def get_rhawk_u0(reglist, u0=[]):
-	"""
-	Given a list of regions, assume that `outermost' region has index [-1].
-	Assume r->inf as u->-inf.
-	Find the r0 value corresponding to (u=v0 and u=2.*s0) in each region.
-	Take maximum r0 over reglist.
-	Return a value slightly more than r0.
-	"""
-	r0 = np.nan * np.ones(len(reglist))
-	for i in range(len(reglist)):
-		reg = reglist[i]
-		for b in [reg.blocks[-1]]:
-			u = np.array([u0[i]])
-			v = np.array([-2.*reg.rparams['s0']])
-			uv = np.array([u,v])
-			r0[i] = b.tr_of_uv(uv)[1]
-	r0 = 1.05*np.max(r0)
-	print r0
 	return r0
 
 
@@ -198,4 +156,39 @@ def fill_by_R(reglist, cm=plt.cm.prism):
 
 
 ############################################################################################
+
+
+################################ checkers ################################
+
+def evaporation_input_good(R, du, dv):
+	"""
+	"""
+	## initialize
+	good = True
+	## check
+	if not (len(R)==len(du) and len(R)==len(dv)):
+		print "MISMATCHED INPUT ARRAY LENGTHS"
+		good = False
+	if not np.all(R>0.):
+		print "RADIUS MUST BE POSITIVE"
+		good = False
+	## return
+	return good
+
+
+
+
+############################################################################
+
+
+
+
+
+
+
+
+
+
+
+
 

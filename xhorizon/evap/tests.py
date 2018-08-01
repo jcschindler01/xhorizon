@@ -138,16 +138,28 @@ def test5():
 	## create initial region
 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
 	reglist = [reg0]
-	## params
-	u0 = 0.
-	v0 = 0.
-	R = np.array([.9])
-	du = np.array([3.])
-	dv = np.array([1.])
+	## init params
+	u0 = 5.
+	v0 = -3.
+	## subsequent params
+	Nreg = 2
+	tt = np.linspace(0.,1.,Nreg+2)[1:-1]
+	R = 1. * (1.-tt)**(1./3.)
+	du = 0.4 + 0.*tt
+	dv = 0.2 + 0.*tt
 	## create evaporated regions
-	reglist += xh.evap.evaporation(reg0, R=R, du=du, dv=dv, u0=u0, v0=v0, l=0.1, rparams={})
+	reglist += xh.evap.evaporation(reglist.pop(), R=R, du=du, dv=dv, u0=u0, v0=v0, l=0.1, rparams={})
+	############
+	## check ubound values
+	uu = [reglist[0].blocks[-1].uvbounds['umin'], reglist[0].blocks[-1].uvbounds['umax']]
+	for reg in reglist:
+		a, b = reg.blocks[-1].uvbounds['umin'], reg.blocks[-1].uvbounds['umax']
+		if np.isfinite(a) and np.isfinite(b):
+			uu += [a,b]
+	print "\n"
+	print "uu = %r"%(uu)
 	## draw regions?
-	if False:
+	if True:
 		## add lines
 		xh.evap.colorlines(reglist)
 		xh.evap.boundarylines(reglist)
@@ -157,7 +169,7 @@ def test5():
 		for reg in reglist:
 			reg.rplot()
 		## fill
-		fill_by_R(reglist)
+		fill_by_R(reglist, cm=plt.cm.prism)
 		## show plot
 		plt.savefig("temp-figs/test5.png", dpi=200)
 		##

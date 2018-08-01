@@ -46,10 +46,56 @@ def evaporation(reg0, R=[], du=[], dv=[], u0=0., v0=0., l=0.1, rparams={}):
 	## reglist
 	reglist = [reg0]
 	## evap steps
-	for i in ii[:-1]:
+	for i in ii:
 		## print announcement
-		print "\nNEXT EVAP STEP, i=%r, R=%r, du=%r, dv=%r"%(i,ux,Rx)
+		print "\nNEXT EVAP STEP, i=%r, R=%r, du=%r, dv=%r"%(i, R[i], du[i], dv[i])
+		## get reg to build from
+		reg1 = reglist.pop()
+		## reg1 params tell you where in the existing region shell starts
+		## get reg1 params for first step
+		if i==0:
+			u1, v1 = u0, v0
+		## get reg1 params for subsequent steps
+		if i>0:
+			print "\nreg1.blocks[-1].uvbounds = %r"%(reg1.blocks[-1].uvbounds)
+			u1 = reg1.blocks[-1].uvbounds['umin'] + du[i-1]
+			v1 = reg1.blocks[-1].uvbounds['vmin'] + dv[i-1]
+		## round reg1 params
+		uvlen = 6
+		u1, v1 = np.round(u1,uvlen), np.round(v1,uvlen)
+		## reg2 params tell you where next region starts
+		## get reg2 params
+		u2, R2 = u1, R[i]  ## could choose u2=0 if desired
+		## print
+		print "\n"
+		print "u1, v1     = %r, %r"%(u1, v1)
+		print "u2, R2, l2 = %r, %r, %r"%(u2, R2, l)
+		print "rparams2 = %r"%(rparams)
+		## do evap
+		print "\nreglist = [length=%r]"%(len(reglist))
+		reglist += evap(reg1, u1=u1, v1=v1, u2=u2, R2=R2, L2=l, rparams2=rparams)
 	## final minkowski region
+	## print announcement
+	print "\nFINAL EVAP STEP"
+	## get reg to build from
+	reg1 = reglist.pop()
+	## get reg1 params
+	print "\nreg1.blocks[-1].uvbounds = %r"%(reg1.blocks[-1].uvbounds)
+	u1 = reg1.blocks[-1].uvbounds['umin'] + du[-1]
+	v1 = reg1.blocks[-1].uvbounds['vmin'] + dv[-1]
+	## round reg1 params
+	uvlen = 6
+	u1, v1 = np.round(u1,uvlen), np.round(v1,uvlen)
+	## get reg2 params
+	u2 = u1 
+	## print
+	print "\n"
+	print "u1, v1     = %r, %r"%(u1, v1)
+	print "u2 = %r"%(u2)
+	print "rparams2 = %r"%(rparams)
+	## do evap
+	print "\nreglist = [length=%r]"%(len(reglist))
+	reglist += evap(reg1, func2=xh.mf.minkowski(), u1=u1, v1=v1, u2=u2, R2=None, L2=None, rparams2=rparams)
 	##
 	print "\nEND EVAPORTION"
 	## return
@@ -58,10 +104,11 @@ def evaporation(reg0, R=[], du=[], dv=[], u0=0., v0=0., l=0.1, rparams={}):
 
 ############ individual evap steps #################
 
-def evap(reg1, u1=0., v1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False, boundary=False):
+def evap(reg1, func2=None, u1=0., v1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False, boundary=False):
 	"""
 	Given reg1 = a Hayward region.
 	Create an evaporation event and adjoining Hayward region reg2.
+	Provide func2 = minkowski() for final step.
 	Shell at:
 		u1,v1,r1 in reg1
 		u2,v2,r2 in reg2
@@ -74,9 +121,11 @@ def evap(reg1, u1=0., v1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False, bo
 		r2 = r1
 		v2 = v2(u2,r2)
 	"""
-	print "BEGIN EVAP"
+	print "\nBEGIN EVAP"
+	## create new hayward metfunc unless otherwise provided
+	if func2==None:
+		func2 = xh.mf.hayward(R=R2,l=L2)
 	## create new region
-	func2 = xh.mf.hayward(R=R2,l=L2)
 	reg2 = xh.reg.EFreg(func2, rparams=rparams2, boundary=boundary, rlines=rlines)
 	## print starting info
 	print "\n"
@@ -125,7 +174,7 @@ def evap(reg1, u1=0., v1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False, bo
 	## reg2
 	for b in reg2.blocks:
 		b.uvbounds.update(dict(vmin=v2))
-	for b in [reg2.blocks[2]]:
+	for b in [reg2.blocks[-1]]:
 		b.uvbounds.update(dict(umin=u2))
 	## print announcement
 	print "\n"
@@ -141,7 +190,6 @@ def evap(reg1, u1=0., v1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlines=False, bo
 	print "\nEND EVAP\n"
 	## return
 	return [reg1b, reg1, reg2]
-
 
 
 
