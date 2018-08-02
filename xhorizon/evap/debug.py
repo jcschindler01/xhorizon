@@ -9,7 +9,7 @@ import xhorizon as xh
 def go():
 	## params
 	R1 = 1.
-	R2 = .5
+	R2 = .8
 	l = .1
 	rparams = dict(s0=10.)
 	u1 = 8.
@@ -51,14 +51,31 @@ def go():
 	print "From ASlice:"
 	print "Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, aslice.r0, aslice.r0/Rh2, aslice.u0, aslice.v0)
 	print "\n"
+
+	### def working great up to heere
+
 	## reglist
-	reglist = [reg1,reg2]
+	reglist = []
+
+	## split regions
+	reglist1 = xh.evap.split_reg_abcd(reg1,  abcd='bcd', u0=pslice.u0, v0=pslice.v0)
+	reglist2 = xh.evap.split_reg_abcd(reg2,  abcd='a',   u0=aslice.u0, v0=aslice.v0)
+
+	## update transformations for reg2
+	for i in range(len(reglist2)):
+		reglist2[i].U_of_udl = aslice.U_of_udl_at_v0
+		reglist2[i].V_of_vdl = aslice.V_of_vdl_at_u0
+
+	## add to reglist
+	reglist += reglist1
+	reglist += reglist2
+
 	## draw diagram
-	if False:
+	if True:
 		## add lines
 		xh.evap.colorlines(reglist)
 		xh.evap.boundarylines(reglist)
-		xh.evap.s0_lines(reglist, sty=dict(lw=.5))
+		xh.evap.s0_lines(reglist, sty=dict(lw=3))
 		## draw
 		plt.figure()
 		plt.xlim(-3,3)
