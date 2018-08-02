@@ -19,10 +19,11 @@ def main():
 	#test1()
 	#test2()
 	#test3()
-	test4()
+	#test4()
 	#test5()
 	#test6()
 	#test7()
+	test8()
 
 def test1():
 	"""
@@ -251,6 +252,28 @@ def test7():
 	print "\nEND TEST 7\n"
 
 
+
+def test8():
+	"""
+	Test functionality of hayward cornermask and reg_split_abcd helper.
+	"""
+	##
+	print "\nTEST 8\n"
+	## make region
+	func = xh.mf.hayward()
+	reg = xh.reg.EFreg(func)
+	##
+	if False:
+		abcd = 'a'
+		reg = xh.cornermask.EFreg2a(reg, abcd='a', u0=0., v0=0.)
+	##
+	plt.figure()
+	plt.xlim(-3,3)
+	plt.gca().set_aspect('equal')
+	reg.rplot()
+	plt.show()
+	##
+	print "\nEND TEST 8\n"
 
 
 

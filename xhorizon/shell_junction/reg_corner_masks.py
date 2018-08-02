@@ -8,6 +8,48 @@ import numpy as np
 
 
 
+def EFreg2a(reg, abcd=None, u0=None, v0=None):
+	"""
+	For Hayward-like regions (aka N=2 and f(0)>0).
+	Assumes slice in outermost block.
+		reg = The region to mask.
+		abcd = Which corner junction label is this piece, with standard label scheme. 
+			Should be a single letter string 'a' 'b' 'c' or 'd'.
+		u0, v0 = Location to slice.
+	Returns the same region that was input, after editing.
+
+	Region is masked by removing unwanted blocks and setting uvbounds on remaining blocks.
+
+	Block order is [inner, middle, outer] (this is arbitrary, just happens to be how EFreg2a is generated).
+	Setting any of the uvbounds to np.nan causes all inequalities to fail, which causes an error unless block is removed.
+	"""
+	## initialize
+	uvb = [dict(), dict(), dict()]
+	## set proper uvbounds for each block based on abcd type
+	## case a
+	if abcd=='a':
+		uvb = [dict(), dict(), dict()]
+	## case b
+	if abcd=='b':
+		uvb = [dict(), dict(), dict()]
+	## case c
+	if abcd=='c':
+		uvb = [dict(), dict(), dict()]
+	## case d
+	if abcd=='d':
+		uvb = [dict(), dict(), dict()]
+	## update blocks uvbounds
+	for i in range(len(reg.blocks)):
+		reg.blocks[i].uvbounds.update(uvb[i])
+	## keep blocks only if no nan in uvbounds values
+	keep = []
+	for b in reg.blocks:
+		if not np.nan in b.uvbounds.values():
+			keep += [b]
+	reg.blocks = keep
+	## return
+	return reg
+
 
 def MAXreg2a(reg, abcd=None, u0=None, v0=None):
 	"""
