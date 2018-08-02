@@ -119,6 +119,20 @@ def colorlines(reglist, rmin=0.05, rmax=5., dr=.2, sty={}, npoints=2001, inf=25.
 				b.add_curves_tr(xh.cm.rlines([rvals[i]], sty=style, npoints=npoints, inf=inf))
 	return reglist
 
+def s0_lines(reglist, sty={}, npoints=1001, inf=50., eps=1e-3):
+	"""
+	"""
+	for reg in reglist:
+		for b in reg.blocks:
+			x = np.array([(2.*reg.rparams['s0'] - eps)])
+			style1 = dict(c='m', alpha=.5, lw=.2, ls=':', zorder=5000)
+			style2 = dict(c='c', alpha=.5, lw=.2, ls=':', zorder=5000)
+			style1.update(sty)
+			style2.update(sty)
+			b.add_curves_uv(xh.cm.uvlines( x, uv='uv', sty=style1, c=0., eps=1e-3, inf=inf, npoints=npoints))
+			b.add_curves_uv(xh.cm.uvlines(-x, uv='uv', sty=style2, c=0., eps=1e-3, inf=inf, npoints=npoints))
+	return reglist
+
 ##########################################################################################
 
 
@@ -175,7 +189,69 @@ def evaporation_input_good(R, du, dv):
 	## return
 	return good
 
-
+def check_uvr(reglist):
+	"""
+	"""
+	## first values
+	iu = [0,0]
+	iv = [1,1]
+	uu = [reglist[0].blocks[-1].uvbounds['umin'], reglist[0].blocks[-1].uvbounds['umax']]
+	vv = [reglist[1].blocks[-1].uvbounds['vmin'], reglist[1].blocks[-1].uvbounds['vmax']]
+	## middle values
+	for i in range(len(reglist)):
+		reg = reglist[i]
+		## uu
+		a, b = reg.blocks[-1].uvbounds['umin'], reg.blocks[-1].uvbounds['umax']
+		if np.isfinite(a) and np.isfinite(b):
+			uu += [a,b]
+			iu += [i,i]
+		## vv
+		a, b = reg.blocks[-1].uvbounds['vmin'], reg.blocks[-1].uvbounds['vmax']
+		if np.isfinite(a) and np.isfinite(b):
+			vv += [a,b]
+			iv += [i,i]
+	## last values
+	iu += [-1,-1]
+	iv += [-1,-1]
+	uu += [reglist[-1].blocks[-1].uvbounds['umin'], reglist[-1].blocks[-1].uvbounds['umax']]
+	vv += [reglist[-1].blocks[-1].uvbounds['vmin'], reglist[-1].blocks[-1].uvbounds['vmax']]
+	## radius
+	RRu = []
+	for i in iu:
+		if 'R' in reglist[i].metfunc.fparams.keys():
+			RRu += [reglist[i].metfunc.fparams['R']]
+		else:
+			RRu += [0.]
+	## radius
+	RRv = []
+	for i in iv:
+		if 'R' in reglist[i].metfunc.fparams.keys():
+			RRv += [reglist[i].metfunc.fparams['R']]
+		else:
+			RRv += [0.]
+	## radius
+	rru = []
+	for k in range(len(iu)):
+		rru += [reglist[iu[k]].blocks[-1].r_of_uv(np.array([[uu[k]],[vv[k]]]))[0]]
+	## radius
+	rrv = []
+	for k in range(len(iv)):
+		rrv += [reglist[iv[k]].blocks[-1].r_of_uv(np.array([[uu[k]],[vv[k]]]))[0]]
+	## array
+	iu,iv,uu,vv,rru,rrv,RRu,RRv = np.array(iu),np.array(iv),np.array(uu),np.array(vv),np.array(rru),np.array(rrv),np.array(RRu),np.array(RRv)
+	## print
+	print "\n"
+	print "CHECK_UVR:"
+	print "iu  = %r"%(iu)
+	print "iv  = %r"%(iv)
+	print "uu  = %r"%(uu)
+	print "vv  = %r"%(vv)
+	print "rru = %r"%(rru)
+	print "rrv = %r"%(rrv)
+	print "RRu = %r"%(RRu)
+	print "RRv = %r"%(RRv)
+	print "rru/RRu = " + repr(rru/RRu)
+	print "\n"
 
 
 ############################################################################

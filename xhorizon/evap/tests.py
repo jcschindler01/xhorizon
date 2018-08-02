@@ -19,8 +19,8 @@ def main():
 	#test1()
 	#test2()
 	#test3()
-	#test4()
-	test5()
+	test4()
+	#test5()
 	#test6()
 	#test7()
 
@@ -109,13 +109,16 @@ def test4():
 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
 	reglist = [reg0]
 	## create evaporated regions
-	reglist += xh.evap.evap(reglist.pop(), u1=0., v1=0., u2=0., R2=0.99)
-	reglist += xh.evap.evap(reglist.pop(), u1=2., v1=2., u2=0., R2=0.98)
+	reglist += xh.evap.evap(reglist.pop(), u1=10., v1=-10., u2=10., R2=0.9)
+	#reglist += xh.evap.evap(reglist.pop(), u1=2., v1=2., u2=0., R2=0.98)
+	## check
+	check_uvr(reglist)
 	## draw diagram?
 	if True:
 		## add lines
-		xh.evap.colorlines(reglist)
+		xh.evap.colorlines(reglist, sty=dict(marker='.', markersize=.3, ls='none'), rmin=0.8, rmax=1.1, dr=.02, npoints=2001, inf=25.)
 		xh.evap.boundarylines(reglist)
+		xh.evap.s0_lines(reglist)
 		## draw
 		xh.newfig(tex=False,sqaxis=3)
 		plt.title("Test 4")
@@ -124,7 +127,7 @@ def test4():
 		## fill
 		fill_by_R(reglist)
 		## show plot
-		plt.savefig("temp-figs/test4.png", dpi=200)
+		plt.savefig("temp-figs/test4.png", dpi=400)
 		##
 	print "\nEND TEST 4\n"
 
@@ -139,25 +142,18 @@ def test5():
 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
 	reglist = [reg0]
 	## init params
-	u0 = 5.
-	v0 = -3.
+	u0 = 10.
+	v0 = 0.
 	## subsequent params
-	Nreg = 2
+	Nreg = 1
 	tt = np.linspace(0.,1.,Nreg+2)[1:-1]
 	R = 1. * (1.-tt)**(1./3.)
 	du = 0.4 + 0.*tt
 	dv = 0.2 + 0.*tt
 	## create evaporated regions
 	reglist += xh.evap.evaporation(reglist.pop(), R=R, du=du, dv=dv, u0=u0, v0=v0, l=0.1, rparams={})
-	############
-	## check ubound values
-	uu = [reglist[0].blocks[-1].uvbounds['umin'], reglist[0].blocks[-1].uvbounds['umax']]
-	for reg in reglist:
-		a, b = reg.blocks[-1].uvbounds['umin'], reg.blocks[-1].uvbounds['umax']
-		if np.isfinite(a) and np.isfinite(b):
-			uu += [a,b]
-	print "\n"
-	print "uu = %r"%(uu)
+	## check uvr
+	check_uvr(reglist)
 	## draw regions?
 	if True:
 		## add lines
@@ -174,6 +170,8 @@ def test5():
 		plt.savefig("temp-figs/test5.png", dpi=200)
 		##
 	print "\nEND TEST 5\n"
+	## return
+	return reglist
 
 
 def test6():

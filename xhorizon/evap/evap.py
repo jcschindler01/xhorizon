@@ -62,7 +62,7 @@ def evaporation(reg0, R=[], du=[], dv=[], u0=0., v0=0., l=0.1, rparams={}):
 			v1 = reg1.blocks[-1].uvbounds['vmin'] + dv[i-1]
 		## round reg1 params
 		uvlen = 6
-		u1, v1 = np.round(u1,uvlen), np.round(v1,uvlen)
+		#u1, v1 = np.round(u1,uvlen), np.round(v1,uvlen)
 		## reg2 params tell you where next region starts
 		## get reg2 params
 		u2, R2 = u1, R[i]  ## could choose u2=0 if desired
@@ -137,7 +137,7 @@ def evap(reg1, func2=None, u1=0., v1=0., u2=0., R2=1., L2=0.1, rparams2={}, rlin
 	print reg2.rparams
 	## get r1 value for corner junction
 	r1 = reg1.blocks[-1].r_of_uv(np.array([[u1],[v1]]))[0]
-	r1 = np.round(r1, 6)
+	#r1 = np.round(r1, 6)
 	r1a = r1.copy()
 	print "\n"
 	print "r1a = %r"%r1a
