@@ -28,16 +28,16 @@ def EFreg2a(reg, abcd=None, u0=None, v0=None):
 	## set proper uvbounds for each block based on abcd type
 	## case a
 	if abcd=='a':
-		uvb = [dict(), dict(), dict()]
+		uvb = [dict(vmin=v0), dict(vmin=v0), dict(vmin=v0, umin=u0)]
 	## case b
 	if abcd=='b':
-		uvb = [dict(), dict(), dict()]
+		uvb = [dict(vmin=np.nan), dict(vmin=np.nan), dict(vmax=v0,umax=u0)]
 	## case c
 	if abcd=='c':
-		uvb = [dict(), dict(), dict()]
+		uvb = [dict(vmin=np.nan), dict(vmin=np.nan), dict(vmin=v0,umax=u0)]
 	## case d
 	if abcd=='d':
-		uvb = [dict(), dict(), dict()]
+		uvb = [dict(vmax=v0), dict(vmax=v0), dict(vmax=v0, umin=u0)]
 	## update blocks uvbounds
 	for i in range(len(reg.blocks)):
 		reg.blocks[i].uvbounds.update(uvb[i])
