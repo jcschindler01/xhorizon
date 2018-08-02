@@ -262,10 +262,16 @@ def check_uvr(reglist):
 
 ############## split region into abcd ####################
 
-def split_reg_abcd(reg, abcd='abcd'):
+def split_reg_abcd(reg, abcd='abcd', u0=0., v0=0.):
 	"""
 	"""
-	reglist = [copy.deepcopy(reg)]
+	##
+	reglist = []
+	##
+	for x in abcd:
+		reglist += [xh.cornermask.EFreg2a(copy.deepcopy(reg), abcd=x, u0=u0, v0=v0)]
+	## return
+	return reglist
 
 
 

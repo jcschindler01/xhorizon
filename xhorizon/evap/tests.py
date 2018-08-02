@@ -23,7 +23,8 @@ def main():
 	#test5()
 	#test6()
 	#test7()
-	test8()
+	#test8()
+	test9()
 
 def test1():
 	"""
@@ -274,6 +275,32 @@ def test8():
 	plt.show()
 	##
 	print "\nEND TEST 8\n"
+
+
+
+
+def test9():
+	"""
+	Test functionality of split abcd helper.
+	"""
+	##
+	print "\nTEST 9\n"
+	## make region
+	func = xh.mf.hayward()
+	reg = xh.reg.EFreg(func)
+	##
+	if True:
+		abcd = 'd'
+		reglist = xh.evap.split_reg_abcd(reg, abcd=abcd, u0=0., v0=0.)
+	##
+	plt.figure()
+	plt.xlim(-3,3)
+	plt.gca().set_aspect('equal')
+	for reg in reglist:
+		reg.rplot()
+	plt.show()
+	##
+	print "\nEND TEST 9\n"
 
 
 
