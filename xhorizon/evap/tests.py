@@ -26,6 +26,10 @@ def main():
 	#test8()
 	test9()
 
+
+
+
+
 def test1():
 	"""
 	Test functionality of get_rinf_uv0.
@@ -256,17 +260,17 @@ def test7():
 
 def test8():
 	"""
-	Test functionality of hayward cornermask.
+	Test functionality of EF cornermask.
 	"""
 	##
 	print "\nTEST 8\n"
 	## make region
-	func = xh.mf.hayward()
+	func = xh.mf.schwarzschild()
 	reg = xh.reg.EFreg(func)
 	##
 	if True:
-		abcd = 'd'
-		reg = xh.cornermask.EFreg2a(reg, abcd=abcd, u0=0., v0=0.)
+		abcd = 'a'
+		reg = xh.cornermask.EFreg(reg, abcd=abcd, u0=0., v0=0.)
 	##
 	plt.figure()
 	plt.xlim(-3,3)
@@ -286,11 +290,11 @@ def test9():
 	##
 	print "\nTEST 9\n"
 	## make region
-	func = xh.mf.hayward()
+	func = xh.mf.schwarzschild()
 	reg = xh.reg.EFreg(func)
 	##
 	if True:
-		abcd = 'bcd'
+		abcd = 'a'
 		reglist = xh.evap.split_reg_abcd(reg, abcd=abcd, u0=0., v0=0.)
 	##
 	print len(reglist)
@@ -304,7 +308,6 @@ def test9():
 	plt.show()
 	##
 	print "\nEND TEST 9\n"
-
 
 
 main()

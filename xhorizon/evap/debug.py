@@ -6,7 +6,7 @@ import xhorizon as xh
 
 
 
-def go():
+def go(st='s'):
 	## params
 	R1 = 1.
 	R2 = .8
@@ -15,12 +15,20 @@ def go():
 	u1 = 8.
 	v1 = 0.
 	u2 = 1.*u1
-	## region 1
-	func1 = xh.mf.hayward(R=R1,l=l)
-	reg1 = xh.reg.EFreg(func1,rparams=rparams,rlines=False,boundary=False)
-	## region 2
-	func2 = xh.mf.hayward(R=R2,l=l)
-	reg2 = xh.reg.EFreg(func2,rparams=rparams,rlines=False,boundary=False)
+	if st=='hay':
+		## region 1
+		func1 = xh.mf.hayward(R=R1,l=l)
+		reg1 = xh.reg.EFreg(func1,rparams=rparams,rlines=False,boundary=False)
+		## region 2
+		func2 = xh.mf.hayward(R=R2,l=l)
+		reg2 = xh.reg.EFreg(func2,rparams=rparams,rlines=False,boundary=False)
+	if st=='s':
+		## region 1
+		func1 = xh.mf.schwarzschild(R=R1)
+		reg1 = xh.reg.EFreg(func1,rparams=rparams,rlines=False,boundary=False)
+		## region 2
+		func2 = xh.mf.schwarzschild(R=R2)
+		reg2 = xh.reg.EFreg(func2,rparams=rparams,rlines=False,boundary=False)
 	## horizon radii
 	Rh1, Rh2 = reg1.blocks[-1].rj[0], reg2.blocks[-1].rj[0]
 	## passive slice of reg1
@@ -52,7 +60,6 @@ def go():
 	print "Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, aslice.r0, aslice.r0/Rh2, aslice.u0, aslice.v0)
 	print "\n"
 
-	### def working great up to heere
 
 	## reglist
 	reglist = []
