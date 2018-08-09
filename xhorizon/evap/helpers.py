@@ -114,7 +114,7 @@ def colorlines(reglist, rmin=0.05, rmax=5., dr=.2, sty={}, npoints=2001, inf=25.
 	for reg in reglist:
 		for b in reg.blocks:
 			for i in range(len(rvals)):
-				style = dict(c=cols[i], ls='none', marker='.', markersize=.2, lw=.5, zorder=1500)
+				style = dict(c=cols[i], ls='none', marker='.', markersize=.8, lw=.5, zorder=1500)
 				style.update(sty)
 				b.add_curves_tr(xh.cm.rlines([rvals[i]], sty=style, npoints=npoints, inf=inf))
 	return reglist

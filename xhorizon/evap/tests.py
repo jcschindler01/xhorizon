@@ -294,7 +294,7 @@ def test9():
 	reg = xh.reg.EFreg(func)
 	##
 	if True:
-		abcd = 'a'
+		abcd = 'bcd'
 		reglist = xh.evap.split_reg_abcd(reg, abcd=abcd, u0=0., v0=0.)
 	##
 	print len(reglist)

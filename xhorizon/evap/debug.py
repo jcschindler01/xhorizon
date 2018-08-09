@@ -15,20 +15,16 @@ def go(st='s'):
 	u1 = 8.
 	v1 = 0.
 	u2 = 1.*u1
-	if st=='hay':
-		## region 1
+	## funcs
+	if False:
 		func1 = xh.mf.hayward(R=R1,l=l)
-		reg1 = xh.reg.EFreg(func1,rparams=rparams,rlines=False,boundary=False)
-		## region 2
 		func2 = xh.mf.hayward(R=R2,l=l)
-		reg2 = xh.reg.EFreg(func2,rparams=rparams,rlines=False,boundary=False)
-	if st=='s':
-		## region 1
+	else:
 		func1 = xh.mf.schwarzschild(R=R1)
-		reg1 = xh.reg.EFreg(func1,rparams=rparams,rlines=False,boundary=False)
-		## region 2
 		func2 = xh.mf.schwarzschild(R=R2)
-		reg2 = xh.reg.EFreg(func2,rparams=rparams,rlines=False,boundary=False)
+	## regs
+	reg1 = xh.reg.EFreg(func1,rparams=rparams,rlines=False,boundary=False)
+	reg2 = xh.reg.EFreg(func2,rparams=rparams,rlines=False,boundary=False)
 	## horizon radii
 	Rh1, Rh2 = reg1.blocks[-1].rj[0], reg2.blocks[-1].rj[0]
 	## passive slice of reg1
