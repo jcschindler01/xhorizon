@@ -13,7 +13,7 @@ def go(st='s'):
 	l = .1
 	rparams = dict(s0=10.)
 	u1 = 8.
-	v1 = 0.
+	v1 = -8.
 	u2 = 1.*u1
 	## funcs
 	if False:
@@ -30,19 +30,32 @@ def go(st='s'):
 	## passive slice of reg1
 	r1 = reg1.blocks[-1].r_of_uv(np.array([[u1],[v1]]))[0]
 	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), r0=r1, u0=u1)
-	## plot passive slice
-	if False:
-		rmin, rmax, npoints = 0., 2., 5001
+
+	## active slice of reg2
+	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=pslice.r0, u0=u2, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0)
+	
+	## plot slice
+	if True:
+		print 'REG1 PSLICE U(r,v0)=red, V(r,u0)=blue'
+		print 'REG2 ASLICE U(r,v0)=red, V(r,u0)=blue'
+		rmin, rmax, npoints = 0., 2., 10001
 		rr = np.linspace(rmin,rmax,npoints)
 		plt.figure()
-		plt.title('REG1 PSLICE U(r,v0)=red, V(r,u0)=blue')
+		plt.title('REG1 PSLICE U(r,v0)=red, V(r,u0)=blue\nREG2 ASLICE U(r,v0)=mag, V(r,u0)=cyan')
 		plt.xlabel('r')
 		plt.ylabel('U(r),V(r) on slice')
 		plt.grid()
-		plt.plot(rr, pslice.U_of_r_at_v0(rr), 'r-', marker='x')
-		plt.plot(rr, pslice.V_of_r_at_u0(rr), 'b-', marker='x')
-	## active slice of reg2
-	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=pslice.r0, u0=u2, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0)
+		plt.xlim(.5,1.5)
+		## passive slice
+		style1 = dict(marker='x', markersize=10, lw=1, ls='none')
+		plt.plot(pslice.r, pslice.UV_v0[0], c='r', **style1)
+		plt.plot(pslice.r, pslice.UV_u0[1], c='b', **style1)
+		## active slice
+		style2 = dict(marker='o', markersize=6, lw=1, ls='none')
+		plt.plot(aslice.r, aslice.UV_v0[0], c='m', **style2)
+		plt.plot(aslice.r, aslice.UV_u0[1], c='c', **style2)
+		## junction radius
+		plt.plot([pslice.r0, pslice.r0], [-1.,1.], 'k-' )
 	## print slice params
 	print "\n"
 	print "                          %22r, %22r, %22r, %22r, %22r"%('Rh', 'r', 'r/Rh', 'u', 'v')
@@ -73,8 +86,17 @@ def go(st='s'):
 	reglist += reglist1
 	reglist += reglist2
 
+	## print block uvbounds
+	print "\n"
+	print '%22r, %22r, %22r, %22r, %22r, %22r'%('R', 'b.rj', 'vmin', 'vmax', 'umin', 'umax')
+	for i in range(len(reglist)):
+		reg = reglist[i]
+		for b in reg.blocks:
+				print '%22s, %22s, %22r, %22r, %22r, %22r'%(reg.metfunc.fparams['R'], b.rj, b.uvbounds['vmin'], b.uvbounds['vmax'], b.uvbounds['umin'], b.uvbounds['umax'])
+	print "\n"
+
 	## draw diagram
-	if True:
+	if False:
 		## add lines
 		xh.evap.colorlines(reglist)
 		xh.evap.boundarylines(reglist)
