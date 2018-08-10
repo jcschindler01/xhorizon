@@ -183,4 +183,9 @@ def slicecheck(sl,reg):
 	return sl, reg
 
 
-
+def get_r_ref(reg, r_refs, r0):
+	"""
+	"""
+	##
+	## return
+	return None
