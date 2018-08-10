@@ -47,7 +47,7 @@ def go(st='s'):
 		plt.grid()
 		plt.xlim(.5,1.5)
 		## passive slice
-		style1 = dict(marker='x', markersize=10, lw=1, ls='none')
+		style1 = dict(marker='x', markersize=8, lw=1, ls='none')
 		plt.plot(pslice.r, pslice.UV_v0[0], c='r', **style1)
 		plt.plot(pslice.r, pslice.UV_u0[1], c='b', **style1)
 		## active slice
