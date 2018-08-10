@@ -12,8 +12,8 @@ def go(st='s'):
 	R2 = .8
 	l = .1
 	rparams = dict(s0=10.)
-	u1 = 8.
-	v1 = -8.
+	u1 = 22.
+	v1 = 0.
 	u2 = 1.*u1
 	## funcs
 	if False:
@@ -32,7 +32,7 @@ def go(st='s'):
 	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), r0=r1, u0=u1)
 
 	## active slice of reg2
-	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=pslice.r0, u0=u2, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0)
+	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=pslice.r0, u0=u2, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
 	
 	## plot slice
 	if True:
@@ -96,9 +96,9 @@ def go(st='s'):
 	print "\n"
 
 	## draw diagram
-	if False:
+	if True:
 		## add lines
-		xh.evap.colorlines(reglist)
+		xh.evap.colorlines(reglist, sty=dict(ls='-'))
 		xh.evap.boundarylines(reglist)
 		xh.evap.s0_lines(reglist, sty=dict(lw=3))
 		## draw

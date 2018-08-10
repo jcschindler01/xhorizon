@@ -71,7 +71,7 @@ class active_slice:
 
 	"""
 
-	def __init__(self, reg, r_refs=[], ublocks=[], vblocks=[], r0=np.nan, u0=np.nan, v0=np.nan, U0=None, V0=None, mu=0.):
+	def __init__(self, reg, ublocks=[], vblocks=[], r0=np.nan, u0=np.nan, v0=np.nan, U0=None, V0=None, mu=0., r_refs=[]):
 
 		## process and store input values
 		self.reg = reg
@@ -81,7 +81,7 @@ class active_slice:
 		self.mu = 1.*float(mu)
 
 		## get ref arrays
-		self.r = get_r_ref(reg, r_refs, r0)
+		self.r = get_r_ref(self.reg, r_refs, self.r0)
 		self.r, self.uvdl_u0, self.uvdl_v0 = uvdl_of_r_at_uv0(self.r, self.reg, ublocks=self.ublocks, vblocks=self.vblocks, u0=self.u0, v0=self.v0)
 		self.U_v0 = U_of_udl_at_v0(self.r, self.uvdl_v0[0], self.U0)
 		self.V_u0 = V_of_vdl_at_u0(self.r, self.uvdl_u0[1], self.V0)

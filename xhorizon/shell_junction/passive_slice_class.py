@@ -17,7 +17,7 @@ class passive_slice:
 	existing ones. This is used to obtain functions to act as input for active slice U0,V0 params.
 	"""
 
-	def __init__(self, reg, ublocks=[], vblocks=[], r0=np.nan, u0=np.nan, v0=np.nan, mu=0.):
+	def __init__(self, reg, ublocks=[], vblocks=[], r0=np.nan, u0=np.nan, v0=np.nan, mu=0., r_refs=[]):
 
 		## process and store input values
 		self.reg = reg
@@ -26,7 +26,7 @@ class passive_slice:
 		self.mu = 1.*float(mu)
 
 		## get r, uvdl ref arrays
-		self.r = self.reg.metfunc.r_ref
+		self.r = get_r_ref(self.reg, r_refs, self.r0)
 		self.r, self.uvdl_u0, self.uvdl_v0 = uvdl_of_r_at_uv0(self.r, self.reg, ublocks=self.ublocks, vblocks=self.vblocks, u0=self.u0, v0=self.v0)
 		
 		## get UV ref arrays
