@@ -38,8 +38,6 @@ def go(st='s'):
 	if True:
 		print 'REG1 PSLICE U(r,v0)=red, V(r,u0)=blue'
 		print 'REG2 ASLICE U(r,v0)=red, V(r,u0)=blue'
-		rmin, rmax, npoints = 0., 2., 10001
-		rr = np.linspace(rmin,rmax,npoints)
 		plt.figure()
 		plt.title('REG1 PSLICE U(r,v0)=red, V(r,u0)=blue\nREG2 ASLICE U(r,v0)=mag, V(r,u0)=cyan')
 		plt.xlabel('r')
