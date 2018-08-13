@@ -129,6 +129,34 @@ def block_boundary(blk, sty={}, inf=100., npoints=1000):
 	return crvlist
 
 
+def block_boundary_2(blk, sty={}, inf=100., npoints=1000):
+	"""
+	"""
+	## change default style
+	style = dict(c='k', ls='-', lw=1.5, zorder=400)
+	style.update(sty)
+	## get min and max rstar values
+	j = blk.j
+	lims = rstar_limits(blk.master.metfunc)
+	lims = lims[j:j+2]
+	## adjust to avoid accidental masking
+	idx = np.argsort(lims)
+	lims[idx] = lims[idx] + 2. * np.array([1.,-1.]) * blk.master.metfunc.Fparams['eps']
+	## make list of boundary curves
+	crvlist = []
+	## make curves
+	for rstar in lims:
+		if rstar==np.inf:
+			rstar = inf
+		if rstar==-np.inf:
+			rstar = -inf
+		crvlist += rstarlines_special_2([rstar], c=blk.master.rparams['c'], sty=style, inf=2.*inf, npoints=npoints)
+	## return
+	return crvlist
+
+
+
+
 def default_rlines(func, sty={}, inf=50., npoints=1000):
 	## get radius length scales of the problem
 	rscales = (func.rj[1:-1])
@@ -230,6 +258,34 @@ def rstarlines_special_1(vals, c=None,  s0=None, ki=None, A=1e4, sty={}, inf=100
 
 
 
+def rstarlines_special_2(vals, c=None, sty={}, inf=50., npoints=1000):
+	"""
+	Produce lines of constant rstar for rstar in vals. Return list of curves.
+	"""
+	crvlist = []
+	for val in vals:
+		## create new curve
+		crv = curve()
+		## define t array
+		t = np.linspace(-inf, inf, 2.*npoints+1)
+		## define u and v arrays
+		c = float(c)
+		u = t - val + c
+		v = t + val - c
+		## add coords to curve
+		crv.uv = np.array([u,v])
+		## update curve style from default
+		style = dict(zorder=600)
+		style.update(sty)
+		crv.sty.update(style)
+		## add crv to output list
+		crvlist += [crv]
+	## return
+	return crvlist
+
+
+
+
 
 def colnorm1(svals,smin,smax):
 	"""
@@ -247,6 +303,14 @@ def colnorm1(svals,smin,smax):
 	ss = (ss - smin) / (smax - smin)
 	## return
 	return ss
+
+
+
+
+def rstarlines_special_2():
+	"""
+	"""
+	## return
 
 
 
