@@ -114,12 +114,14 @@ def colorlines(reglist, rmin=0.05, rmax=5., dr=.2, sty={}, npoints=2001, inf=25.
 	for reg in reglist:
 		for b in reg.blocks:
 			for i in range(len(rvals)):
-				style = dict(c=cols[i], ls='none', marker='.', markersize=.8, lw=.5, zorder=1500)
-				style.update(sty)
-				b.add_curves_tr(xh.cm.rlines([rvals[i]], sty=style, npoints=npoints, inf=inf))
+				if (b.rj[0]<rvals[i]) and (rvals[i]<b.rj[1]):
+					style = dict(c=cols[i], ls='-', markersize=1, lw=.5, zorder=1500)
+					style.update(sty)
+					rstarvals = 1.*b.master.metfunc.F(rvals[i:i+1])
+					b.add_curves_uv(xh.cm.rstarlines_special_2(rstarvals, b.uvbounds, c=b.master.rparams['c'], sty=style, inf=2.*inf, npoints=npoints))
 	return reglist
 
-def s0_lines(reglist, sty={}, npoints=1001, inf=50., eps=1e-3):
+def s0_lines(reglist, sty={}, npoints=1001, inf=50., eps=1e-24):
 	"""
 	"""
 	for reg in reglist:
@@ -129,8 +131,8 @@ def s0_lines(reglist, sty={}, npoints=1001, inf=50., eps=1e-3):
 			style2 = dict(c='c', alpha=.5, lw=.2, ls=':', zorder=5000)
 			style1.update(sty)
 			style2.update(sty)
-			b.add_curves_uv(xh.cm.uvlines( x, uv='uv', sty=style1, c=0., eps=1e-3, inf=inf, npoints=npoints))
-			b.add_curves_uv(xh.cm.uvlines(-x, uv='uv', sty=style2, c=0., eps=1e-3, inf=inf, npoints=npoints))
+			b.add_curves_uv(xh.cm.uvlines( x, uv='uv', uvbounds=b.uvbounds, sty=style1, c=0., inf=inf, npoints=npoints))
+			b.add_curves_uv(xh.cm.uvlines(-x, uv='uv', uvbounds=b.uvbounds, sty=style2, c=0., inf=inf, npoints=npoints))
 	return reglist
 
 ##########################################################################################

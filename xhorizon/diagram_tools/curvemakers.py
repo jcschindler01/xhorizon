@@ -17,6 +17,11 @@ from curve_class import curve
 from block_masks import rstar_limits
 
 
+
+
+
+#############################  rlines ###############################
+
 def rlines(rvals, sty={}, inf=50., t0=0., npoints=1000):
 	"""
 	Produce lines of constant radius for r in rvals. Return list of curves.
@@ -40,96 +45,6 @@ def rlines(rvals, sty={}, inf=50., t0=0., npoints=1000):
 		crvlist += [crv]
 	## return
 	return crvlist
-
-
-
-
-def rstarlines(vals, c=None, sty={}, inf=50., npoints=1000):
-	"""
-	Produce lines of constant rstar for rstar in vals. Return list of curves.
-	"""
-	crvlist = []
-	for val in vals:
-		## create new curve
-		crv = curve()
-		## define t array
-		t = np.linspace(-inf, inf, 2.*npoints+1)
-		## define u and v arrays
-		c = float(c)
-		u = t - val + c
-		v = t + val - c
-		## add coords to curve
-		crv.uv = np.array([u,v])
-		## update curve style from default
-		style = dict(zorder=600)
-		style.update(sty)
-		crv.sty.update(style)
-		## add crv to output list
-		crvlist += [crv]
-	## return
-	return crvlist
-
-
-
-
-def uvlines(uvvals, uv='uv', sty={}, c=0., eps=1e-3, inf=100., npoints=1000):
-	"""
-	Produce lines of constant radius for r in rvals. Return list of curves.
-	"""
-	crvlist = []
-	for val in uvvals:
-		## create new curve
-		ucrv = curve()
-		vcrv = curve()
-		## define linearly spaced array
-		sa = np.linspace(-inf, inf, 2*npoints+1)
-		sb = val - 2.*c + eps*np.array([-1.,0.,1.])
-		sc = val + 2.*c + eps*np.array([-1.,0.,1.])
-		s = np.sort(np.concatenate([sa,sb,sc]))
-		## ucrv is line of const, vcrv is line of const v
-		ucrv.uv = np.array([val+0.*s, 1.*s])
-		vcrv.uv = np.array([1.*s, val+0.*s])
-		## update curve style from default
-		style = dict(zorder=200)
-		style.update(sty)
-		ucrv.sty.update(style)
-		vcrv.sty.update(style)
-		## add crvs to output list
-		if 'u' in uv:
-			crvlist += [ucrv]
-		if 'v' in uv:
-			crvlist += [vcrv]
-	## return
-	return crvlist
-
-
-def block_boundary(blk, sty={}, inf=100., npoints=1000):
-	"""
-	"""
-	## change default style
-	style = dict(c='k', ls='-', lw=1.5, zorder=400)
-	style.update(sty)
-	## get min and max rstar values
-	j = blk.j
-	lims = rstar_limits(blk.master.metfunc)
-	lims = lims[j:j+2]
-	## adjust to avoid accidental masking
-	idx = np.argsort(lims)
-	lims[idx] = lims[idx] + 2. * np.array([1.,-1.]) * blk.master.metfunc.Fparams['eps']
-	## make list of boundary curves
-	crvlist = []
-	## make curves
-	for rstar in lims:
-		if rstar==np.inf:
-			rstar = inf
-		if rstar==-np.inf:
-			rstar = -inf
-		crvlist += rstarlines([rstar], c=blk.master.rparams['c'], sty=style, inf=2.*inf, npoints=npoints)
-	## return
-	return crvlist
-
-
-
 
 
 def default_rlines(func, sty={}, inf=50., npoints=1000):
@@ -163,6 +78,35 @@ def default_rlines(func, sty={}, inf=50., npoints=1000):
 	## return
 	return crvlist
 
+#####################################################################
+
+
+#############################  rstarlines ###############################
+
+def rstarlines(vals, c=None, sty={}, inf=50., npoints=1000):
+	"""
+	Produce lines of constant rstar for rstar in vals. Return list of curves.
+	"""
+	crvlist = []
+	for val in vals:
+		## create new curve
+		crv = curve()
+		## define t array
+		t = np.linspace(-inf, inf, 2.*npoints+1)
+		## define u and v arrays
+		c = float(c)
+		u = t - val + c
+		v = t + val - c
+		## add coords to curve
+		crv.uv = np.array([u,v])
+		## update curve style from default
+		style = dict(zorder=600)
+		style.update(sty)
+		crv.sty.update(style)
+		## add crv to output list
+		crvlist += [crv]
+	## return
+	return crvlist
 
 
 
@@ -230,33 +174,111 @@ def rstarlines_special_1(vals, c=None,  s0=None, ki=None, A=1e4, sty={}, inf=100
 	return crvlist
 
 
-
-
-
-
-
-
-
-def colnorm1(svals,smin,smax):
+def rstarlines_special_2(vals, uvbounds, c=None, sty={}, inf=100., npoints=1000, eps=1e-12):
 	"""
-	Color bar normalizer for input into colormap.
-	Input an array of svals.
-	Return an array of the absolute values normalized to (0,1) and truncated at smin, smax.
+	Produce lines of constant rstar for rstar in vals. Return list of curves.
+	   (v-u)/2 = rstar - c
 	"""
-	## initialize output array to abs val of input
-	ss = 1. * np.abs(svals)
-	## cutoff at min
-	ss[ss<smin] = smin + 0.*ss[ss<smin]
-	## cutoff at max	
-	ss[ss>smax] = smax + 0.*ss[ss>smax]
-	## normalize
-	ss = (ss - smin) / (smax - smin)
+	## initialize
+	crvlist = []
+	uvb = uvbounds.copy()
+	cc = 1.*float(c)
+	## go
+	for val in vals:
+		## create new curve
+		crv = curve()
+		## adjust uvbounds
+		for key in ['vmin', 'umin']:
+			if not np.isfinite(uvb[key]):
+				uvb[key] = -1.*inf
+		for key in ['vmax', 'umax']:
+			if not np.isfinite(uvb[key]):
+				uvb[key] =  1.*inf
+		## readable params
+		umin, umax, vmin, vmax = uvb['umin'] , uvb['umax'], uvb['vmin'], uvb['vmax']
+		## push inward just a bit to avoid mask
+		umin, umax = umin + 1.*eps, umax - 1.*eps, 
+		vmin, vmax = vmin + 1.*eps, vmax - 1.*eps
+		## curve a
+		ua = np.linspace(umin, umax, npoints)
+		va = ua + 2.*(val - 1.*cc)
+		## curve b
+		vb = np.linspace(vmin, vmax, npoints)
+		ub = vb - 2.*(val-1.*cc)
+		## combine
+		uu = np.concatenate([ua,ub])
+		vv = np.concatenate([va,vb])
+		## sort
+		idx = np.argsort(uu)
+		uu = uu[idx]
+		vv = vv[idx]
+		## add coords to curve
+		crv.uv = np.array([uu,vv])
+		## update curve style from default
+		style = dict(zorder=600)
+		style.update(sty)
+		crv.sty.update(style)
+		## add crv to output list
+		crvlist += [crv]
 	## return
-	return ss
+	return crvlist
 
 
+#####################################################################
 
-def block_boundary_2(blk, sty={}, inf=100., npoints=1000):
+############################# uvlines  ###############################
+
+def uvlines(uvvals, uv='uv', uvbounds=dict(), sty={}, c=0., eps=1e-24, inf=100., npoints=1001):
+	"""
+	Produce lines of constant radius for r in rvals. Return list of curves.
+	"""
+	crvlist = []
+	for val in uvvals:
+		## create new curve
+		ucrv = curve()
+		vcrv = curve()
+		## adjust uvbounds
+		uvb = dict(vmin=np.nan, vmax=np.nan, umin=np.nan, umax=np.nan)
+		uvb.update(uvbounds)
+		for key in ['vmin', 'umin']:
+			if not np.isfinite(uvb[key]):
+				uvb[key] = -1.*inf
+		for key in ['vmax', 'umax']:
+			if not np.isfinite(uvb[key]):
+				uvb[key] =  1.*inf
+		## readable params
+		umin, umax, vmin, vmax = uvb['umin'] , uvb['umax'], uvb['vmin'], uvb['vmax']
+		## push inward just a bit to avoid mask
+		umin, umax = umin + 1.*eps, umax - 1.*eps, 
+		vmin, vmax = vmin + 1.*eps, vmax - 1.*eps
+		## define linearly spaced array
+		sa1 = np.linspace(umin, umax, npoints)
+		sa2 = np.linspace(vmin, vmax, npoints)
+		sb = val - 2.*c + eps*np.array([-1.,0.,1.])
+		sc = val + 2.*c + eps*np.array([-1.,0.,1.])
+		s = np.sort(np.concatenate([sa1,sa2,sb,sc]))
+		## ucrv is line of const, vcrv is line of const v
+		ucrv.uv = np.array([val+0.*s, 1.*s])
+		vcrv.uv = np.array([1.*s, val+0.*s])
+		## update curve style from default
+		style = dict(zorder=200)
+		style.update(sty)
+		ucrv.sty.update(style)
+		vcrv.sty.update(style)
+		## add crvs to output list
+		if 'u' in uv:
+			crvlist += [ucrv]
+		if 'v' in uv:
+			crvlist += [vcrv]
+	## return
+	return crvlist
+
+#####################################################################
+
+############################# boundary  ###############################
+
+
+def block_boundary(blk, sty={}, inf=100., npoints=1000):
 	"""
 	"""
 	## change default style
@@ -277,54 +299,83 @@ def block_boundary_2(blk, sty={}, inf=100., npoints=1000):
 			rstar = inf
 		if rstar==-np.inf:
 			rstar = -inf
-		crvlist += rstarlines_special_2([rstar], blk.uvbounds, c=blk.master.rparams['c'], sty=style, inf=2.*inf, npoints=npoints)
+		crvlist += rstarlines([rstar], c=blk.master.rparams['c'], sty=style, inf=2.*inf, npoints=npoints)
 	## return
 	return crvlist
 
 
 
-def rstarlines_special_2(vals, uvbounds, c=None, sty={}, inf=50., npoints=1000):
+
+def block_boundary_2(blk, sty={}, inf=100., npoints=2001):
 	"""
-	Produce lines of constant rstar for rstar in vals. Return list of curves.
-	   (v-u)/2 = rstar - c
 	"""
+	## change default style
+	style = dict(c='k', ls='-', lw=1.5, zorder=400)
+	style.update(sty)
+	## get min and max rstar values
+	j = blk.j
+	lims = rstar_limits(blk.master.metfunc)
+	lims = lims[j:j+2]
+	## adjust to avoid accidental masking
+	idx = np.argsort(lims)
+	lims[idx] = lims[idx] + 2. * np.array([1.,-1.]) * blk.master.metfunc.Fparams['eps']
+	## make list of boundary curves
 	crvlist = []
-	for val in vals:
-		## create new curve
-		crv = curve()
-		## adjust uvbounds
-		for key in ['vmin', 'umin']:
-			if not np.isfinite(uvbounds[key]):
-				uvbounds[key] = -1.*inf
-		for key in ['vmax', 'umax']:
-			if not np.isfinite(uvbounds[key]):
-				uvbounds[key] =  1.*inf
-		## readable params
-		umin, umax, vmin, vmax = uvbounds['umin'] , uvbounds['umax'], uvbounds['vmin'], uvbounds['vmax']
-		## push inward just a bit to avoid mask
-		eps = 1e-24
-		umin, umax = umin + 1.*eps, umax - 1.*eps, 
-		vmin, vmax = vmin + 1.*eps, vmax - 1.*eps
-		## curve a
-		ua = np.linspace(umin, umax, npoints)
-		va = ua + 2.*(val - c)
-		## curve b
-		vb = np.linspace(vmin, vmax, npoints)
-		ub = vb - 2.*(val-c)
-		## combine
-		uu = np.concatenate([ua,ub])
-		vv = np.concatenate([va,vb])
-		## sort
-		idx = np.argsort(uu)
-		uu = uu[idx]
-		vv = vv[idx]
-		## add coords to curve
-		crv.uv = np.array([uu,vv])
-		## update curve style from default
-		style = dict(zorder=600)
-		style.update(sty)
-		crv.sty.update(style)
-		## add crv to output list
-		crvlist += [crv]
+	## make curves
+	for rstar in lims:
+		if rstar==np.inf:
+			rstar = inf
+		if rstar==-np.inf:
+			rstar = -inf
+		crvlist += rstarlines_special_2([rstar], blk.uvbounds, c=blk.master.rparams['c'], sty=style, inf=inf, npoints=npoints)
 	## return
 	return crvlist
+
+
+
+#####################################################################
+
+############################# other  ###############################
+
+def colnorm1(svals,smin,smax):
+	"""
+	Color bar normalizer for input into colormap.
+	Input an array of svals.
+	Return an array of the absolute values normalized to (0,1) and truncated at smin, smax.
+	"""
+	## initialize output array to abs val of input
+	ss = 1. * np.abs(svals)
+	## cutoff at min
+	ss[ss<smin] = smin + 0.*ss[ss<smin]
+	## cutoff at max	
+	ss[ss>smax] = smax + 0.*ss[ss>smax]
+	## normalize
+	ss = (ss - smin) / (smax - smin)
+	## return
+	return ss
+
+
+#####################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

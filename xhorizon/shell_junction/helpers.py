@@ -195,7 +195,7 @@ def get_r_ref(reg, r_refs, r0):
 	## add values near r0
 	a, npoints = 1e-21, 500
 	ss = np.linspace(0., np.log(a), npoints)
-	rrlist += [r0 + np.exp(1.*ss), r0 - np.exp(1.*ss)]
+	#rrlist += [r0 + np.exp(1.*ss), r0 - np.exp(1.*ss)]
 	## concatenate
 	rr = np.concatenate(rrlist)
 	## return
