@@ -9,10 +9,10 @@ import xhorizon as xh
 def go(st='s'):
 	## params
 	R1 = 1.
-	R2 = .8
+	R2 = .5
 	l = .1
 	rparams = dict(s0=10.)
-	u1 = 22.
+	u1 = 25.
 	v1 = 0.
 	u2 = 1.*u1
 	## funcs

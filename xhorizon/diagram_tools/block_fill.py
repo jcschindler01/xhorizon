@@ -8,12 +8,12 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 import curve_class as cc
-from curvemakers import block_boundary, rlines, rstarlines
+from curvemakers import block_boundary, block_boundary_2, rlines, rstarlines
 
 
 
 
-def fill_between_curves_uv(blk, crvlist, tr=False, reverse=True, sty={}, eps=1e-6):
+def fill_between_curves_uv(blk, crvlist, tr=False, reverse=True, sty={}, eps=1e-24):
 	"""
 	Fill in a patch using a list of curves to provide the boundary of polygon.
 	The curves are read from their uv coords.
@@ -71,7 +71,7 @@ def fill_block(blk, sty={}):
 	style = dict(fc='k', ec='none', zorder=10)
 	style.update(sty)
 	## generate block boundaries
-	crvlist = block_boundary(blk)
+	crvlist = block_boundary_2(blk)
 	## fill between boundaries
 	fill_between_curves_uv(blk, crvlist, sty=sty)
 
@@ -163,7 +163,7 @@ def snap_to_bounds(y, ymin=-np.inf, ymax=np.inf):
 	return z
 
 
-def snap_crvlist_to_bounds(crvlist, umin=-np.inf, umax=np.inf, vmin=-np.inf, vmax=np.inf, eps=1e-6):
+def snap_crvlist_to_bounds(crvlist, umin=-np.inf, umax=np.inf, vmin=-np.inf, vmax=np.inf, eps=1e-15):
 	"""
 	Apply snap_to_bounds to uv coordinates of a curve.
 	Displaces curve into a rectangle of specified size.

@@ -100,7 +100,7 @@ def boundarylines(reglist, npoints=5001, sty={}):
 		for b in reg.blocks:
 			style = dict(lw=0.9, c='0.5', zorder=2000)
 			style.update(sty)
-			b.add_curves_uv(xh.cm.block_boundary(b, sty=style, npoints=npoints))
+			b.add_curves_uv(xh.cm.block_boundary_2(b, sty=style, npoints=npoints))
 
 
 def colorlines(reglist, rmin=0.05, rmax=5., dr=.2, sty={}, npoints=2001, inf=25.):
