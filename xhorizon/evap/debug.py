@@ -7,10 +7,10 @@ import xhorizon as xh
 
 
 def go():
-	for ux in [15.]:
+	for ux in [0.5, 4.5, 10.5]:
 		## params
 		R1 = 1.
-		R2 = .5
+		R2 = .8
 		l = .1
 		rparams = dict(s0=10.)
 		u1 = ux
@@ -55,6 +55,51 @@ def go():
 			plt.plot(aslice.r, aslice.UV_u0[1], c='c', **style2)
 			## junction radius
 			plt.plot([pslice.r0, pslice.r0], [-1.,1.], 'k-' )
+
+		## plot uv
+		if False:
+			print 'REG1 PSLICE U(u,v0)=red, V(v,u0)=blue'
+			print 'REG2 ASLICE U(u,v0)=mag, V(v,u0)=cyan'
+			plt.figure()
+			plt.title('REG1 PSLICE U(u,v0)=red, V(v,u0)=blue\nREG2 ASLICE U(u,v0)=mag, V(v,u0)=cyan')
+			plt.xlabel('U,V')
+			plt.ylabel('u,v on slice')
+			plt.grid()
+			#plt.xlim(-1,1)
+			plt.ylim(-40,40)
+			## passive slice
+			r = 1.*pslice.r
+			uvdl_u0 = 1.*pslice.uvdl_u0
+			uvdl_v0 = 1.*pslice.uvdl_v0
+			uv_u0 = np.nan*uvdl_u0
+			uv_v0 = np.nan*uvdl_v0
+			for b in reg1.blocks:
+				mask = np.logical_and(b.rj[0]<r, r<b.rj[1])
+				uv_u0[:,mask] = b.uv_of_uvdl(uvdl_u0[:,mask])
+				uv_v0[:,mask] = b.uv_of_uvdl(uvdl_v0[:,mask])
+			style1 = dict(marker='x', markersize=8, lw=1, ls='none')
+			plt.plot(pslice.UV_v0[0], uvdl_v0[0], c='r', **style1)
+			plt.plot(pslice.UV_u0[1], uvdl_u0[1], c='b', **style1)
+			## active slice
+			r = 1.*aslice.r
+			uvdl_u0 = 1.*aslice.uvdl_u0
+			uvdl_v0 = 1.*aslice.uvdl_v0
+			uv_u0 = np.nan*uvdl_u0
+			uv_v0 = np.nan*uvdl_v0
+			for b in reg1.blocks:
+				mask = np.logical_and(b.rj[0]<r, r<b.rj[1])
+				uv_u0[:,mask] = b.uv_of_uvdl(uvdl_u0[:,mask])
+				uv_v0[:,mask] = b.uv_of_uvdl(uvdl_v0[:,mask])
+			style2 = dict(marker='o', markersize=6, lw=1, ls='none')
+			plt.plot(aslice.UV_v0[0], uvdl_v0[0], c='m', **style2)
+			plt.plot(aslice.UV_u0[1], uvdl_u0[1], c='c', **style2)
+			## junction radius
+			plt.plot([-1.,1.], [pslice.u0, pslice.u0], 'r-' )
+			plt.plot([-1.,1.], [pslice.v0, pslice.v0], 'b-' )
+			plt.plot([-1.,1.], [aslice.u0, aslice.u0], 'm--' )
+			plt.plot([-1.,1.], [aslice.v0, aslice.v0], 'c--' )
+
+
 		## print slice params
 		print "\n"
 		print "                          %22r, %22r, %22r, %22r, %22r"%('Rh', 'r', 'r/Rh', 'u', 'v')
@@ -97,7 +142,8 @@ def go():
 		## draw diagram
 		if True:
 			## add lines
-			xh.evap.colorlines(reglist, sty=dict())
+			#xh.evap.colorlines(reglist, sty=dict())
+			xh.evap.uv_lines(reglist, uv='v', sty=dict())
 			xh.evap.boundarylines(reglist, sty=dict(), npoints=5001)
 			xh.evap.s0_lines(reglist, sty=dict(lw=3))
 			## draw

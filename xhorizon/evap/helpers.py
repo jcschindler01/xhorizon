@@ -135,6 +135,22 @@ def s0_lines(reglist, sty={}, npoints=1001, inf=50., eps=1e-24):
 			b.add_curves_uv(xh.cm.uvlines(-x, uv='uv', uvbounds=b.uvbounds, sty=style2, c=0., inf=inf, npoints=npoints))
 	return reglist
 
+
+def uv_lines(reglist, uv='uv', sty={}, npoints=1001, inf=50., eps=1e-24):
+	"""
+	"""
+	for reg in reglist:
+		for b in reg.blocks:
+			smin, smax, ds = -5., 25., 1.
+			vals = np.arange(smin, smax, ds)
+			cm = plt.cm.gist_rainbow
+			cv = np.linspace(0,1,len(vals))
+			for i in range(len(vals)):
+				style1 = dict(c=cm(cv[i]), lw=.8, ls='-', zorder=6000)
+				style1.update(sty)
+				b.add_curves_uv(xh.cm.uvlines([vals[i]], uv=uv, uvbounds=b.uvbounds, sty=style1, c=0., inf=inf, npoints=npoints))
+	return reglist
+
 ##########################################################################################
 
 
