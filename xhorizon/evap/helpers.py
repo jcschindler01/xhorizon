@@ -320,3 +320,19 @@ def split_reg_abcd(reg, abcd='abcd', u0=0., v0=0.):
 #############################################################
 
 
+#################### other #########################################
+
+
+def sliceprint(pslice, aslice, Rh1, Rh2):
+	print "\n"
+	print "                          %22r, %22r, %22r, %22r, %22r"%('Rh', 'r', 'r-Rh', 'u', 'v')
+	print "PSlice:"
+	print "Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, pslice.r0, pslice.r0-Rh1, pslice.u0, pslice.v0)
+	print "ASlice:"
+	print "Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, aslice.r0, aslice.r0-Rh2, aslice.u0, aslice.v0)
+	print "\n"
+
+
+
+#############################################################
+

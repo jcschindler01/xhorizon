@@ -26,7 +26,7 @@ def main():
 	#test8()
 	#test9()
 	#test10()
-	#test11()
+	test11()
 	test12()
 
 
@@ -421,7 +421,7 @@ def test10():
 
 
 
-def test11(u0=12., v0=-1., du=.5, dv=.3, R=np.array([1.,.99,.98])):
+def test11(u0=12., v0=0., du=.5, dv=.3, R=np.array([1.,.98,.96])):
 	"""
 	One intermediate region.
 	Build from bottom.
@@ -431,7 +431,7 @@ def test11(u0=12., v0=-1., du=.5, dv=.3, R=np.array([1.,.99,.98])):
 	## reglist
 	reglist = []
 	## funcs
-	funclist = [xh.mf.hayward(R=Rx) for Rx in R]
+	funclist = [xh.mf.schwarzschild(R=Rx) for Rx in R]
 	## first region
 	reglist += [xh.reg.EFreg(funclist.pop(0), boundary=False, rlines=False)]
 	## second region
@@ -446,6 +446,7 @@ def test11(u0=12., v0=-1., du=.5, dv=.3, R=np.array([1.,.99,.98])):
 	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
 	reglist += xh.evap.split_reg_abcd(reg1,  abcd='dbc', u0=1.*pslice.u0, v0=1.*pslice.v0)
 	reglist += xh.evap.split_reg_abcd(reg2,  abcd='a'  , u0=1.*aslice.u0, v0=1.*aslice.v0)
+	sliceprint(pslice, aslice, reg1.blocks[-1].rj[0], reg2.blocks[-1].rj[0])
 	## third region
 	reg1 = reglist.pop()
 	reg2 = xh.reg.EFreg(funclist.pop(0), boundary=False, rlines=False)
@@ -458,17 +459,18 @@ def test11(u0=12., v0=-1., du=.5, dv=.3, R=np.array([1.,.99,.98])):
 	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
 	reglist += xh.evap.split_reg_abcd(reg1,  abcd='dbc', u0=1.*pslice.u0, v0=1.*pslice.v0)
 	reglist += xh.evap.split_reg_abcd(reg2,  abcd='a'  , u0=1.*aslice.u0, v0=1.*aslice.v0)
+	sliceprint(pslice, aslice, reg1.blocks[-1].rj[0], reg2.blocks[-1].rj[0])
 	## plot
 	rgp(reglist)
 	## show
-	plt.show()
+	#plt.show()
 	##
 	print "\nEND TEST 11\n"
 
 
 
 
-def test12(u0=0., dr0=.3, du=1., R=np.array([1.,.98,.96])):
+def test12(u0=12., dr0=.1, du=.5, R=np.array([1.,.98,.96])):
 	"""
 	One intermediate region.
 	Build from top.
@@ -492,6 +494,7 @@ def test12(u0=0., dr0=.3, du=1., R=np.array([1.,.98,.96])):
 	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
 	reglist += xh.evap.split_reg_abcd(reg1,  abcd='a', u0=1.*pslice.u0, v0=1.*pslice.v0)
 	reglist += xh.evap.split_reg_abcd(reg2,  abcd='dbc'  , u0=1.*aslice.u0, v0=1.*aslice.v0)
+	sliceprint(pslice, aslice, reg1.blocks[-1].rj[0], reg2.blocks[-1].rj[0])
 	## third region
 	reg3 = xh.reg.EFreg(funclist.pop(-1), boundary=False, rlines=False)
 	u0 = 1.*aslice.u0 - 1.*du
@@ -507,6 +510,7 @@ def test12(u0=0., dr0=.3, du=1., R=np.array([1.,.98,.96])):
 		for b in reg.blocks:
 			b.uvbounds.update(dict(umin=1.*pslice.u0))
 	reglist += xh.evap.split_reg_abcd(reg3,  abcd='dbc' , u0=1.*aslice.u0, v0=1.*aslice.v0)
+	sliceprint(pslice, aslice, reg2.blocks[-1].rj[0], reg3.blocks[-1].rj[0])
 	## plot
 	rgp(reglist)
 	## show
