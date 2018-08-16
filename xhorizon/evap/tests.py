@@ -468,7 +468,7 @@ def test11(u0=12., v0=-1., du=.5, dv=.3, R=np.array([1.,.99,.98])):
 
 
 
-def test12(u0=12., v0=-1., du=.5, dv=.3, R=np.array([1.,.99,.98])):
+def test12(u0=0., dr0=.3, du=1., R=np.array([1.,.98,.96])):
 	"""
 	One intermediate region.
 	Build from top.
@@ -478,21 +478,35 @@ def test12(u0=12., v0=-1., du=.5, dv=.3, R=np.array([1.,.99,.98])):
 	## reglist
 	reglist = []
 	## funcs
-	funclist = [xh.mf.hayward(R=Rx) for Rx in R]
+	funclist = [xh.mf.schwarzschild(R=Rx) for Rx in R]
 	## first region
 	reglist += [xh.reg.EFreg(funclist.pop(-1), boundary=False, rlines=False)]
 	## second region
 	reg1 = reglist.pop()
-	reg2 = xh.reg.EFreg(funclist.pop(0), boundary=False, rlines=False)
+	reg2 = xh.reg.EFreg(funclist.pop(-1), boundary=False, rlines=False)
 	u0 = 1.*u0
-	v0 = 1.*v0
-	r0 = reg1.blocks[-1].r_of_uv(np.array([[u0],[v0]]))[0]
+	r0 = 1.*reg2.blocks[-1].rj[0] + 1.*dr0
 	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), r0=1.*r0, u0=1.*u0)
-	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=1.*pslice.r0, v0=1.*pslice.v0, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
+	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=1.*pslice.r0, u0=1.*pslice.u0, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
 	reg2.U_of_udl = aslice.U_of_udl_at_v0
 	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
-	reglist += xh.evap.split_reg_abcd(reg1,  abcd='dbc', u0=1.*pslice.u0, v0=1.*pslice.v0)
-	reglist += xh.evap.split_reg_abcd(reg2,  abcd='a'  , u0=1.*aslice.u0, v0=1.*aslice.v0)
+	reglist += xh.evap.split_reg_abcd(reg1,  abcd='a', u0=1.*pslice.u0, v0=1.*pslice.v0)
+	reglist += xh.evap.split_reg_abcd(reg2,  abcd='dbc'  , u0=1.*aslice.u0, v0=1.*aslice.v0)
+	## third region
+	reg3 = xh.reg.EFreg(funclist.pop(-1), boundary=False, rlines=False)
+	u0 = 1.*aslice.u0 - 1.*du
+	r0 = 1.*reg3.blocks[-1].rj[0] + 1.*dr0
+	pslice = xh.junc.pslice(reg2, ublocks=[-1], vblocks=range(len(reg1.blocks)), r0=1.*r0, u0=1.*u0)
+	aslice = xh.junc.aslice(reg3, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=1.*pslice.r0, u0=1.*pslice.u0, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
+	reg3.U_of_udl = aslice.U_of_udl_at_v0
+	reg3.V_of_vdl = aslice.V_of_vdl_at_u0
+	for reg in reglist[-3:-1]:
+		for b in reg.blocks:
+			b.uvbounds.update(dict(vmin=1.*pslice.v0))
+	for reg in reglist[-2:]:
+		for b in reg.blocks:
+			b.uvbounds.update(dict(umin=1.*pslice.u0))
+	reglist += xh.evap.split_reg_abcd(reg3,  abcd='dbc' , u0=1.*aslice.u0, v0=1.*aslice.v0)
 	## plot
 	rgp(reglist)
 	## show
