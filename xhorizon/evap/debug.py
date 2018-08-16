@@ -7,10 +7,10 @@ import xhorizon as xh
 
 
 def go():
-	for ux in [0.5, 4.5, 10.5]:
+	for ux in [2.,4.,10.]:
 		## params
 		R1 = 1.
-		R2 = .8
+		R2 = .99
 		l = .1
 		rparams = dict(s0=10.)
 		u1 = ux
@@ -33,7 +33,7 @@ def go():
 		pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), r0=r1, u0=u1)
 
 		## active slice of reg2
-		aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=pslice.r0, u0=u2, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
+		aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=pslice.r0, v0=v1, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
 		
 		## plot slice
 		if False:
@@ -142,8 +142,8 @@ def go():
 		## draw diagram
 		if True:
 			## add lines
-			#xh.evap.colorlines(reglist, sty=dict())
-			xh.evap.uv_lines(reglist, uv='v', sty=dict())
+			xh.evap.colorlines(reglist, sty=dict(alpha=0.2, c='k'))
+			xh.evap.uv_lines(reglist, uv='u', sty=dict())
 			xh.evap.boundarylines(reglist, sty=dict(), npoints=5001)
 			xh.evap.s0_lines(reglist, sty=dict(lw=3))
 			## draw

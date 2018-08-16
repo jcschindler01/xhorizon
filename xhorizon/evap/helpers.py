@@ -90,7 +90,33 @@ def get_uvdl_of_UV(reg):
 ############################################################################
 
 
-################# tools for drawing ########################################3
+############## plot reglist ####################
+
+def rgp(reglist):
+	"""
+	Plot all regions in reglist.
+	"""
+	## lines
+	xh.evap.colorlines(reglist, sty=dict(alpha=0.2, c='k'))
+	#xh.evap.uv_lines(reglist, uv='u', sty=dict())
+	xh.evap.boundarylines(reglist, sty=dict(), npoints=5001)
+	xh.evap.s0_lines(reglist, sty=dict(lw=3))
+	## figure
+	plt.figure(figsize=(6,6))
+	plt.axes([.1, .1, .8, .8])
+	plt.xlim(-3,3)
+	plt.ylim(-3,3)
+	plt.gca().set_aspect('equal')
+	## plot
+	for reg in reglist:
+		reg.rplot()
+	## fill
+	xh.evap.fill_by_R(reglist, cm=plt.cm.prism)
+
+#############################################################
+
+
+################# tools for drawing ########################################
 
 def boundarylines(reglist, npoints=5001, sty={}):
 	"""
@@ -103,14 +129,14 @@ def boundarylines(reglist, npoints=5001, sty={}):
 			b.add_curves_uv(xh.cm.block_boundary_2(b, sty=style, npoints=npoints))
 
 
-def colorlines(reglist, rmin=0.05, rmax=5., dr=.2, sty={}, npoints=2001, inf=25.):
+def colorlines(reglist, rmin=0.05, rmax=5., dr=.2, sty={}, cm=plt.cm.hsv_r, npoints=2001, inf=25.):
 	"""
 	Add colorscaled lines of constant radius to region.
 	Useful to check for matching.
 	"""
 	rvals = np.arange(rmin,rmax,dr)
 	colvals = (rvals - np.min(rvals)) / (np.max(rvals) - np.min(rvals))
-	cols = plt.cm.hsv_r(colvals)
+	cols = cm(colvals)
 	for reg in reglist:
 		for b in reg.blocks:
 			for i in range(len(rvals)):
@@ -127,8 +153,8 @@ def s0_lines(reglist, sty={}, npoints=1001, inf=50., eps=1e-24):
 	for reg in reglist:
 		for b in reg.blocks:
 			x = np.array([(2.*reg.rparams['s0'] - eps)])
-			style1 = dict(c='m', alpha=.5, lw=.2, ls=':', zorder=5000)
-			style2 = dict(c='c', alpha=.5, lw=.2, ls=':', zorder=5000)
+			style1 = dict(c='m', alpha=.5, lw=3, ls=':', zorder=5000)
+			style2 = dict(c='c', alpha=.5, lw=3, ls=':', zorder=5000)
 			style1.update(sty)
 			style2.update(sty)
 			b.add_curves_uv(xh.cm.uvlines( x, uv='uv', uvbounds=b.uvbounds, sty=style1, c=0., inf=inf, npoints=npoints))
@@ -290,10 +316,6 @@ def split_reg_abcd(reg, abcd='abcd', u0=0., v0=0.):
 		reglist += [xh.cornermask.EFreg(copy.deepcopy(reg), abcd=x, u0=u0, v0=v0)]
 	## return
 	return reglist
-
-
-
-
 
 #############################################################
 

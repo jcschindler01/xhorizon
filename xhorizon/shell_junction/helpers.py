@@ -200,3 +200,12 @@ def get_r_ref(reg, r_refs, r0):
 	rr = np.concatenate(rrlist)
 	## return
 	return 1.*rr
+
+
+
+
+
+
+
+
+
