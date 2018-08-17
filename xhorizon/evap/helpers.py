@@ -333,6 +333,11 @@ def sliceprint(pslice, aslice, Rh1, Rh2):
 	print "\n"
 
 
+def mp(matchmode):
+	matchpop = 'uvr0'
+	for s in matchmode:
+		matchpop = matchpop.replace(s,'')
+	return matchpop
 
 #############################################################
 

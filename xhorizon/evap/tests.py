@@ -8,6 +8,7 @@ Tests for evap module.
 import numpy as np
 import matplotlib.pyplot as plt
 import xhorizon as xh
+import pprint
 
 from evap import *
 from helpers import *
@@ -530,19 +531,21 @@ def test13():
 	print "\nTEST 13\n"
 	## make funclist
 	funclist  = []
-	funclist += [xh.mf.minkowski()]
-	funclist += [xh.mf.schwarzschild(R=Rx) for Rx in [.5,1.,.8]]
-	funclist += [xh.mf.minkowski()]
+	#funclist += [xh.mf.minkowski()]
+	funclist += [xh.mf.schwarzschild(R=Rx) for Rx in [1.,.9]]
+	#funclist += [xh.mf.minkowski()]
 	## params
 	t0 = 0.
 	x0 = 0.
 	## params
 	ss = np.ones(len(funclist))
-	du  = .1*ss
-	dv  = .1*ss
-	dr0 = .1*ss
+	du  = 1.5*ss
+	dv  = 1.*ss
 	##
-	reglist = xh.evap.funclist_chain(funclist, seed=4, u0=t0-x0, v0=t0+x0, du=1.*du, dv=1.*dv, mu=1.)
+	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=0, u0=t0-x0, v0=t0+x0, du=1.*du, dv=1.*dv, mu=0., matchmode='rv')
+	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
+	##
+	pprint.pprint(chainparams)
 	##
 	rgp(reglist)
 	plt.show()
