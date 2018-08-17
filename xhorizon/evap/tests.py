@@ -26,9 +26,9 @@ def main():
 	#test8()
 	#test9()
 	#test10()
-	test11()
-	test12()
-
+	#test11()
+	#test12()
+	test13()
 
 
 
@@ -421,7 +421,7 @@ def test10():
 
 
 
-def test11(u0=12., v0=0., du=.5, dv=.3, R=np.array([1.,.98,.96])):
+def test11(u0=-12., v0=0., du=.5, dv=.3, R=np.array([1.,.98,.96])):
 	"""
 	One intermediate region.
 	Build from bottom.
@@ -463,7 +463,7 @@ def test11(u0=12., v0=0., du=.5, dv=.3, R=np.array([1.,.98,.96])):
 	## plot
 	rgp(reglist)
 	## show
-	#plt.show()
+	plt.show()
 	##
 	print "\nEND TEST 11\n"
 
@@ -517,6 +517,37 @@ def test12(u0=12., dr0=.1, du=.5, R=np.array([1.,.98,.96])):
 	plt.show()
 	##
 	print "\nEND TEST 12\n"
+
+
+
+
+
+def test13():
+	"""
+	Test evap.evap.funclist_chain().
+	"""
+	##
+	print "\nTEST 13\n"
+	## make funclist
+	funclist  = []
+	funclist += [xh.mf.minkowski()]
+	funclist += [xh.mf.schwarzschild(R=Rx) for Rx in [.5,1.,.8]]
+	funclist += [xh.mf.minkowski()]
+	## params
+	t0 = 0.
+	x0 = 0.
+	## params
+	ss = np.ones(len(funclist))
+	du  = .1*ss
+	dv  = .1*ss
+	dr0 = .1*ss
+	##
+	reglist = xh.evap.funclist_chain(funclist, seed=4, u0=t0-x0, v0=t0+x0, du=1.*du, dv=1.*dv, mu=1.)
+	##
+	rgp(reglist)
+	plt.show()
+	##
+	print "\nEND TEST 13\n"
 
 
 
