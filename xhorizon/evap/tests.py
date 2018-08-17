@@ -531,20 +531,21 @@ def test13():
 	print "\nTEST 13\n"
 	## make funclist
 	funclist  = []
-	#funclist += [xh.mf.minkowski()]
-	funclist += [xh.mf.schwarzschild(R=Rx) for Rx in [1.,.9]]
-	#funclist += [xh.mf.minkowski()]
+	funclist += [xh.mf.minkowski()]
+	funclist += [xh.mf.hayward(R=Rx) for Rx in [1.,.9,.8,.4]]
+	funclist += [xh.mf.minkowski()]
 	## params
-	t0 = 0.
-	x0 = 0.
+	t0 = -4.
+	x0 = 2.
 	## params
 	ss = np.ones(len(funclist))
-	du  = 1.5*ss
-	dv  = 1.*ss
+	du  = 3.*ss
+	dv  = 3.*ss
 	##
 	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=0, u0=t0-x0, v0=t0+x0, du=1.*du, dv=1.*dv, mu=0., matchmode='rv')
-	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
+	pprint.pprint(chainparams)
 	##
+	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
 	pprint.pprint(chainparams)
 	##
 	rgp(reglist)

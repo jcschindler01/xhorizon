@@ -111,7 +111,7 @@ def rgp(reglist):
 	for reg in reglist:
 		reg.rplot()
 	## fill
-	xh.evap.fill_by_R(reglist, cm=plt.cm.prism)
+	xh.evap.fill_by_R(reglist, cm=plt.cm.hsv)
 
 #############################################################
 
