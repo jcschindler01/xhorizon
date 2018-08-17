@@ -14,10 +14,7 @@ import xhorizon as xh
 from helpers import *
 
 
-"""
-Evaporation.
-From highest to lowest level functions.
-"""
+
 
 ###############################################################################################################3
 
@@ -28,9 +25,8 @@ def funclist_chain(funclist, seed=0, u0=0., v0=0., du=None, dv=None, mu=0.):
 	Create a chain of matched regions, starting at seed region which is unmodified.
 	Each region except ends has two slices through it, a future slice fslice and past slice pslice.
 	Each fslice and pslice can be either active or passive, but there can only be one active slice per region.
-	Return reglist.
 	The index i refers to each region in the sequence for all variables.
-	If mu=0 then all blocks are centered about u=0 symettrically. If mu=1 then u,v are connected from block to block.
+	If mu=0 then all blocks are centered about u=0 symettrically. If mu=1 then u,v are continuous from block to block.
 	"""
 	## init
 	reglist = [xh.reg.EFreg(funcx, boundary=False, rlines=False) for funcx in funclist]
