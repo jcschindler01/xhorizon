@@ -532,21 +532,27 @@ def test13():
 	funclist += [xh.mf.minkowski()]
 	funclist += [xh.mf.schwarzschild(R=Rx) for Rx in [.5,1.,.7]]
 	funclist += [xh.mf.minkowski()]
+	## init
+	t0 = np.zeros(len(funclist))
+	x0 = np.zeros(len(funclist))
 	## params
-	t0 = -4.
-	x0 = 2.
+	t0 = -2. + t0
+	x0 = 2. + x0
+	## params
 	## params
 	ss = np.ones(len(funclist))
 	du  = 1.*ss
-	dv  = 1.*ss
+	dv  = .9*ss
 	##
-	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=0, u0=t0-x0, v0=t0+x0, du=1.*du, dv=1.*dv, mu=0., matchmode='rv')
+	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=-1, u0=t0-x0, v0=t0+x0, du=1.*du, dv=1.*dv, eta=1., matchmode='rv')
 	pprint.pprint(chainparams)
 	##
 	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
 	pprint.pprint(chainparams)
 	##
 	rgp(reglist)
+	plt.xlim(.5,2.5)
+	plt.ylim(-1.5,1.5)
 	plt.show()
 	##
 	print "\nEND TEST 13\n"

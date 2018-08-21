@@ -20,13 +20,19 @@ from helpers import *
 
 
 
-def funclist_chain(funclist, seed=0, u0=0., v0=0., du=None, dv=None, mu=0., matchmode='ru'):
+def funclist_chain(funclist, seed=0, u0=None, v0=None, du=None, dv=None, eta=0., matchmode='ru'):
 	"""
 	Create a chain of matched regions, starting at seed region which is unmodified.
 	Each region except ends has two slices through it, a future slice fslice and past slice pslice.
 	Each fslice and pslice can be either active or passive, but there can only be one active slice per region.
 	The index i refers to each region in the sequence for all variables.
-	If mu=0 then all blocks are centered about u=0 symettrically. If mu=1 then u,v are continuous from block to block.
+	
+	Slive u0 and v0 values determined as follows:
+	If eta=0 then every region goes from u0-du/2 to u0+du/2, equally spaced about u0 with total size du.
+	If eta=1  then the seed region is exactly as it would otherwise be, but the other regions are matched to it
+	sequentially so that each begins where the last left off.
+	This either applies to u or v, depending on matchmode setting.
+
 	"""
 	## init
 	reglist = [xh.reg.EFreg(funcx, boundary=False, rlines=False) for funcx in funclist]
@@ -41,13 +47,18 @@ def funclist_chain(funclist, seed=0, u0=0., v0=0., du=None, dv=None, mu=0., matc
 	fs_v0   = [np.nan for funcx in funclist]
 	i0 = range(len(funclist))[1*seed]
 	matchpop = mp(matchmode)
+	## default u0 and v0 values
+	if u0==None:
+		[0. for funcx in funclist]
+	if v0==None:
+		[0. for funcx in funclist]
 	## seed region
 	i = 1*i0
 	for i in [1*i0]:
 		###### past passive slice
 		## past passive slice input params (mutually consistent)
-		ps_u0[i]  = 1.*u0 - 0.5*(1.-mu)*du[i]
-		ps_v0[i]  = 1.*v0 - 0.5*(1.-mu)*dv[i]
+		ps_u0[i]  = u0[i] - 0.5*du[i]
+		ps_v0[i]  = v0[i] - 0.5*dv[i]
 		ps_r0[i]  = 1.*reglist[i].blocks[-1].r_of_uv(np.array([[ps_u0[i]],[ps_v0[i]]]))[0]
 		## get past passive slice location from inputs and matchpop
 		sliceloc = dict(u0=ps_u0[i], v0=ps_v0[i], r0=ps_r0[i])
@@ -75,8 +86,8 @@ def funclist_chain(funclist, seed=0, u0=0., v0=0., du=None, dv=None, mu=0., matc
 	while i < len(reglist):
 		###### past active slice
 		## past active slice input params (not mutually consistent)
-		ps_u0[i]  = 1.*mu*fs_u0[i-1] - 0.5*(1.-mu)*du[i]
-		ps_v0[i]  = 1.*mu*fs_v0[i-1] - 0.5*(1.-mu)*dv[i]
+		ps_u0[i]  = (eta) * ( fs_u0[i-1] ) + (1.-eta) * ( u0[i] - 0.5*du[i] )
+		ps_v0[i]  = (eta) * ( fs_v0[i-1] ) + (1.-eta) * ( v0[i] - 0.5*dv[i] )
 		ps_r0[i]  = 1.*fs_r0[i-1]
 		## get past active slice location from inputs and matchpop
 		sliceloc = dict(u0=ps_u0[i], v0=ps_v0[i], r0=ps_r0[i])
@@ -111,8 +122,8 @@ def funclist_chain(funclist, seed=0, u0=0., v0=0., du=None, dv=None, mu=0., matc
 	while i>=0:
 		###### future active slice
 		## past active slice input params (not mutually consistent)
-		fs_u0[i]  = 1.*mu*ps_u0[i+1] + 0.5*(1.-mu)*du[i]
-		fs_v0[i]  = 1.*mu*ps_v0[i+1] + 0.5*(1.-mu)*dv[i]
+		fs_u0[i]  = (eta) * ( ps_u0[i+1] ) + (1.-eta) * ( u0[i] - 0.5*du[i] )
+		fs_v0[i]  = (eta) * ( ps_v0[i+1] ) + (1.-eta) * ( v0[i] - 0.5*dv[i] )
 		fs_r0[i]  = 1.*ps_r0[i+1]
 		## get future active slice location from inputs and matchpop
 		sliceloc = dict(u0=fs_u0[i], v0=fs_v0[i], r0=fs_r0[i])
