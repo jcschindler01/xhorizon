@@ -12,8 +12,6 @@ import pprint
 
 from evap import *
 from helpers import *
-from accrete import *
-from formevap import *
 
 
 def main():
@@ -532,15 +530,15 @@ def test13():
 	## make funclist
 	funclist  = []
 	funclist += [xh.mf.minkowski()]
-	funclist += [xh.mf.hayward(R=Rx) for Rx in [1.,.9,.8,.4]]
+	funclist += [xh.mf.schwarzschild(R=Rx) for Rx in [.5,1.,.7]]
 	funclist += [xh.mf.minkowski()]
 	## params
 	t0 = -4.
 	x0 = 2.
 	## params
 	ss = np.ones(len(funclist))
-	du  = 3.*ss
-	dv  = 3.*ss
+	du  = 1.*ss
+	dv  = 1.*ss
 	##
 	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=0, u0=t0-x0, v0=t0+x0, du=1.*du, dv=1.*dv, mu=0., matchmode='rv')
 	pprint.pprint(chainparams)

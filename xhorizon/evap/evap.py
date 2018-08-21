@@ -162,18 +162,42 @@ def chain_masker(reglist, chainparams):
 	##
 	for i in range(len(reglist)):
 		## mask interior blocks
-		for b in reglist[i].blocks[:]:
+		for b in reglist[i].blocks[:-1]:
 			## past
 			if i>0:
 				b.uvbounds.update(dict(vmin=chainparams['ps_v0'][i]))
 			## future
 			if i<len(reglist)-1:
 				b.uvbounds.update(dict(vmax=chainparams['fs_v0'][i]))
-		## mask final blocks
+		## mask final blocks for part that is always there
+		for b in reglist[i].blocks[-1:]:
+			## past
+			if i>0:
+				b.uvbounds.update(dict(vmin=chainparams['ps_v0'][i], umin=chainparams['ps_u0'][i]))
+			## future
+			if i<len(reglist)-1:
+				b.uvbounds.update(dict(vmax=chainparams['fs_v0'][i]))
+		## copy final block for parts which depend on radius change values
+		for b in reglist[i].blocks[-1:]:
+			## copies
+			ba = copy.deepcopy(b)
+			bb = copy.deepcopy(b)
+			bc = copy.deepcopy(b)
+			## mask a=top b=bottom c=right
+			ba.uvbounds.update(dict(vmin=chainparams['fs_v0'][i], vmax= np.inf, umin=chainparams['ps_u0'][i], umax=chainparams['fs_u0'][i]))
+			bb.uvbounds.update(dict(vmin=chainparams['ps_v0'][i], vmax=chainparams['fs_v0'][i], umin=-np.inf, umax=chainparams['ps_u0'][i]))
+			bc.uvbounds.update(dict(vmin=chainparams['fs_v0'][i], vmax= np.inf, umin=-np.inf, umax=chainparams['ps_u0'][i]))
+		## add bottom if increasing from past
+		if i>0 and chainparams['Rh'][i-1]<chainparams['Rh'][i]:
+			reglist[i].blocks += [bb]
+		## add top if decreasing to future
+		if i<len(reglist)-1 and chainparams['Rh'][i+1]<chainparams['Rh'][i]:
+			reglist[i].blocks += [ba]
+		## add right if both
+		if i>0 and i<len(reglist)-1 and chainparams['Rh'][i-1]<chainparams['Rh'][i] and chainparams['Rh'][i+1]<chainparams['Rh'][i]:
+			reglist[i].blocks += [bc]
 	## return
 	return reglist, chainparams
-
-
 
 
 
