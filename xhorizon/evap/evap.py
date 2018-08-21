@@ -213,8 +213,34 @@ def chain_masker(reglist, chainparams):
 
 
 
+def formevap_funclist(R=np.array([0.,.5,1.,.7,0.]), metfunc0=xh.mf.minkowski, metfunc1=xh.mf.schwarzschild, fparams0={}, fparams1={}):
+	"""
+	"""
+	## init
+	funclist = [ None for Rx in R]
+	## fill
+	for i in range(len(funclist)):
+		## massless gives mink or equivalent
+		if R[i]==0.:
+			fp = fparams0.copy()
+			funclist[i] = metfunc0(**fp)
+		## massive gives schwarz or equivalent
+		if R[i]!=0.:
+			fp = fparams1.copy()
+			fp.update(dict(R=R[i]))
+			funclist[i] = metfunc1(**fp)
+	## return
+	return funclist
 
 
+def formevap_dudv(R=np.array([0.,.5,1.,.7,0.])):
+	"""
+	"""
+	## init
+	R  = 1.*R
+	dR = np.roll(R,1) - R
+	print R
+	print dR
 
 
 

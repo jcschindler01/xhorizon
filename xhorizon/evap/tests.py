@@ -27,8 +27,8 @@ def main():
 	#test10()
 	#test11()
 	#test12()
-	test13()
-
+	#test13()
+	test14()
 
 
 def test1():
@@ -528,10 +528,8 @@ def test13():
 	##
 	print "\nTEST 13\n"
 	## make funclist
-	funclist  = []
-	funclist += [xh.mf.minkowski()]
-	funclist += [xh.mf.schwarzschild(R=Rx) for Rx in [.5,1.,.7]]
-	funclist += [xh.mf.minkowski()]
+	R=np.array([0.,.5,1.,.7,0.])
+	funclist  = xh.evap.formevap_funclist(R=R)
 	## init
 	t0 = np.zeros(len(funclist))
 	x0 = np.zeros(len(funclist))
@@ -544,19 +542,32 @@ def test13():
 	du  = 1.*ss
 	dv  = .9*ss
 	##
-	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=-1, u0=t0-x0, v0=t0+x0, du=1.*du, dv=1.*dv, eta=1., matchmode='rv')
+	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=-2, u0=t0-x0, v0=t0+x0, du=1.*du, dv=1.*dv, eta=1., matchmode='rv')
 	pprint.pprint(chainparams)
 	##
 	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
 	pprint.pprint(chainparams)
 	##
 	rgp(reglist)
-	plt.xlim(.5,2.5)
-	plt.ylim(-1.5,1.5)
 	plt.show()
 	##
 	print "\nEND TEST 13\n"
 
+
+
+
+def test14():
+	"""
+	Test evap.evap.formevap_dudv().
+	"""
+	##
+	print "\nTEST 14\n"
+	##
+	R=np.array([0.,.5,1.,.7,0.])
+	##
+	xh.evap.formevap_dudv(R=R)
+	##
+	print "\nEND TEST 14\n"
 
 
 
