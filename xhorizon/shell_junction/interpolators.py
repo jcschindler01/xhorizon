@@ -60,10 +60,10 @@ def interp_with_smooth_extrap(x, x_ref, y_ref, mu=0.):
 	## extrapolate
 	## left
 	mask = x<=x0
-	y[mask] = y0 + f1((x[mask]-x0), s0=dy0, mu=-mu, b=np.abs(np.log(dy0)))
+	y[mask] = y0 + f1((x[mask]-x0), s0=dy0, mu=-mu, b=0.1+np.abs(np.log(dy0)))
 	## right
 	mask = x>=x1
-	y[mask] = y1 + f1((x[mask]-x1), s0=dy1, mu=mu, b=np.abs(np.log(dy1)))
+	y[mask] = y1 + f1((x[mask]-x1), s0=dy1, mu= mu, b=0.1+np.abs(np.log(dy1)))
 	## unflip if yref was flipped
 	if flip==True:
 		y = -y
@@ -86,7 +86,7 @@ def f1(x, s0=1., mu=0., b=1.):
 	Returns:
 		y = Array of values f(x).
 	"""
-	if np.any(np.logical_not(np.isfinite(np.array([b,s0])))):
+	if np.any(np.logical_not(np.isfinite(np.array([b,s0,1./b])))):
 		print 'mu, s0, b = %s, %s, %s'%(mu, s0, b)
 
 	## init
