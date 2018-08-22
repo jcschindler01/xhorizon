@@ -9,10 +9,10 @@ guts of xhorizon rely on this.
 import numpy as np
 import matplotlib.pyplot as plt
 import copy, pprint
+import scipy.optimize as opt
 
 import xhorizon as xh
 from helpers import *
-
 
 
 
@@ -211,8 +211,6 @@ def chain_masker(reglist, chainparams):
 	return reglist, chainparams
 
 
-
-
 def formevap_funclist(R=np.array([0.,.5,1.,.7,0.]), metfunc0=xh.mf.minkowski, metfunc1=xh.mf.schwarzschild, fparams0={}, fparams1={}):
 	"""
 	"""
@@ -233,37 +231,67 @@ def formevap_funclist(R=np.array([0.,.5,1.,.7,0.]), metfunc0=xh.mf.minkowski, me
 	return funclist
 
 
-def funclist_juncparams(funclist):
+
+def dR_function(dR, func, dv=1., l=.01, A=10.):
 	"""
+	This function is zero for valid values of dR, given the parameters.
 	"""
-	## init
-	reglist = [xh.reg.EFreg(funcx, boundary=False, rlines=False) for funcx in funclist]
-	Rh      = np.array([funcx.rj[-2] for funcx in funclist])
-	r0 = Rh + .1
-	print Rh
-	print r0
-	dR = Rh - np.roll(Rh,1)
-	print dR
-	du = -10. * Rh**2 * dR
-	print du
-	## rstar
-	drstar = np.nan*r0
-	for i in range(len(r0))[1:]:
-		print r0[i-1], r0[i]
-		drstar[i] = reglist[i].metfunc.F(r0[i-1]) - reglist[i].metfunc.F(r0[i])
-	print r0 - np.roll(r0,1)
-	print drstar
-
-	print du - drstar
+	## params from func
+	R0, Rh0, F = 1.*func.fparams['R'], 1.*func.rj[-2], func.F
+	## du1 from du ~ R^2 dR
+	du1 = 3.*A*(R0**2)*dR
+	## du2 from dv-du=2*drstar
+	du2 = dv - 2. * ( F(Rh0+dR+l) - F(Rh0+l) )
+	## du1=du2=du so du1-du2 = zero
+	z = np.abs(du1 - du2)**2
+	## return
+	return 1.*z
 
 
-
+def shellparams_from_func(func, dv=1., l=.01, A=10.):
+	"""
+	Suppose you are given a region with metfunc func.
+	This region has a known mass R0 and horizon radius Rh0, both given by func.
+	Assume that this region has a future slice at r0 = Rh+l.
+	Assume that this region will be attached to another region with mass R0+dR.
+	Assume that the time difference between the two slices has a fixed value dv.
+	Assume that the past slice will be at a radius Rh0+dR+l.
+	Assume that this region has a time difference du = 3*A*(R0**2)*dR.
+	This routine determines what value of dR and du makes the assumptions possible.
+	"""
+	## define dR_function
+	dR_f = lambda dR: dR_function(dR, func, dv=1.*dv, l=1.*l, A=1.*A)
+	## plot dR_f
+	ds = np.linspace(-2,2,8001)
+	plt.plot(ds, dR_f(ds), 'k-')
+	plt.plot([0,2],[0,0],'k--')
+	plt.grid()
+	plt.ylim(-10,10)
+	plt.show()
+	## find root of dR_f
+	dR = opt.minimize_scalar(dR_f, bounds=(0., 2.), method='bounded').x
+	## find du in terms of R and dR
+	du = 3.*A*(R0**2)*dR
+	## define shellparams
+	shellparams = dict(func=func, Rself=1.*func.fparams['R'], dR=1.*dR, du=1.*du, dv=1.*dv)
+	shellparams.update(dict(Rnext=1.*shellparams['Rself']+1.*shellparams['dR']))
+	## print
+	pprint.pprint(shellparams)
+	## return
+	return shellparams.copy()
 
 
 
 if __name__=='__main__':
-	fl = formevap_funclist(R=np.linspace(1.,0.,11))
-	funclist_juncparams(fl)
+	## params
+	R0 = .8
+	## func
+	func = xh.mf.schwarzschild(R=R0)
+	## shellparams
+	shellparams_from_func(func, dv=1., l=.01, A=10.)
+	##
+
+
 
 
 
