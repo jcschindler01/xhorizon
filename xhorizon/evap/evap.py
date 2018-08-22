@@ -233,15 +233,37 @@ def formevap_funclist(R=np.array([0.,.5,1.,.7,0.]), metfunc0=xh.mf.minkowski, me
 	return funclist
 
 
-def formevap_dudv(R=np.array([0.,.5,1.,.7,0.])):
+def funclist_juncparams(funclist):
 	"""
 	"""
 	## init
-	R  = 1.*R
-	dR = np.roll(R,1) - R
-	print R
+	reglist = [xh.reg.EFreg(funcx, boundary=False, rlines=False) for funcx in funclist]
+	Rh      = np.array([funcx.rj[-2] for funcx in funclist])
+	r0 = Rh + .1
+	print Rh
+	print r0
+	dR = Rh - np.roll(Rh,1)
 	print dR
+	du = -10. * Rh**2 * dR
+	print du
+	## rstar
+	drstar = np.nan*r0
+	for i in range(len(r0))[1:]:
+		print r0[i-1], r0[i]
+		drstar[i] = reglist[i].metfunc.F(r0[i-1]) - reglist[i].metfunc.F(r0[i])
+	print r0 - np.roll(r0,1)
+	print drstar
 
+	print du - drstar
+
+
+
+
+
+
+if __name__=='__main__':
+	fl = formevap_funclist(R=np.linspace(1.,0.,11))
+	funclist_juncparams(fl)
 
 
 
