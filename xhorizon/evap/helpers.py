@@ -97,7 +97,7 @@ def rgp(reglist):
 	Plot all regions in reglist.
 	"""
 	## lines
-	xh.evap.colorlines(reglist, sty=dict(alpha=0.2, c='k'))
+	xh.evap.colorlines(reglist, sty=dict(alpha=0.5, c='k'))
 	#xh.evap.uv_lines(reglist, uv='u', sty=dict())
 	xh.evap.boundarylines(reglist, sty=dict(), npoints=5001)
 	xh.evap.s0_lines(reglist, sty=dict(lw=3))
@@ -111,7 +111,7 @@ def rgp(reglist):
 	for reg in reglist:
 		reg.rplot()
 	## fill
-	xh.evap.fill_by_R(reglist, cm=plt.cm.hsv)
+	xh.evap.fill_by_R_2(reglist, col='r', amax=.2)
 
 #############################################################
 
@@ -202,6 +202,22 @@ def fillcols_by_R(reglist):
 	## return
 	return colvals
 
+def alphas_by_R_2(reglist, amax=.9):
+	"""
+	Get fill color values based on radius.
+	"""
+	## rvals
+	Rvals = np.zeros(len(reglist))
+	for i, reg in enumerate(reglist):
+		if 'R' in reg.metfunc.fparams.keys():
+			x = reg.metfunc.fparams['R']
+			Rvals[i] = 1.*x
+	## alphas
+	amin, amax = 0., amax
+	avals = amin + (amax-amin)*(Rvals/np.max(Rvals))
+	## return
+	return 1.*avals
+
 
 def fill_by_R(reglist, cm=plt.cm.prism):
 	colvals = fillcols_by_R(reglist)
@@ -212,6 +228,14 @@ def fill_by_R(reglist, cm=plt.cm.prism):
 			sty = dict(fc=col, alpha=.2)
 			b.fill(sty=sty)
 
+def fill_by_R_2(reglist, col='r', amax=.9):
+	##
+	alphas = alphas_by_R_2(reglist, amax=amax)
+	for i in range(len(reglist)):
+		reg = reglist[i]
+		for b in reg.blocks:
+			sty = dict(fc=col, alpha=alphas[i])
+			b.fill(sty=sty)
 
 ############################################################################################
 

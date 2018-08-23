@@ -49,9 +49,9 @@ def funclist_chain(funclist, seed=0, u0=None, v0=None, du=None, dv=None, eta=0.,
 	matchpop = mp(matchmode)
 	## default u0 and v0 values
 	if u0==None:
-		[0. for funcx in funclist]
+		u0 = [0. for funcx in funclist]
 	if v0==None:
-		[0. for funcx in funclist]
+		v0 = [0. for funcx in funclist]
 	## seed region
 	i = 1*i0
 	for i in [1*i0]:
@@ -211,6 +211,8 @@ def chain_masker(reglist, chainparams):
 	return reglist, chainparams
 
 
+
+
 def formevap_funclist(R=np.array([0.,.5,1.,.7,0.]), metfunc0=xh.mf.minkowski, metfunc1=xh.mf.schwarzschild, fparams0={}, fparams1={}):
 	"""
 	"""
@@ -304,7 +306,7 @@ def sp_transpose(sp_list):
 	"""
 	"""
 	##
-	sp = sp_list
+	sp = sp_list[::-1]
 	## outs
 	funclist = [sp[i]['func'] for i in range(len(sp))]
 	RR = np.array([sp[i]['Rself'] for i in range(len(sp))])

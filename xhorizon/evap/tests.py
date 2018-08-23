@@ -28,7 +28,10 @@ def main():
 	#test11()
 	#test12()
 	#test13()
-	test14()
+	#test14()
+	test15()
+
+
 
 
 def test1():
@@ -609,6 +612,37 @@ def test14():
 	##
 	print "\nEND TEST 14\n"
 
+
+
+
+def test15():
+	"""
+	Test evap.evap.shellparams_list().
+	"""
+	##
+	print "\nTEST 15\n"
+	##
+	## shellparams
+	sp = xh.evap.shellparams_list(Rmin=.2, Rmax=.5, dv=1., l=.1, A=10., functype=xh.mf.schwarzschild, fparams=dict())
+	spt = xh.evap.sp_transpose(sp)
+	## outs
+	funclist = spt['funclist']
+	du = spt['du']
+	dv = spt['dv']
+	##
+	print "chain"
+	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=0, du=1.*du, dv=1.*dv, eta=0., matchmode='rv')
+	pprint.pprint(chainparams)
+	##
+	print "mask"
+	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
+	pprint.pprint(chainparams)
+	##
+	print "plot"
+	rgp(reglist)
+	plt.savefig('temp-figs/test15.png', dpi=200)
+	##
+	print "\nEND TEST 15\n"
 
 
 
