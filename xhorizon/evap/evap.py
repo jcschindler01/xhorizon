@@ -262,18 +262,20 @@ def shellparams_from_func(func, dv=1., l=.01, A=10.):
 	## define dR_function
 	dR_f = lambda dR: dR_function(dR, func, dv=1.*dv, l=1.*l, A=1.*A)
 	## plot dR_f
-	ds = np.linspace(-2,2,8001)
-	plt.plot(ds, dR_f(ds), 'k-')
-	plt.plot([0,2],[0,0],'k--')
-	plt.grid()
-	plt.ylim(-10,10)
-	plt.show()
+	if False:
+		ds = np.linspace(-2,2,8001)
+		plt.plot(ds, dR_f(ds), 'k-')
+		plt.plot([0,2],[0,0],'k--')
+		plt.grid()
+		plt.ylim(-10,10)
+		plt.show()
 	## find root of dR_f
-	dR = opt.minimize_scalar(dR_f, bounds=(0., 2.), method='bounded').x
+	dR = opt.minimize_scalar(dR_f, bounds=(0., 3.), method='bounded').x
 	## find du in terms of R and dR
+	R0 = 1.*func.fparams['R']
 	du = 3.*A*(R0**2)*dR
 	## define shellparams
-	shellparams = dict(func=func, Rself=1.*func.fparams['R'], dR=1.*dR, du=1.*du, dv=1.*dv)
+	shellparams = dict(func=copy.deepcopy(func), Rself=1.*func.fparams['R'], dR=1.*dR, du=1.*du, dv=1.*dv, l=1.*l, A=1.*A)
 	shellparams.update(dict(Rnext=1.*shellparams['Rself']+1.*shellparams['dR']))
 	## print
 	pprint.pprint(shellparams)
@@ -282,14 +284,46 @@ def shellparams_from_func(func, dv=1., l=.01, A=10.):
 
 
 
-if __name__=='__main__':
-	## params
-	R0 = .8
-	## func
-	func = xh.mf.schwarzschild(R=R0)
-	## shellparams
-	shellparams_from_func(func, dv=1., l=.01, A=10.)
+def shellparams_list(Rmin=.1, Rmax=1., dv=1., l=.1, A=10., functype=xh.mf.schwarzschild, fparams=dict()):
+	"""
+	"""
+	## init
+	R = 1.*Rmin
+	## get shellparams
+	sp = []
+	while R<=Rmax:
+		print R
+		func = functype(R=1.*R, **fparams)
+		sp += [shellparams_from_func(func, dv=1.*dv, l=1.*l, A=1.*A)]
+		R = 1.*sp[-1]['Rnext']
+	## return
+	return sp
+
+
+def sp_transpose(sp_list):
+	"""
+	"""
 	##
+	sp = sp_list
+	## outs
+	funclist = [sp[i]['func'] for i in range(len(sp))]
+	RR = np.array([sp[i]['Rself'] for i in range(len(sp))])
+	du = np.array([sp[i]['du'] for i in range(len(sp))])
+	dv = np.array([sp[i]['dv'] for i in range(len(sp))])
+	dR = np.array([sp[i]['dR'] for i in range(len(sp))])
+	A = np.array([sp[i]['A'] for i in range(len(sp))])
+	l = np.array([sp[i]['l'] for i in range(len(sp))])
+	## make
+	uu = np.cumsum(du)
+	vv = np.cumsum(dv)
+	## dict
+	spt = dict(funclist=copy.deepcopy(funclist), R=1.*RR, dR=1.*dR, du=1.*du, dv=1.*dv, A=1.*A, l=1.*l, uu=1.*uu, vv=1.*vv)
+	## return
+	return spt.copy()
+
+
+if __name__=='__main__':
+	pass
 
 
 

@@ -558,14 +558,54 @@ def test13():
 
 def test14():
 	"""
-	Test evap.evap.formevap_dudv().
+	Test evap.evap.shellparams_list().
 	"""
 	##
 	print "\nTEST 14\n"
 	##
-	R=np.array([0.,.5,1.,.7,0.])
+	## shellparams
+	sp = xh.evap.shellparams_list(Rmin=.2, Rmax=1., dv=1., l=.1, A=10., functype=xh.mf.schwarzschild, fparams=dict())
+	spt = xh.evap.sp_transpose(sp)
+	## outs
+	RR = spt['R']
+	du = spt['du']
+	dv = spt['dv']
+	uu = spt['uu']
+	vv = spt['vv']
+	A = spt['A'][0]
+	## smooth uu,vv
+	ss = np.linspace(0,1.1*np.max(uu),5001)
+	## plot
+	if True:
+		plt.figure()
+		plt.title('R vs u')
+		plt.xlabel('u')
+		plt.ylabel('A*R^3')
+		plt.xlim(0,10)
+		plt.ylim(0,10)
+		plt.plot(uu,A*RR**3,'k.')
+		plt.plot(ss,ss,'b-')
+		plt.grid(1)
+	## plot
+	if False:
+		plt.figure()
+		plt.title('R vs v')
+		plt.xlabel('v')
+		plt.ylabel('A*R^3')
+		plt.ylim(0,A)
+		plt.plot(vv,A*RR**3,'k.')
+		plt.grid(1)
+	## plot
+	if False:
+		plt.figure()
+		plt.title('du/dv vs v')
+		plt.xlabel('v')
+		plt.ylabel('du/dv')
+		plt.plot(vv,du/dv,'k.')
+		plt.grid(1)
+	## show
+	plt.show()
 	##
-	xh.evap.formevap_dudv(R=R)
 	##
 	print "\nEND TEST 14\n"
 
