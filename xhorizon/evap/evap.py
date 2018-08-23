@@ -191,9 +191,9 @@ def chain_masker(reglist, chainparams):
 		## copy final block for parts which depend on radius change values
 		for b in reglist[i].blocks[-1:]:
 			## copies
-			ba = copy.deepcopy(b)
-			bb = copy.deepcopy(b)
-			bc = copy.deepcopy(b)
+			ba = xh.block(b.master, b.j, b.bparams)
+			bb = xh.block(b.master, b.j, b.bparams)
+			bc = xh.block(b.master, b.j, b.bparams)
 			## mask a=top b=bottom c=right
 			ba.uvbounds.update(dict(vmin=chainparams['fs_v0'][i], vmax= np.inf, umin=chainparams['ps_u0'][i], umax=chainparams['fs_u0'][i]))
 			bb.uvbounds.update(dict(vmin=chainparams['ps_v0'][i], vmax=chainparams['fs_v0'][i], umin=-np.inf, umax=chainparams['ps_u0'][i]))

@@ -623,7 +623,7 @@ def test15():
 	print "\nTEST 15\n"
 	##
 	## shellparams
-	sp = xh.evap.shellparams_list(Rmin=.2, Rmax=.5, dv=1., l=.1, A=10., functype=xh.mf.schwarzschild, fparams=dict())
+	sp = xh.evap.shellparams_list(Rmin=.2, Rmax=1., dv=1., l=.1, A=10., functype=xh.mf.schwarzschild, fparams=dict())
 	spt = xh.evap.sp_transpose(sp)
 	## outs
 	funclist = spt['funclist']
