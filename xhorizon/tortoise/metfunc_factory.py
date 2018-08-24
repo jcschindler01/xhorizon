@@ -285,7 +285,7 @@ def test1():
 	"""
 	"""
 	######### input ########
-	func  = schwarzschild(R=.001)
+	func  = hayward(R=.05, l=.01)
 	########################
 	print "\nTEST 9"
 	print func
