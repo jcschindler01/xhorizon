@@ -623,15 +623,18 @@ def test15():
 	print "\nTEST 15\n"
 	##
 	## shellparams
-	sp = xh.evap.shellparams_list(Rmin=.2, Rmax=1., dv=1., l=.1, A=10., functype=xh.mf.schwarzschild, fparams=dict())
+	sp = xh.evap.shellparams_list(Rmin=.2, Rmax=1., dv=1., l=.1, A=1., functype=xh.mf.schwarzschild, fparams=dict())
 	spt = xh.evap.sp_transpose(sp)
 	## outs
 	funclist = spt['funclist']
 	du = spt['du']
 	dv = spt['dv']
+	r0f = spt['R'] + spt['l']
+	r0p = np.roll(r0f,1)
+	v0 = 0.*np.linspace(-4, 4, len(funclist))
 	##
 	print "chain"
-	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=0, du=1.*du, dv=1.*dv, eta=0., matchmode='rv')
+	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=0, du=1.*du, dv=1.*dv, r0p=1.*r0p, r0f=1.*r0f, v0=1.*v0)
 	pprint.pprint(chainparams)
 	##
 	print "mask"
