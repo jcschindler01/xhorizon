@@ -660,9 +660,9 @@ def test16():
 	## funcs
 	params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=.01)))
 	## evap
-	params.update(dict(Rmin=.1, Rmax=.5, dv_evap=.5, l=.1, A=.2))
+	params.update(dict(Rmin=.1, Rmax=.6, dv_evap=.5, l=.1, A=.2))
 	## accrete
-	params.update(dict(B=.5, Naccrete=1))
+	params.update(dict(B=.5, Naccrete=5))
 	## offset
 	params.update(dict(uoff=0., voff=-2., ueta=0., veta=1.))
 	##
