@@ -272,6 +272,7 @@ def shellparams_from_func(func, dv=1., l=.01, A=10.):
 	Assume that the time difference between the two slices has a fixed value dv.
 	Assume that the past slice will be at a radius Rh0+dR+l.
 	Assume that this region has a time difference du = 3*A*(R0**2)*dR.
+	Assume that Rh ~= R.
 	This routine determines what value of dR and du makes the assumptions possible.
 	"""
 	## define dR_function
@@ -335,6 +336,84 @@ def sp_transpose(sp_list):
 	spt = dict(funclist=copy.deepcopy(funclist), R=1.*RR, dR=1.*dR, du=1.*du, dv=1.*dv, A=1.*A, l=1.*l, uu=1.*uu, vv=1.*vv)
 	## return
 	return spt.copy()
+
+
+def cp_from_fdudv(funclist, du=None, dv=None, l=None):
+	"""
+	"""
+	## init
+	funclist = funclist
+	reglist = [xh.reg.EFreg(funcx, boundary=None, rlines=None) for funcx in funclist]
+	Rh = np.array([funclist[i].rj[-2] for i in range(len(funclist))])
+	du  = 1.*du
+	dv  = 1.*dv
+	r0f = 1.*Rh + 1.*l
+	r0p = 1.*np.roll(r0f,1)
+	u0  = 1.*np.cumsum(du-du[0])
+	v0  = 1.*np.cumsum(dv-dv[0])
+	ps_matchmode = ['rv' for i in range(len(funclist))]
+	fs_matchmode = ['rv' for i in range(len(funclist))]
+	## get rinf
+	rinf = get_rinf_uv0(reglist, v0=1.*v0)
+	print "\n\n\nrinf=%s\n\n\n"%rinf
+	## iterator
+	ii = range(len(funclist))
+	## get correct r0 values
+	## make cp
+	cp = dict(du=1.*du, dv=1.*dv, r0p=1.*r0p, r0f=1.*r0f, u0=1.*u0, v0=1.*v0, ps_matchmode=ps_matchmode, fs_matchmode=fs_matchmode)
+	# ## return
+	return cp.copy()
+
+
+
+
+def formevap_input(Rmin=.2, Rmax=.5, dv_evap=1., l=.1, A=10., B=1., Naccrete=1, functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()):
+	"""
+	Build inputs in reverse order starting from far future.
+
+	funclist, seed=0, du=None, dv=None, r0p=None, r0f=None, u0=None, v0=None, ps_matchmode=None, fs_matchmode=None
+	"""
+	## init
+	funclist = []
+	du  = []
+	dv  = []
+	## final region
+	funclist += [functype0(**fparams0)]
+	du  += [0.]
+	dv  += [0.]
+	## evap
+	sp = shellparams_list(Rmin=1.*Rmin, Rmax=1.*Rmax, dv=1.*dv_evap, l=1.*l, A=1.*A, functype=functype1, fparams=fparams1)
+	for i in range(len(sp)):
+		funclist += [sp[i]['func']]
+		du  += [sp[i]['du']]
+		dv  += [sp[i]['dv']]
+	## max radius
+	Rmax = sp[-1]['Rself']
+	## accrete params
+	RR = np.linspace(Rmax,0., Naccrete+1)[1:-1]
+	dR = Rmax/float(Naccrete)
+	for R in RR:
+		funclist += [functype1(R=1.*R, **fparams1)]
+		du += [0.]
+		dv += [B/float(Naccrete)]
+	## first region
+	funclist += [functype0(**fparams0)]
+	du  += [0.]
+	dv  += [0.]
+	## prep for output
+	funclist = funclist[::-1]
+	du = np.array(du[::-1])
+	dv = np.array(dv[::-1])
+	l = 1.*l
+	## get chain params
+	cp = cp_from_fdudv(funclist, du=1.*du, dv=1.*dv, l=1.*l)
+	##
+	pprint.pprint(cp)
+	## return
+	return funclist, cp
+
+
+
 
 
 if __name__=='__main__':

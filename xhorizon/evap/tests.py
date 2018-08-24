@@ -29,8 +29,8 @@ def main():
 	#test12()
 	#test13()
 	#test14()
-	test15()
-
+	#test15()
+	test16()
 
 
 
@@ -648,6 +648,30 @@ def test15():
 	print "\nEND TEST 15\n"
 
 
+
+def test16():
+	"""
+	Test evap.evap.formevap_input() with funclist_chain().
+	"""
+	##
+	print "\nTEST 16\n"
+	##
+	print "inputs"
+	funclist, cp = formevap_input()
+	##
+	print "chain"
+	reglist, chainparams = funclist_chain(funclist, seed=3, **cp)
+	##
+	print "mask"
+	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
+	pprint.pprint(chainparams)
+	##
+	print "plot"
+	rgp(reglist)
+	plt.savefig('temp-figs/test16.png', dpi=200)
+	plt.show()
+	##
+	print "\nEND TEST 16\n"
 
 
 main()

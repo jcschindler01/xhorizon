@@ -13,7 +13,7 @@ from xhorizon.shell_junction import interpolators as interp
 
 
 
-def get_rinf_uv0(reglist, v0=[], u0=[]):
+def get_rinf_uv0(reglist, v0=[]):
 	"""
 	Given a list of regions, assume that `outermost' region has index [-1].
 	Assume r->inf as u->-inf.
@@ -29,7 +29,7 @@ def get_rinf_uv0(reglist, v0=[], u0=[]):
 			v = np.array([v0[i]])
 			uv = np.array([u,v])
 			r0[i] = b.tr_of_uv(uv)[1]
-	r0 = .95*np.min(r0)
+	r0 = .9*np.min(r0)
 	return r0
 
 
@@ -212,6 +212,8 @@ def alphas_by_R_2(reglist, amax=.9):
 		if 'R' in reg.metfunc.fparams.keys():
 			x = reg.metfunc.fparams['R']
 			Rvals[i] = 1.*x
+	## log
+	Rvals = np.log(1.+Rvals)
 	## alphas
 	amin, amax = 0., amax
 	avals = amin + (amax-amin)*(Rvals/np.max(Rvals))
