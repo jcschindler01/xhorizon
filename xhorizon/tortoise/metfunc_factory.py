@@ -285,12 +285,18 @@ def test1():
 	"""
 	"""
 	######### input ########
-	func  = schwarzschild(R=1.)
+	func  = schwarzschild(R=.1)
 	########################
 	print "\nTEST 9"
 	print func
 	print func.rj
 	print func.info['Type']
+	##
+	import matplotlib.pyplot as plt
+	plt.plot(func.r_ref, func.rstar_ref, 'kx')
+	plt.xlim(0,25)
+	plt.grid()
+	plt.show()
 	## end
 	print "END TEST 9\n"
 
