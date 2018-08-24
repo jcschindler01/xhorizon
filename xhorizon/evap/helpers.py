@@ -29,7 +29,7 @@ def get_rinf_uv0(reglist, v0=[]):
 			v = np.array([v0[i]])
 			uv = np.array([u,v])
 			r0[i] = b.tr_of_uv(uv)[1]
-	r0 = .9*np.min(r0)
+	r0 = .85*np.min(r0)
 	return r0
 
 

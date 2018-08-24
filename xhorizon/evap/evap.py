@@ -226,26 +226,6 @@ def chain_masker(reglist, chainparams):
 
 
 
-def formevap_funclist(R=np.array([0.,.5,1.,.7,0.]), metfunc0=xh.mf.minkowski, metfunc1=xh.mf.schwarzschild, fparams0={}, fparams1={}):
-	"""
-	"""
-	## init
-	funclist = [ None for Rx in R]
-	## fill
-	for i in range(len(funclist)):
-		## massless gives mink or equivalent
-		if R[i]==0.:
-			fp = fparams0.copy()
-			funclist[i] = metfunc0(**fp)
-		## massive gives schwarz or equivalent
-		if R[i]!=0.:
-			fp = fparams1.copy()
-			fp.update(dict(R=R[i]))
-			funclist[i] = metfunc1(**fp)
-	## return
-	return funclist
-
-
 
 def dR_function(dR, func, dv=1., l=.01, A=10.):
 	"""
@@ -338,7 +318,7 @@ def sp_transpose(sp_list):
 	return spt.copy()
 
 
-def cp_from_fdudv(funclist, du=None, dv=None, l=None):
+def cp_from_fdudv(funclist, du=None, dv=None, l=None, uoff=0., voff=0., ueta=1., veta=1.):
 	"""
 	"""
 	## init
@@ -349,16 +329,39 @@ def cp_from_fdudv(funclist, du=None, dv=None, l=None):
 	dv  = 1.*dv
 	r0f = 1.*Rh + 1.*l
 	r0p = 1.*np.roll(r0f,1)
-	u0  = 1.*np.cumsum(du-du[0])
-	v0  = 1.*np.cumsum(dv-dv[0])
+	u0  = 1.*ueta*np.cumsum(du-du[0]) + 1.*uoff
+	v0  = 1.*veta*np.cumsum(dv-dv[0]) + 1.*voff
 	ps_matchmode = ['rv' for i in range(len(funclist))]
 	fs_matchmode = ['rv' for i in range(len(funclist))]
-	## get rinf
-	rinf = get_rinf_uv0(reglist, v0=1.*v0)
-	print "\n\n\nrinf=%s\n\n\n"%rinf
 	## iterator
 	ii = range(len(funclist))
-	## get correct r0 values
+	## get rinf
+	rinf = np.nan * Rh
+	for i in ii:
+		ia, ib = max(0, i-1), min(i+2, len(ii))
+		rinf[i] = get_rinf_uv0(reglist[ia:ib], v0=1.*v0)
+	print rinf	
+	## correct first and last r0 values
+	r0p[0]  = 1.*rinf[0]
+	r0f[-1] = 1.*rinf[-1]
+	## correct r0 values for formation and evaporation
+	for i in ii:
+		## past
+		if i>0:
+			## accretion
+			if Rh[i]>=Rh[i-1]:
+				r0p[i] = 1.*rinf[i]
+			## evaporation
+			if Rh[i]< Rh[i-1]:
+				r0p[i] = 1.*Rh[i-1] + 1.*l
+		## future
+		if i<len(ii)-1:
+			## accretion
+			if Rh[i]<=Rh[i+1]:
+				r0f[i] = 1.*rinf[i]
+			## evaporation
+			if Rh[i]> Rh[i+1]:
+				r0f[i] = 1.*Rh[i] + 1.*l
 	## make cp
 	cp = dict(du=1.*du, dv=1.*dv, r0p=1.*r0p, r0f=1.*r0f, u0=1.*u0, v0=1.*v0, ps_matchmode=ps_matchmode, fs_matchmode=fs_matchmode)
 	# ## return
@@ -367,7 +370,7 @@ def cp_from_fdudv(funclist, du=None, dv=None, l=None):
 
 
 
-def formevap_input(Rmin=.2, Rmax=.5, dv_evap=1., l=.1, A=10., B=1., Naccrete=1, functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()):
+def formevap_input(Rmin=.1, Rmax=1., dv_evap=1., l=.01, A=10., B=1., Naccrete=5, uoff=0., voff=0., ueta=1., veta=1., functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()):
 	"""
 	Build inputs in reverse order starting from far future.
 
@@ -406,7 +409,7 @@ def formevap_input(Rmin=.2, Rmax=.5, dv_evap=1., l=.1, A=10., B=1., Naccrete=1, 
 	dv = np.array(dv[::-1])
 	l = 1.*l
 	## get chain params
-	cp = cp_from_fdudv(funclist, du=1.*du, dv=1.*dv, l=1.*l)
+	cp = cp_from_fdudv(funclist, du=1.*du, dv=1.*dv, l=1.*l, uoff=1.*uoff, voff=1.*voff, ueta=1.*ueta, veta=1.*veta)
 	##
 	pprint.pprint(cp)
 	## return

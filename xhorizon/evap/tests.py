@@ -655,21 +655,34 @@ def test16():
 	"""
 	##
 	print "\nTEST 16\n"
+	## params
+	params = dict()
+	## funcs
+	params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=.01)))
+	## evap
+	params.update(dict(Rmin=.1, Rmax=.5, dv_evap=.5, l=.1, A=.2))
+	## accrete
+	params.update(dict(B=.5, Naccrete=1))
+	## offset
+	params.update(dict(uoff=0., voff=-2., ueta=0., veta=1.))
 	##
 	print "inputs"
-	funclist, cp = formevap_input()
+	funclist, cp = formevap_input(**params)
 	##
 	print "chain"
-	reglist, chainparams = funclist_chain(funclist, seed=3, **cp)
+	reglist, chainparams = funclist_chain(funclist, seed=0, **cp)
 	##
 	print "mask"
 	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
 	pprint.pprint(chainparams)
 	##
 	print "plot"
-	rgp(reglist)
-	plt.savefig('temp-figs/test16.png', dpi=200)
-	plt.show()
+	rgp(reglist[:])
+	plt.xlim(0,3)
+	plt.ylim(-1.5,1.5)
+	##
+	print "save"
+	plt.savefig('temp-figs/test16.png', dpi=400)
 	##
 	print "\nEND TEST 16\n"
 
