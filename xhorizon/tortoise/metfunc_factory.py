@@ -51,7 +51,7 @@ def schwarzschild(R=1.):
 	## parameters
 	R = float(R)
 	fparams = dict(R=R)
-	Fparams = dict(eps=1e-6*R, inf=25.*R, npoints_interp=500)
+	Fparams = dict(eps=1e-6*R, inf=25., npoints_interp=500)
 	## metric function
 	f = lambda r: 1. - R / r
 	## zeroes and slopes of f(r)
@@ -285,7 +285,7 @@ def test1():
 	"""
 	"""
 	######### input ########
-	func  = schwarzschild(R=.1)
+	func  = schwarzschild(R=.001)
 	########################
 	print "\nTEST 9"
 	print func
