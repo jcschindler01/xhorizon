@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import xhorizon as xh
 import pprint
+import datetime
 
 from evap import *
 from helpers import *
@@ -660,17 +661,19 @@ def test16():
 	## funcs
 	params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=.01)))
 	## evap
-	params.update(dict(Rmin=.1, Rmax=.6, dv_evap=.5, l=.1, A=.2))
+	params.update(dict(Rmin=1., Rmax=1., dv_evap=.5, l=.1, A=.2))
 	## accrete
-	params.update(dict(B=.5, Naccrete=5))
+	params.update(dict(B=.5, Naccrete=1))
 	## offset
-	params.update(dict(uoff=0., voff=-2., ueta=0., veta=1.))
+	params.update(dict(voff=0., veta=1., uoff=0., ueta=0.))
+	## seed
+	seed = 0
 	##
 	print "inputs"
 	funclist, cp = formevap_input(**params)
 	##
 	print "chain"
-	reglist, chainparams = funclist_chain(funclist, seed=0, **cp)
+	reglist, chainparams = funclist_chain(funclist, seed=seed, **cp)
 	##
 	print "mask"
 	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
@@ -681,8 +684,18 @@ def test16():
 	plt.xlim(0,3)
 	plt.ylim(-1.5,1.5)
 	##
-	print "save"
-	plt.savefig('temp-figs/test16.png', dpi=400)
+	print "save fig"
+	fname =  datetime.datetime.now().strftime("Test16_%Y-%m-%d_%H-%M-%S-%f")
+	plt.title(fname)
+	plt.savefig("temp-figs/%s.png"%(fname), dpi=400)
+	##
+	print "save txt"
+	ff = open("temp-figs/%s.txt"%(fname), 'w')
+	ff.write("%s\n"%(fname))
+	ff.write('\n')
+	ff.write('Input:\nparams=\n%s\nseed=\n%s\n'%(pprint.pformat(params),seed))
+	ff.write('\n')
+	ff.write('Output:\nchainparams=\n%s\n'%(pprint.pformat(chainparams)))
 	##
 	print "\nEND TEST 16\n"
 
