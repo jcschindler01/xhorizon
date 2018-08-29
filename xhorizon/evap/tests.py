@@ -661,13 +661,13 @@ def test16():
 	## funcs
 	params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=.01)))
 	## evap
-	params.update(dict(Rmin=1., Rmax=1., dv_evap=.5, l=.1, A=.2))
+	params.update(dict(Rmin=.2, Rmax=.5, dv_evap=.5, l=.1, A=.2))
 	## accrete
-	params.update(dict(B=.5, Naccrete=1))
+	params.update(dict(B=.5, Naccrete=3))
 	## offset
 	params.update(dict(voff=0., veta=1., uoff=0., ueta=0.))
 	## seed
-	seed = 0
+	seed = -3
 	##
 	print "inputs"
 	funclist, cp = formevap_input(**params)
@@ -683,6 +683,9 @@ def test16():
 	rgp(reglist[:])
 	plt.xlim(0,3)
 	plt.ylim(-1.5,1.5)
+	if seed not in [0,-1]:
+		plt.xlim(-3,3)
+		plt.ylim(-1.5,4.5)
 	##
 	print "save fig"
 	fname =  datetime.datetime.now().strftime("Test16_%Y-%m-%d_%H-%M-%S-%f")

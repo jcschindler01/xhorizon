@@ -100,7 +100,7 @@ def rgp(reglist):
 	xh.evap.colorlines(reglist, sty=dict(alpha=0.5, c='k'))
 	#xh.evap.uv_lines(reglist, uv='u', sty=dict())
 	xh.evap.boundarylines(reglist, sty=dict(), npoints=5001)
-	xh.evap.s0_lines(reglist, sty=dict(lw=3))
+	#xh.evap.s0_lines(reglist, sty=dict(lw=3))
 	## figure
 	plt.figure(figsize=(6,6))
 	plt.axes([.1, .1, .8, .8])
