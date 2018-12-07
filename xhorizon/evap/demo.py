@@ -10,20 +10,20 @@ def demo():
 	## params
 	params = dict()
 	## funcs
-	#params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=.01)))
-	params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()))
+	params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=.01)))
+	#params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()))
 	## evap
-	params.update(dict(Rmin=1., Rmax=1., dv_evap=.5, l=.05, A=.2))
+	params.update(dict(Rmin=.94, Rmax=1., dv_evap=.5, l=.05, A=.2))
 	## accrete
-	params.update(dict(B=.5, Naccrete=1))
+	params.update(dict(B=.5, Naccrete=4))
 	## offset
 	params.update(dict(voff=0., veta=1., uoff=0., ueta=0.))
 
 	## seed
-	seed = -1
+	seed = 0
 
 	## go
-	reglist, chainparams = xh.evap.create_evap(params, seed=0)
+	reglist, chainparams = xh.evap.create_evap(params, seed=seed)
 
 	## draw
 	print "plot"

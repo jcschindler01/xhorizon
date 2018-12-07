@@ -21,10 +21,11 @@ def drawreg(reglist, chainparams):
 	singularity_sty     = dict(ls='dashed', dashes=(2,2))
 	rline_inf_sty       = dict(c='0.5', zorder=10000, lw=1.3)
 	rline_hor_sty       = dict(lw=0.2, c='k', zorder=9999)
-	acc_shells_sty      = dict(lw=0.2, ls='dashed', dashes=(4,4), c='0.65', zorder=2000)
+	acc_shells_sty      = dict(lw=0.2, ls='dashed', dashes=(4,4), c='0.75', zorder=2000)
 	evap_shells_out_sty = acc_shells_sty
-	evap_shells_in_sty  = dict(lw=0.9, ls=':', c='0.65', zorder=2000)
+	evap_shells_in_sty  = dict(lw=0.4, ls='dashed', dashes=(.5,1), c='0.75', zorder=2000)
 	fill_horizons_sty   = dict(fc='none', ec='k', lw=0, hatch='.', zorder=9990)
+	fill_density_sty    = dict(zorder=100)
 	## lines
 	rline_zero(reglist, sty=rline_zero_sty, sty2=singularity_sty, npoints=5001)
 	rline_inf_col(reglist, sty=rline_inf_sty, npoints=5001)
@@ -46,7 +47,7 @@ def drawreg(reglist, chainparams):
 		reg.rplot()
 	## fill
 	fill_horizons(reglist, sty=fill_horizons_sty)
-	#fill_by_R_2(reglist, col='r', amax=.1)
+	fill_density(reglist, sty=fill_density_sty)
 
 
 
@@ -221,13 +222,83 @@ def fill_horizons(reglist, sty={}):
 				style.update(sty)
 				b.fill(sty=style)
 
+
+def fill_density(reglist, sty={}):
+	## regions
+	for reg in reglist:
+		## linespacing
+		x = np.arange(0.,10.1,1.)
+		## default to zero
+		density = 0.*x
+		## vac spacetimes
+		vac = ['Schwarzschild', 'Minkowski']
+		if reg.metfunc.info['Type'] in vac:
+			for b in reg.blocks:
+				b.fill(dstyle(0.))
+		## hayward
+		if reg.metfunc.info['Type'] == 'Hayward':
+			## get params
+			l = reg.metfunc.fparams['l']
+			R = reg.metfunc.fparams['R']
+			## rcore and r
+			rcore = (R*l**2.)**(1./3.)
+			r = rcore * x
+			rmax = 100.
+			print r
+			r = np.concatenate([r, np.array([rmax])])
+			print r
+			## density 
+			density = 1./(1.+x**3)**2   # rho/rho0 = 1/(1+x^3)^2
+			## blocks
+			for b in reg.blocks:
+				## loop over radii
+				for n in range(len(x)):
+					## rr and rho
+					rr = r[n:n+2]
+					rho = density[n]
+					## style
+					style = dstyle(rho)
+					## fill
+					rvals=b.fill_between_r(rr, sty=style, npoints=1001, inf=50.)
+
+
+
+
+
+def dstyle(rho, cm=plt.cm.Oranges, sty={}, ovr={}):
+	"""
+	Density rho in (0,1), output fill style.
+	Since all Hayward have same l, all regions same scale.
+	"""
+	## style
+	style = dict(fc='none', ec='none', zorder=900)
+	style.update(sty)
+	## cnorm
+	cmin, cmax = .3, .5
+	cnorm = cmin + (cmax-cmin)*rho
+	## anorm
+	amin, amax = .3, .7
+	anorm = amin + (amax-amin)*rho
+	## color and alpha
+	style.update(fc=cm(cnorm), alpha=anorm)
+	## override
+	style.update(ovr)
+	## return
+	return style.copy()
+		
+			
+			
+
+
+
+
 ##############################
 
 ################# tools for drawing ########################################
 
 
 
-def rlines(reglist, rmin=0.05, rmax=25., dr=.2, sty={}, cm=plt.cm.hsv_r, npoints=2001, inf=25.):
+def rlines(reglist, rmin=1.1, rmax=25., dr=.5, sty={}, cm=plt.cm.hsv_r, npoints=2001, inf=25.):
 	"""
 	Add colorscaled lines of constant radius to region.
 	Useful to check for matching.
@@ -260,137 +331,7 @@ def s0_lines(reglist, sty={}, npoints=1001, inf=50., eps=1e-24):
 			b.add_curves_uv(xh.cm.uvlines(-x, uv='uv', uvbounds=b.uvbounds, sty=style2, c=0., inf=inf, npoints=npoints))
 	return reglist
 
-
-def uv_lines(reglist, uv='uv', sty={}, npoints=1001, inf=50., eps=1e-24):
-	"""
-	"""
-	for reg in reglist:
-		for b in reg.blocks:
-			smin, smax, ds = -5., 25., 1.
-			vals = np.arange(smin, smax, ds)
-			cm = plt.cm.gist_rainbow
-			cv = np.linspace(0,1,len(vals))
-			for i in range(len(vals)):
-				style1 = dict(c=cm(cv[i]), lw=.8, ls='-', zorder=6000)
-				style1.update(sty)
-				b.add_curves_uv(xh.cm.uvlines([vals[i]], uv=uv, uvbounds=b.uvbounds, sty=style1, c=0., inf=inf, npoints=npoints))
-	return reglist
-
-
 ##########################################################################################
-
-
-
-
-######################### tools for filling #############################################
-
-def fillcols_by_R(reglist):
-	"""
-	Get fill color values based on radius.
-	"""
-	## get rvals
-	Rvals = np.zeros(len(reglist))
-	for i, reg in enumerate(reglist):
-		if 'R' in reg.metfunc.fparams.keys():
-			x = reg.metfunc.fparams['R']
-			Rvals[i] = x
-	## get colvals
-	norm = np.max(Rvals)
-	colvals = 0.2 + 0.7 * Rvals / norm
-	## return
-	return colvals
-
-def alphas_by_R_2(reglist, amax=.9):
-	"""
-	Get fill color values based on radius.
-	"""
-	## rvals
-	Rvals = np.zeros(len(reglist))
-	for i, reg in enumerate(reglist):
-		if 'R' in reg.metfunc.fparams.keys():
-			x = reg.metfunc.fparams['R']
-			Rvals[i] = 1.*x
-	## log
-	Rvals = np.log(1.+Rvals)
-	## alphas
-	amin, amax = 0., amax
-	avals = amin + (amax-amin)*(Rvals/np.max(Rvals))
-	## return
-	return 1.*avals
-
-
-def fill_by_R(reglist, cm=plt.cm.prism):
-	colvals = fillcols_by_R(reglist)
-	for i in range(len(reglist)):
-		reg = reglist[i]
-		col = cm(colvals[i])
-		for b in reg.blocks:
-			sty = dict(fc=col, alpha=.2)
-			b.fill(sty=sty)
-
-def fill_by_R_2(reglist, col='r', amax=.9):
-	##
-	alphas = alphas_by_R_2(reglist, amax=amax)
-	for i in range(len(reglist)):
-		reg = reglist[i]
-		for b in reg.blocks:
-			sty = dict(fc=col, alpha=alphas[i])
-			b.fill(sty=sty)
-
-
-
-def rline_inf(reglist, npoints=5001, inf=1000., sty={}):
-	"""
-	Add boundary lines to regions in reglist.
-	"""
-	for reg in reglist:
-		for b in reg.blocks:
-			## outermost blocks only
-			if b.j==len(b.master.metfunc.rj)-2:
-				## style
-				style = dict(lw=0.9, c='0.5', zorder=2010)
-				style.update(sty)
-				## rstar value
-				rstar = b.master.metfunc.rstar_ref[-1]
-				## curve
-				b.add_curves_uv(xh.cm.block_boundary_2(b, sty=style, inf=100., npoints=npoints)[-1:])
-
-############################################################################################
-
-
-################## more helpers #############
-
-
-
-##########################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
