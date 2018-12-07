@@ -26,6 +26,7 @@ def drawreg(reglist, chainparams):
 	evap_shells_in_sty  = dict(lw=0.4, ls='dashed', dashes=(.5,1), c='0.75', zorder=2000)
 	fill_horizons_sty   = dict(fc='none', ec='k', lw=0, hatch='.', zorder=9990)
 	fill_density_sty    = dict(zorder=100)
+
 	## lines
 	rline_zero(reglist, sty=rline_zero_sty, sty2=singularity_sty, npoints=5001)
 	rline_inf_col(reglist, sty=rline_inf_sty, npoints=5001)
@@ -33,11 +34,11 @@ def drawreg(reglist, chainparams):
 	acc_shells(reglist, chainparams, sty=acc_shells_sty, inf=100., npoints=5001)
 	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=5001)
 	evap_shells_in(reglist, chainparams, sty=evap_shells_in_sty, inf=100., npoints=5001)
-	#rlines(reglist)
-	#xh.evap.uv_lines(reglist, uv='u', sty=dict())
-	#xh.evap.s0_lines(reglist, sty=dict(lw=3))
+	make_rlines(reglist, chainparams, l=.05)
+	vticks(reglist)
+	uticks(reglist)
 	## figure
-	plt.figure(figsize=(6,6))
+	plt.figure(figsize=(4,6))
 	plt.axes([.1, .1, .8, .8])
 	plt.xlim(-3,3)
 	plt.ylim(-3,3)
@@ -227,7 +228,7 @@ def fill_density(reglist, sty={}):
 	## regions
 	for reg in reglist:
 		## linespacing
-		x = np.arange(0.,10.1,1.)
+		x = np.arange(0.,10.1,.5)
 		## default to zero
 		density = 0.*x
 		## vac spacetimes
@@ -248,7 +249,7 @@ def fill_density(reglist, sty={}):
 			r = np.concatenate([r, np.array([rmax])])
 			print r
 			## density 
-			density = 1./(1.+x**3)**2   # rho/rho0 = 1/(1+x^3)^2
+			density = 1./(1.+x**3.)**2.   # rho/rho0 = 1/(1+x^3)^2
 			## blocks
 			for b in reg.blocks:
 				## loop over radii
@@ -263,32 +264,112 @@ def fill_density(reglist, sty={}):
 
 
 
-
-
 def dstyle(rho, cm=plt.cm.Oranges, sty={}, ovr={}):
 	"""
 	Density rho in (0,1), output fill style.
 	Since all Hayward have same l, all regions same scale.
 	"""
 	## style
-	style = dict(fc='none', ec='none', zorder=900)
+	style = dict(fc='none', ec='none', lw=0, zorder=900)
 	style.update(sty)
 	## cnorm
-	cmin, cmax = .3, .5
+	cmin, cmax = .1, .5
 	cnorm = cmin + (cmax-cmin)*rho
 	## anorm
 	amin, amax = .3, .7
 	anorm = amin + (amax-amin)*rho
 	## color and alpha
-	style.update(fc=cm(cnorm), alpha=anorm)
+	style.update(fc=cm(cnorm), alpha=.47)
 	## override
 	style.update(ovr)
 	## return
 	return style.copy()
 		
 			
-			
 
+def make_rlines(reglist, chainparams, l=.05):
+	"""
+	"""
+	## params
+	R = np.max(chainparams['Rh'])
+	l = 1.*l
+	rcore = (R*l**2)**(1./3.)
+	print "%.3f, %.3f, %.3f"%(l, rcore, R)
+	## general
+	style = dict(ls='-', zorder=10, lw=.4, alpha=.14)
+	## l scale
+	x = np.arange(0.,10.01,.5)
+	scale = l
+	style.update(dict(c='c'))
+	rlines(reglist, scale*x, sty=style, inf=10., npoints=5001.)
+	## R scale
+	x = np.arange(0.,25.01,.5)
+	scale = R
+	style.update(dict(c='m' ))
+	rlines(reglist, scale*x, sty=style, inf=25., npoints=5001.)
+
+
+def vticks(reglist, dv=1., inf1=100., inf2=50.5):
+	"""
+	Remainder lets dv carry across regions.
+	"""
+	## init
+	remainder = 0.
+	## regions
+	for reg in reglist:
+		## blocks
+		for b in reg.blocks:
+			## last blocks only
+			if b.j == reg.blocks[-1].j:
+				## outer last blocks only
+				if not np.isfinite(b.uvbounds['umin']):
+					## get min and max
+					vmin = np.max([b.uvbounds['vmin'], -inf2])
+					vmax = np.min([b.uvbounds['vmax'],  inf2])
+					## make array
+					vv = remainder + np.arange(vmin, vmax, dv)
+					## get new remainder
+					remainder = dv - (vmax - vv[-1])
+					## make and add curve
+					crv = xh.curve()
+					crv.uv = np.array([-inf1+0.*vv, 1.*vv])
+					style = dict(c='.5',alpha=.3, ls='none', marker=(2,0,45), markersize=7, zorder=100)
+					crv.sty.update(style)
+					b.add_curves_uv([crv])
+					## print
+					print "dv = %s"%(dv)
+
+
+
+def uticks(reglist, du=1., inf1=100., inf2=50.5):
+	"""
+	Remainder lets dv carry across regions.
+	"""
+	## init
+	remainder = 0.
+	## regions
+	for reg in reglist:
+		## blocks
+		for b in reg.blocks:
+			## last blocks only
+			if b.j == reg.blocks[-1].j:
+				## outer last blocks only
+				if not np.isfinite(b.uvbounds['umax']):
+					## get min and max
+					umin = np.max([b.uvbounds['umin'], -inf2])
+					umax = np.min([b.uvbounds['umax'],  inf2])
+					## make array
+					uu = remainder + np.arange(umin, umax, du)
+					## get new remainder
+					remainder = du - (umax - uu[-1])
+					## make and add curve
+					crv = xh.curve()
+					crv.uv = np.array([1.*uu, inf1+0.*uu])
+					style = dict(c='.5',alpha=.3, marker=(2,0,-45), markersize=7, zorder=100)
+					crv.sty.update(style)
+					b.add_curves_uv([crv])
+					## print
+					print "dv = %s"%(du)
 
 
 
@@ -298,7 +379,24 @@ def dstyle(rho, cm=plt.cm.Oranges, sty={}, ovr={}):
 
 
 
-def rlines(reglist, rmin=1.1, rmax=25., dr=.5, sty={}, cm=plt.cm.hsv_r, npoints=2001, inf=25.):
+def rlines(reglist, rvals, sty={}, npoints=2001, inf=25.):
+	"""
+	Add colorscaled lines of constant radius to region.
+	Useful to check for matching.
+	"""
+	rvals = 1.*rvals
+	for reg in reglist:
+		for b in reg.blocks:
+			for i in range(len(rvals)):
+				if (b.rj[0]<rvals[i]) and (rvals[i]<b.rj[1]):
+					style = dict(c='c', ls='-', lw=.5, zorder=1500)
+					style.update(sty)
+					rstarvals = 1.*b.master.metfunc.F(rvals[i:i+1])
+					b.add_curves_uv(xh.cm.rstarlines_special_2(rstarvals, b.uvbounds, c=b.master.rparams['c'], sty=style, inf=1.*inf, npoints=1.*npoints))
+	return reglist
+
+
+def colorlines(reglist, rmin=1.1, rmax=25., dr=.5, sty={}, cm=plt.cm.hsv_r, npoints=2001, inf=25.):
 	"""
 	Add colorscaled lines of constant radius to region.
 	Useful to check for matching.
@@ -315,7 +413,6 @@ def rlines(reglist, rmin=1.1, rmax=25., dr=.5, sty={}, cm=plt.cm.hsv_r, npoints=
 					rstarvals = 1.*b.master.metfunc.F(rvals[i:i+1])
 					b.add_curves_uv(xh.cm.rstarlines_special_2(rstarvals, b.uvbounds, c=b.master.rparams['c'], sty=style, inf=2.*inf, npoints=npoints))
 	return reglist
-
 
 def s0_lines(reglist, sty={}, npoints=1001, inf=50., eps=1e-24):
 	"""
