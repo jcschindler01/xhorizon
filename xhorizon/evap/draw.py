@@ -16,14 +16,22 @@ def drawreg(reglist, chainparams):
 	"""
 	Plot all regions in reglist.
 	"""
+	## styles
+	rline_zero_sty      = dict(lw=0.9, c='0.5', zorder=11000)
+	singularity_sty     = dict(ls='dashed', dashes=(2,2))
+	rline_inf_sty       = dict(c='0.5', zorder=10000, lw=1.3)
+	rline_hor_sty       = dict(lw=0.2, c='k', zorder=9999)
+	acc_shells_sty      = dict(lw=0.2, ls='dashed', dashes=(4,4), c='0.65', zorder=2000)
+	evap_shells_out_sty = acc_shells_sty
+	evap_shells_in_sty  = dict(lw=0.9, ls=':', c='0.65', zorder=2000)
+	fill_horizons_sty   = dict(fc='none', ec='k', lw=0, hatch='.', zorder=9990)
 	## lines
-	acc_shells(reglist, chainparams, sty=dict(), inf=100., npoints=5001)
-	evap_shells_out(reglist, chainparams, sty=dict(), inf=100., npoints=5001)
-	evap_shells_in(reglist, chainparams, sty=dict(), inf=100., npoints=5001)
-	rline_zero(reglist, sty=dict(), npoints=5001)
-	#rline_inf(reglist, sty=dict(), npoints=5001)
-	rline_inf_col(reglist, sty=dict(), npoints=5001)
-	rline_hor(reglist)
+	rline_zero(reglist, sty=rline_zero_sty, sty2=singularity_sty, npoints=5001)
+	rline_inf_col(reglist, sty=rline_inf_sty, npoints=5001)
+	rline_hor(reglist, sty=rline_hor_sty)
+	acc_shells(reglist, chainparams, sty=acc_shells_sty, inf=100., npoints=5001)
+	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=5001)
+	evap_shells_in(reglist, chainparams, sty=evap_shells_in_sty, inf=100., npoints=5001)
 	#rlines(reglist)
 	#xh.evap.uv_lines(reglist, uv='u', sty=dict())
 	#xh.evap.s0_lines(reglist, sty=dict(lw=3))
@@ -37,8 +45,8 @@ def drawreg(reglist, chainparams):
 	for reg in reglist:
 		reg.rplot()
 	## fill
-	fill_horizons(reglist)
-	fill_by_R_2(reglist, col='r', amax=.9)
+	fill_horizons(reglist, sty=fill_horizons_sty)
+	#fill_by_R_2(reglist, col='r', amax=.1)
 
 
 
@@ -48,7 +56,7 @@ def drawreg(reglist, chainparams):
 
 ## being actually used ############
 
-def rline_zero(reglist, npoints=5001, sty={}):
+def rline_zero(reglist, npoints=5001, sty={}, sty2={}):
 	"""
 	Add boundary lines to regions in reglist.
 	"""
@@ -60,7 +68,7 @@ def rline_zero(reglist, npoints=5001, sty={}):
 				style.update(sty)
 				## singularity style
 				if b.sgnf<0.:
-					style.update(dict(ls='dashed', dashes=(2,2)))
+					style.update(sty2)
 				## curve
 				cv = xh.cm.rstarlines_special_2([0.], b.uvbounds, c=0., sty=style, inf=100., npoints=1001, eps=1e-12)
 				b.add_curves_uv(cv)
@@ -76,7 +84,7 @@ def rline_inf_col(reglist, npoints=5001, inf=1000., sty={}):
 			## outermost blocks only
 			if b.j==len(b.master.metfunc.rj)-2:
 				## style
-				style = dict(zorder=10000)
+				style = dict(c='0.5', zorder=10000)
 				style.update(sty)
 				## rstar value
 				rstar = b.master.metfunc.rstar_ref[-1]
@@ -84,11 +92,10 @@ def rline_inf_col(reglist, npoints=5001, inf=1000., sty={}):
 				m = 0.
 				if 'R' in b.master.metfunc.fparams.keys():
 					m = 0.5 * b.master.metfunc.fparams['R']
-				## color
-				cmin = .5
-				colval = cmin + (1.-cmin)*m
-				lw = 1.3 * (1.+2.*m)
-				style.update(dict(lw=lw, c='0.5'))
+				## linewidth
+				lw0 = 1.*style['lw']
+				lw = lw0 * (1.+2.*m)
+				style.update(dict(lw=lw))
 				## curve
 				b.add_curves_uv(xh.cm.block_boundary_2(b, sty=style, inf=100., npoints=npoints)[-1:])
 				#b.add_curves_uv(xh.cm.uvlines([-inf,inf], uv='uv', uvbounds=b.uvbounds, sty=style, c=0., inf=inf, npoints=npoints))
@@ -125,8 +132,6 @@ def acc_shells(reglist, chainparams, sty={}, inf=50., npoints=5001):
 		reg = reglist[i]
 		## accretion only
 		if Rh[i+1]>Rh[i]:
-			print i
-			print "hello"
 			##
 			for b in reg.blocks:
 				## style
@@ -147,10 +152,8 @@ def evap_shells_out(reglist, chainparams, sty={}, inf=100., npoints=5001):
 		reg = reglist[i]
 		## evap only
 		if Rh[i+1]<Rh[i]:
-			print i
 			## outgoing
 			for b in reg.blocks:
-				print b.uvbounds['vmax']
 				if not np.isfinite(b.uvbounds['vmax']):
 					## style
 					style = dict(lw=0.2, ls='dashed', dashes=(4,4), c='0.65', zorder=2000)
@@ -166,9 +169,9 @@ def evap_shells_in(reglist, chainparams, sty={}, inf=5., npoints=5001):
 	Add boundary lines to regions in reglist.
 	"""
 	Rh = chainparams['Rh']
-	u0 = chainparams['fs_u0']+1e-15
+	u0 = chainparams['fs_u0']
 	v0 = chainparams['fs_v0']-1e-15
-	r0 = chainparams['fs_r0']-1e-15
+	r0 = chainparams['fs_r0']
 	for i in range(len(reglist[:-1])):
 		reg = reglist[i]
 		## evap only
@@ -177,29 +180,46 @@ def evap_shells_in(reglist, chainparams, sty={}, inf=5., npoints=5001):
 			uu = u0[i:i+1]
 			vv = v0[i:i+1]
 			rr = r0[i:i+1]
-			## outgoing
+			## ingoing
 			for b in reg.blocks:
-				if b.rj[0]<rr:
-					## style
-					style = dict(lw=0.2, ls='-', marker='x', c='0.65', zorder=2000)
-					style.update(sty)
-					## uvbounds
-					uvb = b.uvbounds.copy()
-					uvb.update(dict(umin=0.))
-					print uvb
-					print chainparams['fs_u0'][i]
-					## curve
-					b.add_curves_uv(xh.cm.uvlines(vv, uv='v', uvbounds=uvb, sty=style, c=0., inf=inf, npoints=npoints))
+				## style
+				style = dict(lw=0.9, ls=':', c='0.65', zorder=2000)
+				style.update(sty)
+				## inner blocks
+				if b.rj[1]<rr:
+					## values
+					u = np.linspace(-inf,inf,npoints)
+					v = vv+0.*u
+					## make curve
+					cv = xh.curve()
+					cv.uv = np.array([u,v])
+					cv.sty.update(style)
+					## add
+					b.add_curves_uv([cv])
+				## outer block
+				elif b.rj[0]<rr and not np.isfinite(b.uvbounds['umax']):
+					## values
+					u = np.linspace(uu,inf,npoints)
+					v = vv+0.*u
+					## make curve
+					cv = xh.curve()
+					cv.uv = np.array([u,v])
+					cv.sty.update(style)
+					## add
+					b.add_curves_uv([cv])
 
 
-def fill_horizons(reglist):
+
+
+def fill_horizons(reglist, sty={}):
 	##
 	for i in range(len(reglist)):
 		reg = reglist[i]
 		for b in reg.blocks:
 			if b.sgnf < 0.:
-				sty = dict(fc='none', ec='k', lw=0, hatch='.', zorder=9990)
-				b.fill(sty=sty)
+				style = dict(fc='none', ec='k', lw=0, hatch='.', zorder=9990)
+				style.update(sty)
+				b.fill(sty=style)
 
 ##############################
 
@@ -277,8 +297,6 @@ def fillcols_by_R(reglist):
 	## get colvals
 	norm = np.max(Rvals)
 	colvals = 0.2 + 0.7 * Rvals / norm
-	#print "Rvals = %s"%(Rvals)
-	#print "colvals = %s"%(colvals)
 	## return
 	return colvals
 
