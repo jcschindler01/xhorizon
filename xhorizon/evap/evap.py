@@ -417,6 +417,69 @@ def formevap_input(Rmin=.1, Rmax=1., dv_evap=1., l=.01, A=10., B=1., Naccrete=5,
 
 
 
+def create_evap(params, seed=0):
+	"""
+	Takes input parameters of the form:
+
+	"""
+	## 
+	import pprint
+	## print
+	pprint.pprint("params = %s"%(params))
+	pprint.pprint("seed = %s"%(seed))
+	## formevap_input
+	print "inputs"
+	funclist, cp = xh.evap.formevap_input(**params)
+	## funclist_chain
+	print "chain"
+	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=seed, **cp)
+	## chain_masker
+	print "mask"
+	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
+	## print
+	pprint.pprint(chainparams)
+	## return
+	return reglist, chainparams
+
+
+def evapsave(path="temp/temp", params=None, chainparams=None, seed=None, sfp=dict(), temp_only=False):
+	"""
+	Save figure with timestamp and txt notes.
+	"""
+	##
+	import shutil
+	import time
+	import pprint
+	import matplotlib.pyplot as plt
+	## get path with timestamp
+	ts = str(time.time()).replace(".","")
+	## save figure
+	print( "save...")
+	sfpp = dict(dpi=400)
+	sfpp.update(sfp)
+	plt.savefig("%s_%s.png"%(path,ts), **sfpp)
+	print( "save done")
+	##save text
+	print( "save txt")
+	ff = open("%s_%s.txt"%(path,ts), 'w')
+	ff.write("%s_%s\n"%(path,ts))
+	ff.write('\n')
+	ff.write('Input:\nparams=\n%s\nseed=\n%s\n'%(pprint.pformat(params),seed))
+	ff.write('\n')
+	ff.write('Output:\nchainparams=\n%s\n'%(pprint.pformat(chainparams)))
+	ff.close()
+	## copy to temp
+	print( "copy...")
+	## copy normally
+	if temp_only==False:
+		shutil.copy("%s_%s.png"%(path,ts), path+"_temp.png")
+		shutil.copy("%s_%s.txt"%(path,ts), path+"_temp.txt")
+	if temp_only==True:
+		shutil.move("%s_%s.png"%(path,ts), path+"_temp.png")
+		shutil.move("%s_%s.txt"%(path,ts), path+"_temp.txt")
+	print( "copy done")
+	## copy normally
+
 
 
 if __name__=='__main__':

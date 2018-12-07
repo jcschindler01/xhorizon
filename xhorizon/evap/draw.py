@@ -251,6 +251,5 @@ def fill_by_R_2(reglist, col='r', amax=.9):
 
 
 if __name__=='__main__':
-	import os
-	os.system("python C:\\Joe\\gdrive\\physics\\2018\\form_evap\\form_evap\\figures\\004\\004b.py")
+	xh.evap.demo()
 
