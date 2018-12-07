@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 import curve_class as cc
-from curvemakers import block_boundary, block_boundary_2, rlines, rstarlines
+from curvemakers import rstarlines_special_2, block_boundary, block_boundary_2, rlines, rstarlines
 
 
 
@@ -119,7 +119,8 @@ def fill_between_r(blk, rvals=np.array([0.,0.]), sty={}, inf=100., npoints=1000)
 	## go if valid
 	if valid==True:
 		## can be buggy if inf or npoints are too low
-		crvlist = rstarlines(rstar_vals, c=c, inf=2.*inf, npoints=npoints, sty=dict(marker='x'))
+		#crvlist = rstarlines(rstar_vals, c=c, inf=2.*inf, npoints=npoints, sty=dict(marker='x'))
+		crvlist = rstarlines_special_2(rstar_vals, blk.uvbounds, c=1.*c, inf=inf, npoints=npoints, eps=1e-15)
 		fill_between_curves_uv(blk, crvlist, sty=sty, eps=eps)
 
 
