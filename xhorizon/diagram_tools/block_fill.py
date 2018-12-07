@@ -88,7 +88,7 @@ def fill_between_r(blk, rvals=np.array([0.,0.]), sty={}, inf=100., npoints=1000)
 	if np.abs(rsnap[1]-rsnap[0]) > 5.*eps:
 		valid = True
 	## get block boundary curves
-	boundary_curves = block_boundary(blk)
+	boundary_curves = block_boundary_2(blk, inf=inf, npoints=npoints)
 	## get params and initialize boundary rstar values
 	boundary_rstar = np.nan * rvals
 	c = float(blk.master.rparams['c'])
