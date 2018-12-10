@@ -7,6 +7,25 @@ def demo():
 	"""
 	"""
 
+
+	## format axes
+	## figure
+	plt.figure(figsize=(4,6))
+	plt.axes([.1, .1, .8, .8])
+	plt.xlim(-3,3)
+	plt.ylim(-3,3)
+	plt.gca().set_aspect('equal')
+	## ticks
+	plt.xticks([1,2])
+	plt.yticks([-1,0,1])
+	## lims
+	plt.xlim(.8,2.2)
+	plt.ylim(-1.2,1.2)
+	## labels
+	plt.xlabel('$V-U$')
+	plt.ylabel('$V+U$')
+
+
 	## params
 	params = dict()
 	## funcs
@@ -30,16 +49,6 @@ def demo():
 	print "plot"
 	xh.evap.drawreg(reglist, chainparams)
 
-	## format axes
-	## ticks
-	plt.xticks([1,2])
-	plt.yticks([-1,0,1])
-	## lims
-	plt.xlim(.8,2.2)
-	plt.ylim(-1.2,1.2)
-	## labels
-	plt.xlabel('$V-U$')
-	plt.ylabel('$V+U$')
 
 	if seed not in [0,-1]:
 		plt.xlim(-3,3)
@@ -49,7 +58,7 @@ def demo():
 	if True:
 		path = "temp-figs/demo"
 		sfp = dict(dpi=400)
-		temp_only = False
+		temp_only = True
 		xh.evap.evapsave(path=path, params=params, chainparams=chainparams, seed=seed, sfp=sfp, temp_only=temp_only)
 
 	## show

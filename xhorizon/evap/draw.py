@@ -37,12 +37,6 @@ def drawreg(reglist, chainparams):
 	make_rlines(reglist, chainparams, l=.05)
 	vticks(reglist)
 	uticks(reglist)
-	## figure
-	plt.figure(figsize=(4,6))
-	plt.axes([.1, .1, .8, .8])
-	plt.xlim(-3,3)
-	plt.ylim(-3,3)
-	plt.gca().set_aspect('equal')
 	## plot
 	for reg in reglist:
 		reg.rplot()
