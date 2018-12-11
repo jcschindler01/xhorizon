@@ -54,21 +54,23 @@ def demo():
 	label = ''
 
 	# func type
-	ftype = 1
+	ftype = 0
 
 	## input
-	l = .05
-	R = 1.
+	l  = .05
+	le = .01
+
+	## input
+	R0 = .1
+	R  = 1.
 
 	## evap
-	R0 = .8
-	tauB = 1.
-	dv = .75
-	le = .005
+	dv = .5
+	tauB = .2
 
 	## accrete
-	Nacc = 2
-	tauA = 1.
+	Nacc = 5
+	tauA = .5
 
 	## seed
 	seed=0
@@ -92,9 +94,9 @@ def demo():
 	if ftype==1:
 		params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=1.*l)))
 	## evap
-	params.update(dict(Rmin=1.*R0, Rmax=1.*R, dv_evap=1.*dv, l=1.*le, A=1.*tauB))
+	params.update(dict(Rmin=1.*R0, Rmax=1.*R, dv_evap=1.*dv, l=1.*le, A=1.*tauA))
 	## accrete
-	params.update(dict(B=1.*tauB, Naccrete=1*Nacc))
+	params.update(dict(B=1.*tauA, Naccrete=1*Nacc))
 	## offset
 	params.update(dict(voff=1.*voff, veta=1.*veta, uoff=1.*uoff, ueta=1.*ueta))
 
