@@ -62,7 +62,7 @@ def demo():
 	seed = 0
 
 	## label
-	label = '(b)'
+	label = ''
 
 	## go
 	reglist, chainparams = xh.evap.create_evap(params, seed=seed)
