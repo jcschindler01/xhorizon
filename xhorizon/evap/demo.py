@@ -61,13 +61,13 @@ def demo():
 	R = 1.
 
 	## evap
-	R0 = 1.
+	R0 = .8
 	tauB = 1.
 	dv = .75
 	le = .005
 
 	## accrete
-	Nacc = 1
+	Nacc = 2
 	tauA = 1.
 
 	## seed
@@ -92,7 +92,7 @@ def demo():
 	if ftype==1:
 		params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=1.*l)))
 	## evap
-	params.update(dict(Rmin=1., Rmax=1.*R, dv_evap=1.*dv, l=1.*le, A=1.*tauB))
+	params.update(dict(Rmin=1.*R0, Rmax=1.*R, dv_evap=1.*dv, l=1.*le, A=1.*tauB))
 	## accrete
 	params.update(dict(B=1.*tauB, Naccrete=1*Nacc))
 	## offset
