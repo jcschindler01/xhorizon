@@ -5,6 +5,7 @@ This module contains helpers to draw with evap code.
 import numpy as np
 import matplotlib.pyplot as plt
 import copy
+import matplotlib.hatch
 
 import xhorizon as xh
 from xhorizon.shell_junction import interpolators as interp
@@ -21,10 +22,11 @@ def drawreg(reglist, chainparams):
 	singularity_sty     = dict(ls='dashed', dashes=(2,2))
 	rline_inf_sty       = dict(c='0.5', zorder=10000, lw=1.3)
 	rline_hor_sty       = dict(lw=0.2, c='k', zorder=9999)
-	acc_shells_sty      = dict(lw=0.2, ls='dashed', dashes=(4,4), c='0.75', zorder=2000)
+	rline_sty           = dict(ls='-', zorder=10, lw=.4, alpha=.29)
+	acc_shells_sty      = dict(lw=0.3, ls='dashed', dashes=(3,3), c='0.65', zorder=2000)
 	evap_shells_out_sty = acc_shells_sty
-	evap_shells_in_sty  = dict(lw=0.4, ls='dashed', dashes=(.5,1), c='0.75', zorder=2000)
-	fill_horizons_sty   = dict(fc='none', ec='k', lw=0, hatch='.', zorder=9990)
+	evap_shells_in_sty  = dict(lw=0.8, ls='dashed', dashes=(1,1.2), c='0.65', zorder=2000)
+	fill_horizons_sty   = dict(fc='none', ec='k', lw=0, hatch='c', zorder=9990)
 	fill_density_sty    = dict(zorder=100)
 
 	## lines
@@ -34,7 +36,7 @@ def drawreg(reglist, chainparams):
 	acc_shells(reglist, chainparams, sty=acc_shells_sty, inf=100., npoints=5001)
 	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=5001)
 	evap_shells_in(reglist, chainparams, sty=evap_shells_in_sty, inf=100., npoints=5001)
-	make_rlines(reglist, chainparams, l=.05)
+	make_rlines(reglist, chainparams, l=.05, sty=rline_sty)
 	vticks(reglist)
 	uticks(reglist)
 	## plot
@@ -90,7 +92,7 @@ def rline_inf_col(reglist, npoints=5001, inf=1000., sty={}):
 					m = 0.5 * b.master.metfunc.fparams['R']
 				## linewidth
 				lw0 = 1.*style['lw']
-				lw = lw0 * (1.+2.*m)
+				lw = lw0 * (1.+3.*m)
 				style.update(dict(lw=lw))
 				## curve
 				b.add_curves_uv(xh.cm.block_boundary_2(b, sty=style, inf=100., npoints=npoints)[-1:])
@@ -239,9 +241,7 @@ def fill_density(reglist, sty={}):
 			rcore = (R*l**2.)**(1./3.)
 			r = rcore * x
 			rmax = 100.
-			print r
 			r = np.concatenate([r, np.array([rmax])])
-			print r
 			## density 
 			density = 1./(1.+x**3.)**2.   # rho/rho0 = 1/(1+x^3)^2
 			## blocks
@@ -273,7 +273,7 @@ def dstyle(rho, cm=plt.cm.Oranges, sty={}, ovr={}):
 	amin, amax = .3, .7
 	anorm = amin + (amax-amin)*rho
 	## color and alpha
-	style.update(fc=cm(cnorm), alpha=.47)
+	style.update(fc=cm(cnorm), alpha=.75)
 	## override
 	style.update(ovr)
 	## return
@@ -281,16 +281,16 @@ def dstyle(rho, cm=plt.cm.Oranges, sty={}, ovr={}):
 		
 			
 
-def make_rlines(reglist, chainparams, l=.05):
+def make_rlines(reglist, chainparams, l=.05, sty={}):
 	"""
 	"""
 	## params
 	R = np.max(chainparams['Rh'])
 	l = 1.*l
 	rcore = (R*l**2)**(1./3.)
-	print "%.3f, %.3f, %.3f"%(l, rcore, R)
 	## general
-	style = dict(ls='-', zorder=10, lw=.4, alpha=.14)
+	style = dict(ls='-', zorder=10, lw=.4, alpha=.2)
+	style.update(sty)
 	## l scale
 	x = np.arange(0.,10.01,.5)
 	scale = l
@@ -327,15 +327,14 @@ def vticks(reglist, dv=1., inf1=100., inf2=50.5):
 					## make and add curve
 					crv = xh.curve()
 					crv.uv = np.array([-inf1+0.*vv, 1.*vv])
-					style = dict(c='.5',alpha=.3, ls='none', marker=(2,0,45), markersize=7, zorder=100)
+					style = dict(markeredgecolor='k', alpha=0.3, ls='none', marker=(2,0,45), markersize=7, zorder=-100)
 					crv.sty.update(style)
 					b.add_curves_uv([crv])
-					## print
-					print "dv = %s"%(dv)
 
 
 
-def uticks(reglist, du=1., inf1=100., inf2=50.5):
+
+def uticks(reglist, du=1., inf1=100., inf2=50.1):
 	"""
 	Remainder lets dv carry across regions.
 	"""
@@ -348,7 +347,7 @@ def uticks(reglist, du=1., inf1=100., inf2=50.5):
 			## last blocks only
 			if b.j == reg.blocks[-1].j:
 				## outer last blocks only
-				if not np.isfinite(b.uvbounds['umax']):
+				if not np.isfinite(b.uvbounds['vmax']):
 					## get min and max
 					umin = np.max([b.uvbounds['umin'], -inf2])
 					umax = np.min([b.uvbounds['umax'],  inf2])
@@ -359,12 +358,23 @@ def uticks(reglist, du=1., inf1=100., inf2=50.5):
 					## make and add curve
 					crv = xh.curve()
 					crv.uv = np.array([1.*uu, inf1+0.*uu])
-					style = dict(c='.5',alpha=.3, marker=(2,0,-45), markersize=7, zorder=100)
+					style = dict(markeredgecolor='k', alpha=.3, marker=(2,0,-45), markersize=7, zorder=100)
 					crv.sty.update(style)
 					b.add_curves_uv([crv])
-					## print
-					print "dv = %s"%(du)
 
+
+## custom hatch
+class CustomHatch(matplotlib.hatch.SmallFilledCircles):
+    size = 0.1
+    filled = True
+
+    def __init__(self, hatch, density):
+    	density = 2
+        self.num_rows = (hatch.count('c')) * density
+        matplotlib.hatch.Circles.__init__(self, hatch, density)
+
+## assign custom hatch
+matplotlib.hatch._hatch_types.append(CustomHatch)
 
 
 ##############################
