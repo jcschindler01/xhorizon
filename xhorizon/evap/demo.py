@@ -44,32 +44,44 @@ def demo():
 		plt.ylim(-0.5*aspect*sq,0.5*aspect*sq)
 	################################
 	
+	## input
+	l = .05
+	le = .005
+	R = 1.
+	dv = .75
+
+	# type
+	ftype = 1
+
+	## seed
+	seed=0
+
+	## label
+	label = ''
 
 	## params
 	params = dict()
 	## funcs
-	#
-	#params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=.05)))
-	params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()))
+	#### schwarz
+	if ftype==0:
+		params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()))
+	#### hayward
+	if ftype==1:
+		params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=1.*l)))
 	## evap
-	params.update(dict(Rmin=1., Rmax=1., dv_evap=.75, l=.05, A=1.))
+	params.update(dict(Rmin=1., Rmax=1.*R, dv_evap=1.*dv, l=1.*le, A=1.))
 	## accrete
 	params.update(dict(B=1., Naccrete=1))
 	## offset
 	params.update(dict(voff=0., veta=1., uoff=0., ueta=0.))
-
-	## seed
-	seed = 0
-
-	## label
-	label = ''
 
 	## go
 	reglist, chainparams = xh.evap.create_evap(params, seed=seed)
 
 	## draw
 	print("plot")
-	xh.evap.drawreg(reglist, chainparams)
+	pp = dict(l=1.*l, R=1.*R)
+	xh.evap.drawreg(reglist, chainparams, fparams=pp)
 
 
 	if seed not in [0,-1]:
@@ -83,7 +95,7 @@ def demo():
 
 	## param label
 	if True:
-		plabel = "\n".join([r"$2M=%.2f$"%(1.), r"$l_{ev}=l=%.2f$"%(0.05)])
+		plabel = "\n".join([r"$l_{ev}=%s$"%(le), r"", r"$l=%s$"%(l), r"$2M=%s$"%(R)])
 		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
 
 

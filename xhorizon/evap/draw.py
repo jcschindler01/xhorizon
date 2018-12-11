@@ -31,10 +31,12 @@ tick_sty            = dict(markersize=10, markeredgecolor='k', alpha=.3, zorder=
 
 
 
-def drawreg(reglist, chainparams):
+def drawreg(reglist, chainparams, fparams=dict()):
 	"""
 	Plot all regions in reglist.
 	"""       
+	l=fparams['l']
+	R=fparams['R']
 
 	## lines
 	rline_zero(reglist, sty=rline_zero_sty, sty2=singularity_sty, npoints=5001)
@@ -43,7 +45,7 @@ def drawreg(reglist, chainparams):
 	acc_shells(reglist, chainparams, sty=acc_shells_sty, inf=100., npoints=5001)
 	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=5001)
 	evap_shells_in(reglist, chainparams, sty=evap_shells_in_sty, inf=100., npoints=5001)
-	make_rlines(reglist, chainparams, l=.05, sty=rline_sty)
+	make_rlines(reglist, chainparams, l=l, R=R, sty=rline_sty)
 	vticks(reglist, sty=tick_sty)
 	uticks(reglist, sty=tick_sty)
 	## plot
@@ -61,7 +63,7 @@ def drawreg(reglist, chainparams):
 
 ## being actually used ############
 
-def rline_zero(reglist, npoints=5001, sty={}, sty2={}):
+def rline_zero(reglist, npoints=5001, inf=100., sty={}, sty2={}):
 	"""
 	Add boundary lines to regions in reglist.
 	"""
@@ -75,7 +77,7 @@ def rline_zero(reglist, npoints=5001, sty={}, sty2={}):
 				if b.sgnf<0.:
 					style.update(sty2)
 				## curve
-				cv = xh.cm.rstarlines_special_2([0.], b.uvbounds, c=0., sty=style, inf=100., npoints=1001, eps=1e-12)
+				cv = xh.cm.rstarlines_special_2([0.], b.uvbounds, c=0., sty=style, inf=1.*inf, npoints=1.*npoints, eps=1e-12)
 				b.add_curves_uv(cv)
 
 
@@ -296,10 +298,15 @@ def make_rlines(reglist, chainparams, l=.05, R=1., sty={}):
 	style = dict(ls='-', zorder=10, lw=.4, alpha=.2)
 	style.update(sty)
 	## l scale
-	x = np.arange(0.,10.01,.5)
+	x = np.arange(0.,.5*R/l,.5)
 	scale = l
 	style.update(dict(c='c'))
 	rlines(reglist, scale*x, sty=style, inf=10., npoints=5001.)
+	# ## rcore scale
+	# x = np.arange(0.,10.,.5)
+	# scale = rcore
+	# style.update(dict(c='b'))
+	# rlines(reglist, scale*x, sty=style, inf=4., npoints=5001.)
 	## R scale
 	x = np.arange(0.,25.01,.5)
 	scale = R
