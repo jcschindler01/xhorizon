@@ -14,7 +14,7 @@ def demo():
 	plt.rcParams['xtick.major.size'] = 2
 	plt.rcParams['ytick.major.size'] = 2
 	## figure size
-	fig_width  = 2.  ## inches
+	fig_width  = 2.5  ## inches
 	fig_aspect = 1.68   ## height/width
 	fig_height = fig_width * fig_aspect
 	## axis size
@@ -49,17 +49,20 @@ def demo():
 	params = dict()
 	## funcs
 	#
-	params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=.05)))
-	#params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()))
+	#params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=.05)))
+	params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()))
 	## evap
-	params.update(dict(Rmin=1., Rmax=1., dv_evap=.5, l=.05, A=.2))
+	params.update(dict(Rmin=1., Rmax=1., dv_evap=.75, l=.05, A=1.))
 	## accrete
-	params.update(dict(B=.5, Naccrete=1))
+	params.update(dict(B=1., Naccrete=1))
 	## offset
 	params.update(dict(voff=0., veta=1., uoff=0., ueta=0.))
 
 	## seed
 	seed = 0
+
+	## label
+	label = '(b)'
 
 	## go
 	reglist, chainparams = xh.evap.create_evap(params, seed=seed)
@@ -73,6 +76,18 @@ def demo():
 		plt.xlim(-3,3)
 		plt.ylim(-1.5,4.5)
 
+	## label
+	if True:
+		plt.annotate(s=label, xy=(.95,.97), xycoords='axes fraction', ha='right', va='top', size=8)
+
+
+	## param label
+	if True:
+		plabel = "\n".join([r"$2M=%.2f$"%(1.), r"$l_{ev}=l=%.2f$"%(0.05)])
+		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
+
+
+
 	## save
 	if True:
 		path = "temp-figs/demo"
@@ -80,9 +95,11 @@ def demo():
 		temp_only = False
 		xh.evap.evapsave(path=path, params=params, chainparams=chainparams, seed=seed, sfp=sfp, temp_only=temp_only)
 
+
 	## show
 	if False:
 		plt.show()
+
 
 	## return
 	return reglist, chainparams

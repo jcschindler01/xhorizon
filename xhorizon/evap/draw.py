@@ -6,6 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import copy
 import matplotlib.hatch
+import matplotlib as mpl
+import matplotlib.colors
 
 import xhorizon as xh
 from xhorizon.shell_junction import interpolators as interp
@@ -13,21 +15,26 @@ from xhorizon.shell_junction import interpolators as interp
 
 ############## plot reglist ####################
 
+
+## styles
+rline_zero_sty      = dict(lw=1.5, c='0.48', zorder=11000)
+singularity_sty     = dict(ls='dashed', dashes=(2,2))
+rline_inf_sty       = dict(lw=1.5, c='0.48', zorder=10000)
+rline_hor_sty       = dict(lw=0.4, c='k', zorder=9999)
+rline_sty           = dict(ls='-', zorder=10, lw=.6, alpha=.5)
+acc_shells_sty      = dict(lw=0.6, ls='dashed', dashes=(3,3), c='0.6', zorder=2000)
+evap_shells_out_sty = acc_shells_sty
+evap_shells_in_sty  = dict(lw=1., ls='dashed', dashes=(1,1.2), c='0.6', zorder=2000)
+fill_horizons_sty   = dict(fc='none', ec='k', lw=0, hatch='c', zorder=9990)
+fill_density_sty    = dict(zorder=100)
+tick_sty            = dict(markersize=10, markeredgecolor='k', alpha=.3, zorder=100)
+
+
+
 def drawreg(reglist, chainparams):
 	"""
 	Plot all regions in reglist.
-	"""
-	## styles
-	rline_zero_sty      = dict(lw=0.9, c='0.5', zorder=11000)
-	singularity_sty     = dict(ls='dashed', dashes=(2,2))
-	rline_inf_sty       = dict(c='0.5', zorder=10000, lw=1.3)
-	rline_hor_sty       = dict(lw=0.2, c='k', zorder=9999)
-	rline_sty           = dict(ls='-', zorder=10, lw=.4, alpha=.29)
-	acc_shells_sty      = dict(lw=0.3, ls='dashed', dashes=(3,3), c='0.65', zorder=2000)
-	evap_shells_out_sty = acc_shells_sty
-	evap_shells_in_sty  = dict(lw=0.8, ls='dashed', dashes=(1,1.2), c='0.65', zorder=2000)
-	fill_horizons_sty   = dict(fc='none', ec='k', lw=0, hatch='c', zorder=9990)
-	fill_density_sty    = dict(zorder=100)
+	"""       
 
 	## lines
 	rline_zero(reglist, sty=rline_zero_sty, sty2=singularity_sty, npoints=5001)
@@ -37,8 +44,8 @@ def drawreg(reglist, chainparams):
 	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=5001)
 	evap_shells_in(reglist, chainparams, sty=evap_shells_in_sty, inf=100., npoints=5001)
 	make_rlines(reglist, chainparams, l=.05, sty=rline_sty)
-	vticks(reglist)
-	uticks(reglist)
+	vticks(reglist, sty=tick_sty)
+	uticks(reglist, sty=tick_sty)
 	## plot
 	for reg in reglist:
 		reg.rplot()
@@ -267,11 +274,8 @@ def dstyle(rho, cm=plt.cm.Oranges, sty={}, ovr={}):
 	style = dict(fc='none', ec='none', lw=0, zorder=900)
 	style.update(sty)
 	## cnorm
-	cmin, cmax = .1, .5
+	cmin, cmax = .1, .6
 	cnorm = cmin + (cmax-cmin)*rho
-	## anorm
-	amin, amax = .3, .7
-	anorm = amin + (amax-amin)*rho
 	## color and alpha
 	style.update(fc=cm(cnorm), alpha=.75)
 	## override
@@ -281,11 +285,11 @@ def dstyle(rho, cm=plt.cm.Oranges, sty={}, ovr={}):
 		
 			
 
-def make_rlines(reglist, chainparams, l=.05, sty={}):
+def make_rlines(reglist, chainparams, l=.05, R=1., sty={}):
 	"""
 	"""
 	## params
-	R = np.max(chainparams['Rh'])
+	R = 1.*R
 	l = 1.*l
 	rcore = (R*l**2)**(1./3.)
 	## general
@@ -303,7 +307,7 @@ def make_rlines(reglist, chainparams, l=.05, sty={}):
 	rlines(reglist, scale*x, sty=style, inf=25., npoints=5001.)
 
 
-def vticks(reglist, dv=1., inf1=100., inf2=50.5):
+def vticks(reglist, dv=1., inf1=100., inf2=50.5, sty={}):
 	"""
 	Remainder lets dv carry across regions.
 	"""
@@ -328,13 +332,14 @@ def vticks(reglist, dv=1., inf1=100., inf2=50.5):
 					crv = xh.curve()
 					crv.uv = np.array([-inf1+0.*vv, 1.*vv])
 					style = dict(markeredgecolor='k', alpha=0.3, ls='none', marker=(2,0,45), markersize=7, zorder=-100)
+					style.update(sty)
 					crv.sty.update(style)
 					b.add_curves_uv([crv])
 
 
 
 
-def uticks(reglist, du=1., inf1=100., inf2=50.1):
+def uticks(reglist, du=1., inf1=100., inf2=50.1, sty={}):
 	"""
 	Remainder lets dv carry across regions.
 	"""
@@ -358,7 +363,8 @@ def uticks(reglist, du=1., inf1=100., inf2=50.1):
 					## make and add curve
 					crv = xh.curve()
 					crv.uv = np.array([1.*uu, inf1+0.*uu])
-					style = dict(markeredgecolor='k', alpha=.3, marker=(2,0,-45), markersize=7, zorder=100)
+					style = dict(markeredgecolor='k', alpha=.3, marker=(2,0,-45), ls='none', markersize=7, zorder=100)
+					style.update(sty)
 					crv.sty.update(style)
 					b.add_curves_uv([crv])
 
@@ -369,12 +375,13 @@ class CustomHatch(matplotlib.hatch.SmallFilledCircles):
     filled = True
 
     def __init__(self, hatch, density):
-    	density = 2
+        density = 2
         self.num_rows = (hatch.count('c')) * density
         matplotlib.hatch.Circles.__init__(self, hatch, density)
 
 ## assign custom hatch
 matplotlib.hatch._hatch_types.append(CustomHatch)
+
 
 
 ##############################
