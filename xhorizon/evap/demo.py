@@ -44,20 +44,43 @@ def demo():
 		plt.ylim(-0.5*aspect*sq,0.5*aspect*sq)
 	################################
 	
+
+	## save
+	path = "temp-figs/demo"
+	sfp = dict(dpi=800)
+	temp_only = True
+
+	## label
+	label = ''
+
+	# func type
+	ftype = 1
+
 	## input
 	l = .05
-	le = .005
 	R = 1.
-	dv = .75
 
-	# type
-	ftype = 1
+	## evap
+	R0 = 1.
+	tauB = 1.
+	dv = .75
+	le = .005
+
+	## accrete
+	Nacc = 1
+	tauA = 1.
 
 	## seed
 	seed=0
 
-	## label
-	label = ''
+	## vv
+	voff = 0.
+	veta = 1.
+
+	## uu
+	uoff = 0.
+	ueta = 0.
+
 
 	## params
 	params = dict()
@@ -69,11 +92,11 @@ def demo():
 	if ftype==1:
 		params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=1.*l)))
 	## evap
-	params.update(dict(Rmin=1., Rmax=1.*R, dv_evap=1.*dv, l=1.*le, A=1.))
+	params.update(dict(Rmin=1., Rmax=1.*R, dv_evap=1.*dv, l=1.*le, A=1.*tauB))
 	## accrete
-	params.update(dict(B=1., Naccrete=1))
+	params.update(dict(B=1.*tauB, Naccrete=1*Nacc))
 	## offset
-	params.update(dict(voff=0., veta=1., uoff=0., ueta=0.))
+	params.update(dict(voff=1.*voff, veta=1.*veta, uoff=1.*uoff, ueta=1.*ueta))
 
 	## go
 	reglist, chainparams = xh.evap.create_evap(params, seed=seed)
@@ -102,9 +125,6 @@ def demo():
 
 	## save
 	if True:
-		path = "temp-figs/demo"
-		sfp = dict(dpi=800)
-		temp_only = False
 		xh.evap.evapsave(path=path, params=params, chainparams=chainparams, seed=seed, sfp=sfp, temp_only=temp_only)
 
 
