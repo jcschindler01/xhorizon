@@ -227,14 +227,15 @@ def chain_masker(reglist, chainparams):
 
 
 
-def dR_function(dR, func, dv=1., l=.01, A=10.):
+def dR_function(dR, func, dv=1., l=.01, A=10., Rmax=1.):
 	"""
 	This function is zero for valid values of dR, given the parameters.
+	A is delta_u lifetime of BH.
 	"""
 	## params from func
 	R0, Rh0, F = 1.*func.fparams['R'], 1.*func.rj[-2], func.F
 	## du1 from du ~ R^2 dR
-	du1 = 3.*A*(R0**2)*dR
+	du1 = 3.*A*(R0**2)*dR / (Rmax**3)
 	## du2 from dv-du=2*drstar
 	du2 = dv - 2. * ( F(Rh0+dR+l) - F(Rh0+l) )
 	## du1=du2=du so du1-du2 = zero
@@ -243,7 +244,7 @@ def dR_function(dR, func, dv=1., l=.01, A=10.):
 	return 1.*z
 
 
-def shellparams_from_func(func, dv=1., l=.01, A=10.):
+def shellparams_from_func(func, dv=1., l=.01, A=10., Rmax=1.):
 	"""
 	Suppose you are given a region with metfunc func.
 	This region has a known mass R0 and horizon radius Rh0, both given by func.
@@ -256,7 +257,7 @@ def shellparams_from_func(func, dv=1., l=.01, A=10.):
 	This routine determines what value of dR and du makes the assumptions possible.
 	"""
 	## define dR_function
-	dR_f = lambda dR: dR_function(dR, func, dv=1.*dv, l=1.*l, A=1.*A)
+	dR_f = lambda dR: dR_function(dR, func, dv=1.*dv, l=1.*l, A=1.*A, Rmax=1.*Rmax)
 	## plot dR_f
 	if False:
 		ds = np.linspace(-2,2,8001)
@@ -269,7 +270,7 @@ def shellparams_from_func(func, dv=1., l=.01, A=10.):
 	dR = opt.minimize_scalar(dR_f, bounds=(0., 3.), method='bounded').x
 	## find du in terms of R and dR
 	R0 = 1.*func.fparams['R']
-	du = 3.*A*(R0**2)*dR
+	du = = 3.*A*(R0**2)*dR / (Rmax**3)
 	## define shellparams
 	shellparams = dict(func=copy.deepcopy(func), Rself=1.*func.fparams['R'], dR=1.*dR, du=1.*du, dv=1.*dv, l=1.*l, A=1.*A)
 	shellparams.update(dict(Rnext=1.*shellparams['Rself']+1.*shellparams['dR']))
@@ -290,7 +291,7 @@ def shellparams_list(Rmin=.1, Rmax=1., dv=1., l=.1, A=10., functype=xh.mf.schwar
 	while R<=Rmax:
 		print R
 		func = functype(R=1.*R, **fparams)
-		sp += [shellparams_from_func(func, dv=1.*dv, l=1.*l, A=1.*A)]
+		sp += [shellparams_from_func(func, dv=1.*dv, l=1.*l, A=1.*A, Rmax=1.*Rmax)]
 		R = 1.*sp[-1]['Rnext']
 	## return
 	return sp
