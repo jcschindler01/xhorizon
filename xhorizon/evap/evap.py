@@ -397,7 +397,7 @@ def formevap_input(Rmin=.1, Rmax=1., dv_evap=1., l=.01, A=1., B=1., Naccrete=5, 
 	for R in RR:
 		funclist += [functype1(R=1.*R, **fparams1)]
 		du += [0.]
-		dv += [B/float(Naccrete)]
+		dv += [B/float(Naccrete-1)]
 	## first region
 	funclist += [functype0(**fparams0)]
 	du  += [0.]

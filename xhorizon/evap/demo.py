@@ -69,7 +69,7 @@ def demo():
 	tauB = .2
 
 	## accrete
-	Nacc = 4
+	Nacc = 1
 	tauA = .5
 
 	## seed
