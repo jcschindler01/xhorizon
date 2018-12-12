@@ -393,7 +393,7 @@ def formevap_input(Rmin=.1, Rmax=1., dv_evap=1., l=.01, A=1., B=1., Naccrete=5, 
 	## max radius
 	Rmax = sp[-1]['Rself']
 	## accrete params
-	RR = np.linspace(Rmax,0.5*Rmax, Naccrete+1)[1:]
+	RR = np.linspace(Rmax,0.5*Rmax, Naccrete)[1:]
 	for R in RR:
 		funclist += [functype1(R=1.*R, **fparams1)]
 		du += [0.]
