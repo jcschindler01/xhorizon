@@ -370,7 +370,7 @@ def cp_from_fdudv(funclist, du=None, dv=None, l=None, uoff=0., voff=0., ueta=1.,
 
 
 
-def formevap_input(Rmin=.1, Rmax=1., dv_evap=1., l=.01, A=10., B=1., Naccrete=5, uoff=0., voff=0., ueta=1., veta=1., functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()):
+def formevap_input(Rmin=.1, Rmax=1., dv_evap=1., l=.01, A=1., B=1., Naccrete=5, uoff=0., voff=0., ueta=1., veta=1., functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()):
 	"""
 	Build inputs in reverse order starting from far future.
 
@@ -393,8 +393,7 @@ def formevap_input(Rmin=.1, Rmax=1., dv_evap=1., l=.01, A=10., B=1., Naccrete=5,
 	## max radius
 	Rmax = sp[-1]['Rself']
 	## accrete params
-	RR = np.linspace(Rmax,0., Naccrete+1)[1:-1]
-	dR = Rmax/float(Naccrete)
+	RR = np.linspace(Rmax,0.5*Rmax, Naccrete+1)[1:]
 	for R in RR:
 		funclist += [functype1(R=1.*R, **fparams1)]
 		du += [0.]

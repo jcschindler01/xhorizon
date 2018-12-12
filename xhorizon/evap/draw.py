@@ -105,7 +105,6 @@ def rline_inf_col(reglist, npoints=5001, inf=1000., sty={}):
 				style.update(dict(lw=lw))
 				## curve
 				b.add_curves_uv(xh.cm.block_boundary_2(b, sty=style, inf=100., npoints=npoints)[-1:])
-				#b.add_curves_uv(xh.cm.uvlines([-inf,inf], uv='uv', uvbounds=b.uvbounds, sty=style, c=0., inf=inf, npoints=npoints))
 
 
 def rline_hor(reglist, npoints=5001, sty={}):
