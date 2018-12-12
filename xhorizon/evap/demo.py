@@ -54,22 +54,22 @@ def demo():
 	label = ''
 
 	# func type
-	ftype = 0
+	ftype = 1
 
 	## input
-	l  = .05
-	le = .01
+	l  = .01
+	le = .005
 
 	## input
-	R0 = .1
-	R  = 1.
+	R0 = .5
+	R  = .5
 
 	## evap
 	dv = .5
 	tauB = .2
 
 	## accrete
-	Nacc = 5
+	Nacc = 4
 	tauA = .5
 
 	## seed
