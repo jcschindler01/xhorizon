@@ -40,7 +40,7 @@ def drawreg(reglist, chainparams, fparams=dict()):
 
 	## lines
 	rline_zero(reglist, sty=rline_zero_sty, sty2=singularity_sty, npoints=5001)
-	rline_inf_col(reglist, sty=rline_inf_sty, npoints=5001)
+	rline_inf_col(reglist, sty=rline_inf_sty, npoints=5001, M=0.5*R)
 	rline_hor(reglist, sty=rline_hor_sty)
 	acc_shells(reglist, chainparams, sty=acc_shells_sty, inf=100., npoints=5001)
 	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=5001)
@@ -82,7 +82,7 @@ def rline_zero(reglist, npoints=5001, inf=100., sty={}, sty2={}):
 
 
 
-def rline_inf_col(reglist, npoints=5001, inf=1000., sty={}):
+def rline_inf_col(reglist, npoints=5001, inf=1000., sty={}, M=.5):
 	"""
 	Add boundary lines to regions in reglist.
 	"""
@@ -101,7 +101,7 @@ def rline_inf_col(reglist, npoints=5001, inf=1000., sty={}):
 					m = 0.5 * b.master.metfunc.fparams['R']
 				## linewidth
 				lw0 = 1.*style['lw']
-				lw = lw0 * (1.+3.*m)
+				lw = lw0 * (1.+2.*m/M)
 				style.update(dict(lw=lw))
 				## curve
 				b.add_curves_uv(xh.cm.block_boundary_2(b, sty=style, inf=100., npoints=npoints)[-1:])
