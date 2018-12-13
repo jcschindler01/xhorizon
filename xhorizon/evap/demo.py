@@ -144,7 +144,7 @@ def demo():
 		massplot(reglist, chainparams, params)
 
 	## save
-	if False:
+	if True:
 		xh.evap.evapsave(path=path, params=params, chainparams=chainparams, seed=seed, sfp=sfp, temp_only=temp_only)
 
 
