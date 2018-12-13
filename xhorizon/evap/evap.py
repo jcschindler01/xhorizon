@@ -39,15 +39,19 @@ def funclist_chain(funclist, seed=0, du=None, dv=None, r0p=None, r0f=None, u0=No
 		ps_matchmode = list of strings, each either 'ru' or 'rv', to determine how past slice is sliced when pslice is active
 		ps_matchmode = list of strings, each either 'ru' or 'rv', to determine how future slice is sliced when fslice is active
 	"""
+	print "du funclist_chain"
+	print repr(du)
+	print "dv funclist_chain"
+	print repr(dv)
 	## init default values
 	if u0==None:
 		u0 = np.zeros(len(funclist))
 	if v0==None:
 		v0 = np.zeros(len(funclist))
 	if ps_matchmode==None:
-		ps_matchmode = ['rv' for func in funclist]
+		ps_matchmode = ['ru' for func in funclist]
 	if fs_matchmode==None:
-		fs_matchmode = ['rv' for func in funclist]
+		fs_matchmode = ['ru' for func in funclist]
 	## set irrelevant first and last du and dv values to zero
 	du[0], du[-1] = 0., 0.
 	dv[0], dv[-1] = 0., 0.	
@@ -334,8 +338,8 @@ def cp_from_fdudv(funclist, du=None, dv=None, l=None, uoff=0., voff=0., ueta=1.,
 	r0p = 1.*np.roll(r0f,1)
 	u0  = 1.*ueta*np.cumsum(du-du[0]) + 1.*uoff
 	v0  = 1.*veta*np.cumsum(dv-dv[0]) + 1.*voff
-	ps_matchmode = ['rv' for i in range(len(funclist))]
-	fs_matchmode = ['rv' for i in range(len(funclist))]
+	ps_matchmode = None #['ru' for i in range(len(funclist))]         ### Edit matchmode here
+	fs_matchmode = None #['ru' for i in range(len(funclist))]         ### Edit matchmode here
 	## iterator
 	ii = range(len(funclist))
 	## get rinf
@@ -482,13 +486,14 @@ def evapsave(path="temp/temp", params=None, chainparams=None, seed=None, sfp=dic
 	print( "copy...")
 	## copy normally
 	if temp_only==False:
-		shutil.copy("%s_%s.png"%(path,ts), path+"_temp.png")
-		shutil.copy("%s_%s.txt"%(path,ts), path+"_temp.txt")
-		shutil.copy("%s_%s_mass.png"%(path,ts), path+"_temp_mass.png")
+		tempsave = shutil.copy
 	if temp_only==True:
-		shutil.move("%s_%s.png"%(path,ts), path+"_temp.png")
-		shutil.move("%s_%s_mass.txt"%(path,ts), path+"_temp.txt")
-		shutil.move("%s_%s_mass.png"%(path,ts), path+"_temp_mass.png")
+		tempsave = shutil.move
+	## copy or move
+	tempsave("%s_%s.png"%(path,ts), path+"_temp.png")
+	tempsave("%s_%s.txt"%(path,ts), path+"_temp.txt")
+	tempsave("%s_%s_mass.png"%(path,ts), path+"_temp_mass.png")
+	## print
 	print( "copy done")
 
 

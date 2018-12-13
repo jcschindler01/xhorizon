@@ -49,7 +49,7 @@ def demo():
 	## save
 	path = "temp-figs/demo"
 	sfp = dict(dpi=800)
-	temp_only = False
+	temp_only = True
 
 	## label
 	label = ''
@@ -66,7 +66,7 @@ def demo():
 	R  = .1
 
 	## evap
-	dv = .1
+	dv = .2
 	Tevap = 1.
 
 	## accrete
@@ -82,7 +82,7 @@ def demo():
 
 	## uu
 	uoff = 0.
-	ueta = 0.
+	ueta = 1.
 
 
 	## params
@@ -124,7 +124,7 @@ def demo():
 	reglist, chainparams = xh.evap.create_evap(params, seed=seed)
 
 	## draw
-	if True:
+	if False:
 		print("plot")
 		pp = dict(l=1.*l, R=1.*R)
 		xh.evap.drawreg(reglist, chainparams, fparams=pp)
