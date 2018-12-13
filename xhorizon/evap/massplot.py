@@ -2,6 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from pprint import pprint
+import matplotlib.patches
 
 
 def massplot(reglist, chainparams, params):
@@ -30,6 +31,46 @@ def massplot(reglist, chainparams, params):
 def massplot2():
 	"""
 	"""
+	## setup figure #################
+	## tex
+	plt.rcParams['text.usetex'] = True
+	plt.rcParams['font.family'] = 'serif'
+	plt.rcParams['font.serif'] = []
+	plt.rcParams['text.latex.preamble'] = []
+	## rc
+	plt.rcParams['font.size'] = 7
+	plt.rcParams['axes.linewidth'] = .4
+	plt.rcParams['xtick.major.size'] = 2
+	plt.rcParams['ytick.major.size'] = 2
+	## figure size
+	fig_width  = 2.5  ## inches
+	fig_aspect = 1.68   ## height/width
+	fig_height = fig_width * fig_aspect
+	## define figure and axes
+	plt.figure(99, figsize=(fig_width,fig_height))
+	## axes
+	h, hh = .08, .33
+	ax1 = plt.axes([.08,1.-h-hh,.89,hh]) # [left,bottom,width,height]
+	ax2 = plt.axes([.08,h      ,.89,hh]) # [left,bottom,width,height]
+	ax = [ax1,ax2]
+	## format axes
+	for axx in [ax1,ax2]:
+		plt.sca(axx)
+		## axes
+		plt.xticks([0,1])
+		plt.yticks([0,1])
+		plt.ylabel(r"$m/M$", labelpad=-4)
+		plt.xlim(-.3,1.3)
+		plt.ylim(-.1,1.1)
+		plt.grid(1, alpha=.15, zorder=0)
+	## labels
+	ax1.set_xlabel(r"$v/\tau_{f}$", labelpad=-6)
+	ax2.set_xlabel(r"$u/\tau_{e}$", labelpad=-6)
+	## labels
+	ax1.set_title("$(d)$ Formation Dynamics")
+	ax2.set_title("$(e)$ Evaporation Dynamics")
+	################################
+
 
 	####################### fake input #######################
 	## mass
@@ -121,14 +162,11 @@ def massplot2():
 	macc_ideal[x>0.] = M*(0.5 + 0.5*vv[x>0.]/Tacc)
 	macc_ideal[x>1.] = M + 0.*vv[x>1.]
 
-
-
 	"""
 	Evap.
 	u is split into Nevap+1 intervals, each of length du
 	    uu = past ending point of each interval
 	    mm = mass in each interval
-	Nevap = 
 	"""
 
 	## Nevap
@@ -166,40 +204,58 @@ def massplot2():
 	Plot.
 	"""
 
-	## figure
-	plt.figure(99, figsize=(6,6))
 
-	## axes
-	plt.xticks([0,.5,1])
-	plt.yticks([0,.5,1])
-	plt.ylabel('m/M')
-	plt.xlabel("w/T")
-	plt.xlim(-.3,1.3)
-	plt.ylim(-.1,1.1)
-	plt.grid()
 
 	## style
-	fill_sty = dict(alpha=.1)
-	border_sty = dict(lw=1, alpha=.2)
-	line_sty = dict()
-	ideal_sty = dict(lw=3, ls='--')
+	fill_sty = dict(alpha=.15, edgecolor='none', zorder=100)
+	border_sty = dict(alpha=.3, lw=1, zorder=150)
+	ideal_sty = dict(alpha=1., lw=1.5, ls='--')
 
-	# ## plot accretion
-	# plt.fill_between(vv/Tacc, 0., mmacc/M, color='b', **fill_sty)
-	# plt.plot(vv/Tacc, mmacc/M, color='b', **border_sty)
-	# plt.plot(vv/Tacc, macc_ideal/M, color='b', **ideal_sty)
+	## ax1
+	plt.sca(ax1)
+
+	## plot accretion
+	plt.fill_between(vv/Tacc, 0., mmacc/M, color='b', **fill_sty)
+	plt.plot(vv/Tacc, mmacc/M, color='b', **border_sty)
+	plt.plot(vv/Tacc, macc_ideal/M, color='b', **ideal_sty)
+
+	## legend
+	blue1, blue2 = (0.,0.,1.,.15), (0.,0.,1.,.4)
+	a1, = plt.plot([], [], label=r"$m_v\!(v)$ (ideal)", color='b', linestyle="dashed", dashes=(3,3), lw=1.5)
+	a2 = matplotlib.patches.Patch(label=r"$m_v\!(v)$ (numerical)", color=blue1, ec=blue2, lw=.7)
+
+	## make legend
+	leg1 = plt.legend(handles=[a1,a2], loc='lower right', numpoints=10, fontsize=6)
+	leg1.zorder = 900
+	leg1.get_frame().set_linewidth(.4)
+
+	## ax2
+	plt.sca(ax2)
 
 	## plot evaportion
-	plt.plot(uevap/Tevap, mevap/M, 'ro')
 	plt.fill_between(uu/Tevap, 0., mmevap/M, color='r', **fill_sty)
 	plt.plot(uu/Tevap, mmevap/M, color='r', **border_sty)
 	plt.plot(uu/Tevap, mevap_ideal/M, color='r', **ideal_sty)
 
+	## legend
+	red1, red2 = (1.,0.,0.,.15), (1.,0.,0.,.4)
+	a1, = plt.plot([], [], label=r"$m_u\!(u)$ ideal", color='r', linestyle="dashed", dashes=(3,3), lw=1.5)
+	a2 = matplotlib.patches.Patch(label=r"$m_u\!(u)$ numerical", color=red1, ec=red2, lw=.7)
 
+	## make legend
+	leg1 = plt.legend(handles=[a1,a2], loc='lower left', numpoints=10, fontsize=6)
+	leg1.zorder = 900
+	leg1.get_frame().set_linewidth(.4)
+
+
+	## save
+	if True:
+		plt.savefig("temp.png", dpi=800)
 
 
 	## show
-	plt.show()
+	if False:
+		plt.show()
 
 
 
