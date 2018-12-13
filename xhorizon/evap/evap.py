@@ -220,6 +220,8 @@ def chain_masker(reglist, chainparams):
 		## add right if both
 		if i>0 and i<len(reglist)-1 and chainparams['Rh'][i-1]<chainparams['Rh'][i] and chainparams['Rh'][i+1]<chainparams['Rh'][i]:
 			reglist[i].blocks += [bc]
+	## add masses to chainparams
+	chainparams.update(dict(m=getmm(reglist)))
 	## return
 	return reglist, chainparams
 
