@@ -167,7 +167,7 @@ def funclist_chain(funclist, seed=0, du=None, dv=None, r0p=None, r0f=None, u0=No
 		## iterate
 		i -= 1
 	## make sliceparams dict
-	chainparams = dict(Rh=1.*np.array(Rh), ps_u0=1.*np.array(ps_u0), ps_v0=1.*np.array(ps_v0), ps_r0=1.*np.array(ps_r0), fs_u0=1.*np.array(fs_u0), fs_v0=1.*np.array(fs_v0), fs_r0=1.*np.array(fs_r0), i0=1*i0, ps_matchmode=ps_matchmode, fs_matchmode=fs_matchmode)
+	chainparams = dict(Rh=1.*np.array(Rh), ps_u0=1.*np.array(ps_u0), ps_v0=1.*np.array(ps_v0), ps_r0=1.*np.array(ps_r0), fs_u0=1.*np.array(fs_u0), fs_v0=1.*np.array(fs_v0), fs_r0=1.*np.array(fs_r0), i0=1*i0, ps_matchmode=ps_matchmode, fs_matchmode=fs_matchmode, funclist=funclist)
 	##
 	print "\n"
 	pprint.pprint(chainparams)
