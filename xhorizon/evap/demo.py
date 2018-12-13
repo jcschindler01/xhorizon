@@ -55,15 +55,15 @@ def demo():
 	label = ''
 
 	# func type
-	ftype = 1
+	ftype = 0
 
 	## input
 	l  = .01
-	le = .1
+	le = .01
 
 	## input
-	R0 = .2
-	R  = .5
+	R0 = .05
+	R  = .1
 
 	## evap
 	dv = .5
