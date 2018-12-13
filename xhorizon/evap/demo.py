@@ -66,8 +66,8 @@ def demo():
 	R  = .1
 
 	## evap
-	dv = .5
-	Tevap = 2.
+	dv = .1
+	Tevap = 1.
 
 	## accrete
 	Nacc = 5
@@ -124,9 +124,10 @@ def demo():
 	reglist, chainparams = xh.evap.create_evap(params, seed=seed)
 
 	## draw
-	print("plot")
-	pp = dict(l=1.*l, R=1.*R)
-	xh.evap.drawreg(reglist, chainparams, fparams=pp)
+	if False:
+		print("plot")
+		pp = dict(l=1.*l, R=1.*R)
+		xh.evap.drawreg(reglist, chainparams, fparams=pp)
 			
 
 	## label
