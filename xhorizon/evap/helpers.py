@@ -327,7 +327,18 @@ def check_uvr(reglist):
 ############################################################################
 
 
-
+######### get mass parameters #######
+def getmm(funclist):
+	## initialize masses
+	m = np.zeros(len(funclist))
+	## loop
+	for i in range(len(reglist)):
+		fp = reglist[i].metfunc.fparams
+		if 'R' in fp.keys():
+			m[i] = 0.5*fp['R']
+	## return
+	return 1.*m
+#############################
 
 
 ############## split region into abcd ####################
