@@ -3,6 +3,7 @@ def demo():
 	import numpy as np
 	import matplotlib.pyplot as plt
 	import xhorizon as xh
+	from massplot import massplot
 
 	"""
 	"""
@@ -58,10 +59,10 @@ def demo():
 
 	## input
 	l  = .01
-	le = .01
+	le = .1
 
 	## input
-	R0 = .1
+	R0 = .18
 	R  = .2
 
 	## evap
@@ -69,7 +70,7 @@ def demo():
 	Tevap = 2.
 
 	## accrete
-	Nacc = 5
+	Nacc = 3
 	Tacc = .4
 
 	## seed
@@ -100,15 +101,9 @@ def demo():
 	## offset
 	params.update(dict(voff=1.*voff, veta=1.*veta, uoff=1.*uoff, ueta=1.*ueta))
 
-	## go
-	reglist, chainparams = xh.evap.create_evap(params, seed=seed)
 
-	## draw
-	print("plot")
-	pp = dict(l=1.*l, R=1.*R)
-	xh.evap.drawreg(reglist, chainparams, fparams=pp)
-
-
+##########################################
+	## change lim if seed
 	if seed not in [0,-1]:
 		## format axes
 		for axx in ax:
@@ -122,10 +117,20 @@ def demo():
 			x0, y0 = -1.2, 1.2
 			plt.xlim(x0,x0+sq)
 			plt.ylim(y0-0.5*aspect*sq,y0+0.5*aspect*sq)
+##########################################
+
+
+	## go
+	reglist, chainparams = xh.evap.create_evap(params, seed=seed)
+
+	## draw
+	print("plot")
+	pp = dict(l=1.*l, R=1.*R)
+	xh.evap.drawreg(reglist, chainparams, fparams=pp)
 			
 
 	## label
-	if True:
+	if False:
 		plt.annotate(s=label, xy=(.95,.97), xycoords='axes fraction', ha='right', va='top', size=8)
 
 
@@ -134,10 +139,12 @@ def demo():
 		plabel = "\n".join([r"$l_{ev}=%s$"%(le), r"", r"$l=%s$"%(l), r"$2M=%s$"%(R)])
 		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
 
-
+	## mass plot
+	if True:
+		massplot(reglist, chainparams, params)
 
 	## save
-	if True:
+	if False:
 		xh.evap.evapsave(path=path, params=params, chainparams=chainparams, seed=seed, sfp=sfp, temp_only=temp_only)
 
 
