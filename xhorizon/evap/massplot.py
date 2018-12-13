@@ -132,8 +132,12 @@ def massplot(chainparams, params):
 	duevap = (u1-u0)[-Nevap:-1]
 	uevap[1:] = np.cumsum(np.concatenate([ np.array([0.]), duevap]))
 
+	## dvevap
+	dvevap = (v1-v0)[-Nevap:-1]
+
 	## fill mevap values
 	mevap = 1.*m[-Nevap-1:]
+
 
 	## reference uevap np.arrays
 	uu = Tevap * np.linspace(-1, 2, npoints)
@@ -145,9 +149,32 @@ def massplot(chainparams, params):
 
 	## ideal mass function
 	y = 1.*uu/Tevap
-	mevap_ideal = 1.*M + 0.*uu
-	mevap_ideal[y>0.] = M * (1. - (uu[y>0.]/Tevap))**(1./3.)
-	mevap_ideal[y>1.] = 0.*uu[y>1.]
+	mevap_ideal = 0.*uu
+	mevap_ideal[y<1.] = M * (1. - (uu[y<1.]/Tevap))**(1./3.)
+	mevap_ideal[y<0.] = 1.*M + 0.*uu[y<0.]
+
+
+	"""
+	Checks.
+	"""
+
+
+	## more checks
+	print "r1-Rh"
+	print repr(r1-Rh)
+	print "Rh/2m"
+	print repr(Rh/2*m)
+	print "mcrit/M"
+	print repr(mcrit/M)
+
+	## print checks
+	print "m evap"
+	print repr(mevap)
+	print "du evap"
+	print repr(duevap)
+	print "dv evap"
+	print repr(dvevap)
+
 
 
 
