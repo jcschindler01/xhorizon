@@ -328,9 +328,9 @@ def check_uvr(reglist):
 
 
 ######### get mass parameters #######
-def getmm(funclist):
+def getmm(reglist):
 	## initialize masses
-	m = np.zeros(len(funclist))
+	m = np.zeros(len(reglist))
 	## loop
 	for i in range(len(reglist)):
 		fp = reglist[i].metfunc.fparams
