@@ -17,7 +17,7 @@ def massplotrc():
 	plt.rcParams['ytick.major.size'] = 2
 
 
-def massplot(reglist, chainparams, params):
+def massplot(chainparams, params):
 	"""
 	"""
 	## setup figure #################
@@ -65,11 +65,7 @@ def massplot(reglist, chainparams, params):
 	Rh = chainparams['Rh']
 
 	## initialize masses
-	m = 0. * Rh
-	for i in range(len(reglist)):
-		fp = reglist[i].metfunc.fparams
-		if 'R' in fp.keys():
-			m[i] = 0.5*fp['R']
+	m = chainparams['m']
 
 	## icrit=nacc and mcrit
 	Nacc = params['Naccrete']

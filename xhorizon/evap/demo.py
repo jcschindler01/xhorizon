@@ -142,7 +142,7 @@ def demo():
 	## mass plot
 	mpgo = True
 	if mpgo:
-		massplot(reglist, chainparams, params)
+		massplot(chainparams, params)
 
 	## save
 	if True:
