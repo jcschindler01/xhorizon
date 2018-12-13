@@ -124,7 +124,7 @@ def demo():
 	reglist, chainparams = xh.evap.create_evap(params, seed=seed)
 
 	## draw
-	if False:
+	if True:
 		print("plot")
 		pp = dict(l=1.*l, R=1.*R)
 		xh.evap.drawreg(reglist, chainparams, fparams=pp)
