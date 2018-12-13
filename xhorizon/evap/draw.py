@@ -39,12 +39,12 @@ def drawreg(reglist, chainparams, fparams=dict()):
 	R=fparams['R']
 
 	## lines
-	rline_zero(reglist, sty=rline_zero_sty, sty2=singularity_sty, npoints=5001)
-	rline_inf_col(reglist, sty=rline_inf_sty, npoints=5001, M=0.5*R)
+	rline_zero(reglist, sty=rline_zero_sty, sty2=singularity_sty, npoints=1001)
+	rline_inf_col(reglist, sty=rline_inf_sty, npoints=1001, M=0.5*R)
 	rline_hor(reglist, sty=rline_hor_sty)
-	acc_shells(reglist, chainparams, sty=acc_shells_sty, inf=100., npoints=5001)
-	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=5001)
-	evap_shells_in(reglist, chainparams, sty=evap_shells_in_sty, inf=100., npoints=5001)
+	acc_shells(reglist, chainparams, sty=acc_shells_sty, inf=100., npoints=1001)
+	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=1001)
+	evap_shells_in(reglist, chainparams, sty=evap_shells_in_sty, inf=100., npoints=1001)
 	make_rlines(reglist, chainparams, l=l, R=R, sty=rline_sty)
 	vticks(reglist, sty=tick_sty)
 	uticks(reglist, sty=tick_sty)
@@ -300,17 +300,12 @@ def make_rlines(reglist, chainparams, l=.05, R=1., sty={}):
 	x = np.arange(0.,.5*R/l,.5)
 	scale = l
 	style.update(dict(c='c'))
-	rlines(reglist, scale*x, sty=style, inf=10., npoints=5001.)
-	# ## rcore scale
-	# x = np.arange(0.,10.,.5)
-	# scale = rcore
-	# style.update(dict(c='b'))
-	# rlines(reglist, scale*x, sty=style, inf=4., npoints=5001.)
+	rlines(reglist, scale*x, sty=style, inf=10., npoints=2001.)
 	## R scale
 	x = np.arange(0.,25.01,.5)
 	scale = R
 	style.update(dict(c='m' ))
-	rlines(reglist, scale*x, sty=style, inf=25., npoints=5001.)
+	rlines(reglist, scale*x, sty=style, inf=25., npoints=1001.)
 
 
 def vticks(reglist, dv=1., inf1=100., inf2=50.5, sty={}):

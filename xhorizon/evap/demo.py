@@ -48,7 +48,7 @@ def demo():
 	## save
 	path = "temp-figs/demo"
 	sfp = dict(dpi=800)
-	temp_only = True
+	temp_only = False
 
 	## label
 	label = ''
@@ -58,25 +58,25 @@ def demo():
 
 	## input
 	l  = .01
-	le = .005
+	le = .01
 
 	## input
-	R0 = .5
-	R  = .5
+	R0 = .1
+	R  = .2
 
 	## evap
 	dv = .5
-	tauB = .2
+	Tevap = 2.
 
 	## accrete
-	Nacc = 1
-	tauA = .5
+	Nacc = 5
+	Tacc = .4
 
 	## seed
-	seed=0
+	seed = 0
 
 	## vv
-	voff = 0.
+	voff = -Tacc - 0.
 	veta = 1.
 
 	## uu
@@ -94,9 +94,9 @@ def demo():
 	if ftype==1:
 		params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=1.*l)))
 	## evap
-	params.update(dict(Rmin=1.*R0, Rmax=1.*R, dv_evap=1.*dv, l=1.*le, A=1.*tauA))
+	params.update(dict(Rmin=1.*R0, Rmax=1.*R, dv_evap=1.*dv, l=1.*le, A=1.*Tevap))
 	## accrete
-	params.update(dict(B=1.*tauA, Naccrete=1*Nacc))
+	params.update(dict(B=1.*Tacc, Naccrete=1*Nacc))
 	## offset
 	params.update(dict(voff=1.*voff, veta=1.*veta, uoff=1.*uoff, ueta=1.*ueta))
 
@@ -110,8 +110,19 @@ def demo():
 
 
 	if seed not in [0,-1]:
-		plt.xlim(-3,3)
-		plt.ylim(-1.5,4.5)
+		## format axes
+		for axx in ax:
+			## set axis
+			plt.sca(axx)
+			## ticks
+			plt.xticks([-1,0,1,2,3])
+			plt.yticks([-1,0,1,2,3])
+			## lims
+			sq = 3.4
+			x0, y0 = -1.2, 1.2
+			plt.xlim(x0,x0+sq)
+			plt.ylim(y0-0.5*aspect*sq,y0+0.5*aspect*sq)
+			
 
 	## label
 	if True:
@@ -119,7 +130,7 @@ def demo():
 
 
 	## param label
-	if True:
+	if False:
 		plabel = "\n".join([r"$l_{ev}=%s$"%(le), r"", r"$l=%s$"%(l), r"$2M=%s$"%(R)])
 		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
 

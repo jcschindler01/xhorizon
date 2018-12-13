@@ -270,7 +270,7 @@ def shellparams_from_func(func, dv=1., l=.01, A=10., Rmax=1.):
 	dR = opt.minimize_scalar(dR_f, bounds=(0., 3.), method='bounded').x
 	## find du in terms of R and dR
 	R0 = 1.*func.fparams['R']
-	du = = 3.*A*(R0**2)*dR / (Rmax**3)
+	du = 3.*A*(R0**2)*dR / (Rmax**3)
 	## define shellparams
 	shellparams = dict(func=copy.deepcopy(func), Rself=1.*func.fparams['R'], dR=1.*dR, du=1.*du, dv=1.*dv, l=1.*l, A=1.*A)
 	shellparams.update(dict(Rnext=1.*shellparams['Rself']+1.*shellparams['dR']))
