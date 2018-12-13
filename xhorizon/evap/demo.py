@@ -62,15 +62,15 @@ def demo():
 	le = .1
 
 	## input
-	R0 = .18
-	R  = .2
+	R0 = .2
+	R  = .5
 
 	## evap
 	dv = .5
 	Tevap = 2.
 
 	## accrete
-	Nacc = 3
+	Nacc = 5
 	Tacc = .4
 
 	## seed
@@ -140,12 +140,13 @@ def demo():
 		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
 
 	## mass plot
-	if True:
+	mpgo = True
+	if mpgo:
 		massplot(reglist, chainparams, params)
 
 	## save
 	if True:
-		xh.evap.evapsave(path=path, params=params, chainparams=chainparams, seed=seed, sfp=sfp, temp_only=temp_only)
+		xh.evap.evapsave(path=path, params=params, chainparams=chainparams, seed=seed, sfp=sfp, temp_only=temp_only, massplot=mpgo)
 
 
 	## show

@@ -442,7 +442,7 @@ def create_evap(params, seed=0):
 	return reglist, chainparams
 
 
-def evapsave(path="temp/temp", params=None, chainparams=None, seed=None, sfp=dict(), temp_only=False):
+def evapsave(path="temp/temp", params=None, chainparams=None, seed=None, sfp=dict(), temp_only=False, massplot=False):
 	"""
 	Save figure with timestamp and txt notes.
 	"""
@@ -455,6 +455,7 @@ def evapsave(path="temp/temp", params=None, chainparams=None, seed=None, sfp=dic
 	ts = str(time.time()).replace(".","")
 	## save figure
 	print( "save...")
+	plt.figure(1)
 	sfpp = dict(dpi=400)
 	sfpp.update(sfp)
 	plt.savefig("%s_%s.png"%(path,ts), **sfpp)
@@ -468,17 +469,26 @@ def evapsave(path="temp/temp", params=None, chainparams=None, seed=None, sfp=dic
 	ff.write('\n')
 	ff.write('Output:\nchainparams=\n%s\n'%(pprint.pformat(chainparams)))
 	ff.close()
+	##save massplot
+	if massplot==True:
+		print( "save massplot...")
+		xh.evap.massplot.massplotrc()
+		plt.figure(99)
+		plt.savefig("%s_%s_mass.png"%(path,ts), **sfpp)
+		print( "save done")
 	## copy to temp
 	print( "copy...")
 	## copy normally
 	if temp_only==False:
 		shutil.copy("%s_%s.png"%(path,ts), path+"_temp.png")
 		shutil.copy("%s_%s.txt"%(path,ts), path+"_temp.txt")
+		shutil.copy("%s_%s_mass.png"%(path,ts), path+"_temp_mass.png")
 	if temp_only==True:
 		shutil.move("%s_%s.png"%(path,ts), path+"_temp.png")
-		shutil.move("%s_%s.txt"%(path,ts), path+"_temp.txt")
+		shutil.move("%s_%s_mass.txt"%(path,ts), path+"_temp.txt")
+		shutil.move("%s_%s_mass.png"%(path,ts), path+"_temp_mass.png")
 	print( "copy done")
-	## copy normally
+
 
 
 
