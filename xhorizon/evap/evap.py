@@ -250,27 +250,6 @@ def shellparams_list(Rmax=1., le=.1, Nevap=5, Tevap=10., functype=xh.mf.schwarzs
 	return sp
 
 
-def sp_transpose(sp_list):
-	"""
-	"""
-	##
-	sp = sp_list[::-1]
-	## outs
-	funclist = [sp[i]['func'] for i in range(len(sp))]
-	RR = np.array([sp[i]['Rself'] for i in range(len(sp))])
-	du = np.array([sp[i]['du'] for i in range(len(sp))])
-	dv = np.array([sp[i]['dv'] for i in range(len(sp))])
-	dR = np.array([sp[i]['dR'] for i in range(len(sp))])
-	A = np.array([sp[i]['A'] for i in range(len(sp))])
-	le = np.array([sp[i]['le'] for i in range(len(sp))])
-	## make
-	uu = np.cumsum(du)
-	vv = np.cumsum(dv)
-	## dict
-	spt = dict(funclist=copy.deepcopy(funclist), R=1.*RR, dR=1.*dR, du=1.*du, dv=1.*dv, A=1.*A, le=1.*le, uu=1.*uu, vv=1.*vv)
-	## return
-	return spt.copy()
-
 
 def cp_from_fdudv(funclist, du=None, dv=None, le=None, uoff=0., voff=0., ueta=1., veta=1.):
 	"""
