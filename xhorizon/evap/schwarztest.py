@@ -34,19 +34,10 @@ Constraints:
 	rp_j = Rh(m_j-1)+le
 
 """
-Nevap = 10
-T = 10.
-M = 1.
-le = .1
 
 
 def F(r,m):
-	r = r*np.array([1.])
-	if np.any(r<=2.*m):
-		out = None
-	else:
-		out = r + 2.*m * np.log(np.abs(r - 2.*m))
-	return 1.*out
+	return r + 2.*m * np.log(np.abs(r/(2.*m) - 1))
 
 def R(m):
 	return 2.*m
@@ -59,47 +50,28 @@ def zero(m, mprev=1., dv=1., T=1., M=1., l=1.):
 	return dv-2.*drstar, du
 
 
+Nevap = 20
+T = 10.
+M = 1.
+l = .1
 
-m = np.nan * np.ones(Nevap+1)
-du = np.nan*m
-dv = np.nan*m
+## u
+u = np.linspace(0,T,Nevap)
 
+## m(u)
+m = M * (1. - u/T)**(1./3.)
 
-m[0] = 1.*M
-dv[1:-1] = .1*T
+## r(u)
+r = 2.*m + l
 
+## v(u)
+v = u + 2.*F(r,m)
 
+## du dv
+du = u[1:]-u[:-1]
+dv = v[1:]-v[:-1]
+dm = m[1:]-m[:-1]
 
-for mprev in np.linspace(1.,0.,5)[:-1]:
-
-	M = .01
-
-	T  = 50.   *M
-	l  = .01   *M
-	dv = .5   *M
-	mp = mprev*M
-
-	params = dict(mprev=mp, dv=dv, T=T, M=M, l=l)
-	mm = np.linspace(0,mp,1001)
-	zz = zero(mm, **params)
-
-	plt.plot(mm, zz[0], 'r-')
-	plt.plot(mm, zz[1], 'b-')
-
-	plt.plot(mm, 0.*mm, 'k-')
-	plt.xlim(0,M)
-	plt.ylim(np.array([-1.,1.])*np.max(np.abs(plt.ylim())))
-	plt.show()
-
-
-
-
-
-
-
-
-
-print "m  = %s"%(m)
-print "du = %s"%(du)
-print "dv = %s"%(dv)
-
+print du
+print dv
+print dm
