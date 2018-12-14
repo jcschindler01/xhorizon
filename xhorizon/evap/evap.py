@@ -243,7 +243,7 @@ def shellparams_list(Rmax=1., le=.1, Nevap=5, Tevap=10., Tacc=1., Naccrete=1, fu
 		func = functype(R=2.*m[i], **fparams)
 		sp += [dict(func=copy.deepcopy(func), Rself=1.*func.fparams['R'], du=1.*du[i], dv=1.*dv[i], le=1.*le, Tevap=1.*Tevap, Nevap=1*Nevap, mdudv=mdudv)]
 	## edit final one
-	sp[-1]['dv'] = 1.*Tacc/Naccrete
+	sp[-1]['dv'] = 1.*Tacc/float(Naccrete-1)
 	## print
 	pprint.pprint(sp)
 	## return

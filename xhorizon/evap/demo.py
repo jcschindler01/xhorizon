@@ -55,17 +55,17 @@ def demo():
 	label = ''
 
 	# func type
-	ftype = 1
+	ftype = 0
 
 	## input
 	l  = .01
 	le = .1
 
 	## input
-	R  = .2
+	R  = .5
 
 	## evap
-	Nevap = 6
+	Nevap = 10
 	Tevap = 10.
 
 	## accrete

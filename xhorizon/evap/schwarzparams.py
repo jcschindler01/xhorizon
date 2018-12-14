@@ -42,19 +42,18 @@ def F(r,m):
 def R(m):
 	return 2.*m
 
-def zero(m, mprev=1., dv=1., T=1., M=1., l=1.):
-	dv = 1.*dv
-	du = -(3.*T/M**3) * m**2 * (m-mprev)
-	drstar = F(R(m)+l,m) - F(R(mprev)+l,m)
-	#return dv-du-2.*drstar
-	return dv-2.*drstar, du
-
-
 def SSduvm(Nevap=10, Tevap=5., M=.5, le=.01):
 	"""
 	"""
+	##
+	eps = 1e-9
+	s = np.linspace(eps,1.-eps,Nevap)
+	# s = np.append(eps,s)
+	# s = np.append(s,1.-eps)
+	# print s
 	## u
-	u = np.linspace(1e-9,Tevap-1e-9,Nevap)
+	beta = 1.
+	u  = Tevap * s**beta
 	## m(u)
 	m = M * (1. - u/Tevap)**(1./3.)
 	## r(u)
@@ -64,7 +63,6 @@ def SSduvm(Nevap=10, Tevap=5., M=.5, le=.01):
 	## du dv dm
 	du = u[1:]-u[:-1]
 	dv = v[1:]-v[:-1]
-	dm = m[1:]-m[:-1]
 	## mself mprev
 	mself = m[1:]
 	mprev = m[:-1]
@@ -76,8 +74,3 @@ def SSduvm(Nevap=10, Tevap=5., M=.5, le=.01):
 	print "mean error in dv-du-2.*drstar = %s"%(np.mean(np.abs(zero)))
 	## return
 	return mself, du, dv
-
-
-
-#mself, du, dv = SSduvm(Nevap=20, Tevap=10., M=.2, le=.05)
-
