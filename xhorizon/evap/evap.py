@@ -49,9 +49,9 @@ def funclist_chain(funclist, seed=0, du=None, dv=None, r0p=None, r0f=None, u0=No
 	if v0==None:
 		v0 = np.zeros(len(funclist))
 	if ps_matchmode==None:
-		ps_matchmode = ['ru' for func in funclist]
+		ps_matchmode = ['rv' for func in funclist]
 	if fs_matchmode==None:
-		fs_matchmode = ['ru' for func in funclist]
+		fs_matchmode = ['rv' for func in funclist]
 	## set irrelevant first and last du and dv values to zero
 	du[0], du[-1] = 0., 0.
 	dv[0], dv[-1] = 0., 0.	
