@@ -230,75 +230,22 @@ def chain_masker(reglist, chainparams):
 	return reglist, chainparams
 
 
-
-
-
-def dR_function(dR, func, dv=1., l=.01, A=10., Rmax=1.):
-	"""
-	This function is zero for valid values of dR, given the parameters.
-	A is delta_u lifetime of BH.
-	"""
-	## params from func
-	R0, Rh0, F = 1.*func.fparams['R'], 1.*func.rj[-2], func.F
-	## du1 from du ~ R^2 dR
-	du1 = 3.*A*(R0**2)*dR / (Rmax**3)
-	## du2 from dv-du=2*drstar
-	du2 = dv - 2. * ( F(Rh0+dR+l) - F(Rh0+l) )
-	## du1=du2=du so du1-du2 = zero
-	z = np.abs(du1 - du2)**2
-	## return
-	return 1.*z
-
-
-def shellparams_from_func(func, dv=1., l=.01, A=10., Rmax=1.):
-	"""
-	Suppose you are given a region with metfunc func.
-	This region has a known mass R0 and horizon radius Rh0, both given by func.
-	Assume that this region has a future slice at r0 = Rh+l.
-	Assume that this region will be attached to another region with mass R0+dR.
-	Assume that the time difference between the two slices has a fixed value dv.
-	Assume that the past slice will be at a radius Rh0+dR+l.
-	Assume that this region has a time difference du = 3*A*(R0**2)*dR.
-	Assume that Rh ~= R.
-	This routine determines what value of dR and du makes the assumptions possible.
-	"""
-	## define dR_function
-	dR_f = lambda dR: dR_function(dR, func, dv=1.*dv, l=1.*l, A=1.*A, Rmax=1.*Rmax)
-	## plot dR_f
-	if False:
-		ds = np.linspace(-2,2,8001)
-		plt.plot(ds, dR_f(ds), 'k-')
-		plt.plot([0,2],[0,0],'k--')
-		plt.grid()
-		plt.ylim(-10,10)
-		plt.show()
-	## find root of dR_f
-	dR = opt.minimize_scalar(dR_f, bounds=(0., 3.), method='bounded').x
-	## find du in terms of R and dR
-	R0 = 1.*func.fparams['R']
-	du = 3.*A*(R0**2)*dR / (Rmax**3)
-	## define shellparams
-	shellparams = dict(func=copy.deepcopy(func), Rself=1.*func.fparams['R'], dR=1.*dR, du=1.*du, dv=1.*dv, l=1.*l, A=1.*A)
-	shellparams.update(dict(Rnext=1.*shellparams['Rself']+1.*shellparams['dR']))
-	## print
-	pprint.pprint(shellparams)
-	## return
-	return shellparams.copy()
-
-
-
-def shellparams_list(Rmin=.1, Rmax=1., dv=1., l=.1, A=10., functype=xh.mf.schwarzschild, fparams=dict()):
+def shellparams_list(Rmax=1., le=.1, Nevap=5, Tevap=10., functype=xh.mf.schwarzschild, fparams=dict()):
 	"""
 	"""
 	## init
-	R = 1.*Rmin
+	m, du, dv = xh.evap.SSp.SSduvm(Nevap=1*Nevap, Tevap=1.*Tevap, M=0.5*Rmax, le=1.*le)
+	m, du, dv = m[::-1], du[::-1], dv[::-1]
+	print m
+	print du
+	print dv
 	## get shellparams
 	sp = []
-	while R<=Rmax:
-		print R
-		func = functype(R=1.*R, **fparams)
-		sp += [shellparams_from_func(func, dv=1.*dv, l=1.*l, A=1.*A, Rmax=1.*Rmax)]
-		R = 1.*sp[-1]['Rnext']
+	for i in range(len(m)):
+		func = functype(R=2.*m[i], **fparams)
+		sp += [dict(func=copy.deepcopy(func), Rself=1.*func.fparams['R'], du=1.*du[i], dv=1.*dv[i], le=1.*le, Tevap=1.*Tevap, Nevap=1*Nevap)]
+	## print
+	pprint.pprint(sp)
 	## return
 	return sp
 
@@ -315,17 +262,17 @@ def sp_transpose(sp_list):
 	dv = np.array([sp[i]['dv'] for i in range(len(sp))])
 	dR = np.array([sp[i]['dR'] for i in range(len(sp))])
 	A = np.array([sp[i]['A'] for i in range(len(sp))])
-	l = np.array([sp[i]['l'] for i in range(len(sp))])
+	le = np.array([sp[i]['le'] for i in range(len(sp))])
 	## make
 	uu = np.cumsum(du)
 	vv = np.cumsum(dv)
 	## dict
-	spt = dict(funclist=copy.deepcopy(funclist), R=1.*RR, dR=1.*dR, du=1.*du, dv=1.*dv, A=1.*A, l=1.*l, uu=1.*uu, vv=1.*vv)
+	spt = dict(funclist=copy.deepcopy(funclist), R=1.*RR, dR=1.*dR, du=1.*du, dv=1.*dv, A=1.*A, le=1.*le, uu=1.*uu, vv=1.*vv)
 	## return
 	return spt.copy()
 
 
-def cp_from_fdudv(funclist, du=None, dv=None, l=None, uoff=0., voff=0., ueta=1., veta=1.):
+def cp_from_fdudv(funclist, du=None, dv=None, le=None, uoff=0., voff=0., ueta=1., veta=1.):
 	"""
 	"""
 	## init
@@ -334,7 +281,7 @@ def cp_from_fdudv(funclist, du=None, dv=None, l=None, uoff=0., voff=0., ueta=1.,
 	Rh = np.array([funclist[i].rj[-2] for i in range(len(funclist))])
 	du  = 1.*du
 	dv  = 1.*dv
-	r0f = 1.*Rh + 1.*l
+	r0f = 1.*Rh + 1.*le
 	r0p = 1.*np.roll(r0f,1)
 	u0  = 1.*ueta*np.cumsum(du-du[0]) + 1.*uoff
 	v0  = 1.*veta*np.cumsum(dv-dv[0]) + 1.*voff
@@ -360,7 +307,7 @@ def cp_from_fdudv(funclist, du=None, dv=None, l=None, uoff=0., voff=0., ueta=1.,
 				r0p[i] = 1.*rinf[i]
 			## evaporation
 			if Rh[i]< Rh[i-1]:
-				r0p[i] = 1.*Rh[i-1] + 1.*l
+				r0p[i] = 1.*Rh[i-1] + 1.*le
 		## future
 		if i<len(ii)-1:
 			## accretion
@@ -368,7 +315,7 @@ def cp_from_fdudv(funclist, du=None, dv=None, l=None, uoff=0., voff=0., ueta=1.,
 				r0f[i] = 1.*rinf[i]
 			## evaporation
 			if Rh[i]> Rh[i+1]:
-				r0f[i] = 1.*Rh[i] + 1.*l
+				r0f[i] = 1.*Rh[i] + 1.*le
 	## make cp
 	cp = dict(du=1.*du, dv=1.*dv, r0p=1.*r0p, r0f=1.*r0f, u0=1.*u0, v0=1.*v0, ps_matchmode=ps_matchmode, fs_matchmode=fs_matchmode)
 	# ## return
@@ -377,7 +324,7 @@ def cp_from_fdudv(funclist, du=None, dv=None, l=None, uoff=0., voff=0., ueta=1.,
 
 
 
-def formevap_input(Rmin=.1, Rmax=1., dv_evap=1., l=.01, A=1., B=1., Naccrete=5, uoff=0., voff=0., ueta=1., veta=1., functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()):
+def formevap_input(Rmax=1., le=.01, Tevap=1., Tacc=1., Nevap=5, Naccrete=5, uoff=0., voff=0., ueta=1., veta=1., functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.schwarzschild, fparams1=dict()):
 	"""
 	Build inputs in reverse order starting from far future.
 
@@ -392,7 +339,7 @@ def formevap_input(Rmin=.1, Rmax=1., dv_evap=1., l=.01, A=1., B=1., Naccrete=5, 
 	du  += [0.]
 	dv  += [0.]
 	## evap
-	sp = shellparams_list(Rmin=1.*Rmin, Rmax=1.*Rmax, dv=1.*dv_evap, l=1.*l, A=1.*A, functype=functype1, fparams=fparams1)
+	sp = shellparams_list(Rmax=1.*Rmax, Nevap=Nevap, le=1.*le, Tevap=1.*Tevap, functype=functype1, fparams=fparams1)
 	for i in range(len(sp)):
 		funclist += [sp[i]['func']]
 		du  += [sp[i]['du']]
@@ -404,7 +351,7 @@ def formevap_input(Rmin=.1, Rmax=1., dv_evap=1., l=.01, A=1., B=1., Naccrete=5, 
 	for R in RR:
 		funclist += [functype1(R=1.*R, **fparams1)]
 		du += [0.]
-		dv += [B/float(Naccrete-1)]
+		dv += [Tacc/float(Naccrete-1)]
 	## first region
 	funclist += [functype0(**fparams0)]
 	du  += [0.]
@@ -413,9 +360,9 @@ def formevap_input(Rmin=.1, Rmax=1., dv_evap=1., l=.01, A=1., B=1., Naccrete=5, 
 	funclist = funclist[::-1]
 	du = np.array(du[::-1])
 	dv = np.array(dv[::-1])
-	l = 1.*l
+	le = 1.*le
 	## get chain params
-	cp = cp_from_fdudv(funclist, du=1.*du, dv=1.*dv, l=1.*l, uoff=1.*uoff, voff=1.*voff, ueta=1.*ueta, veta=1.*veta)
+	cp = cp_from_fdudv(funclist, du=1.*du, dv=1.*dv, le=1.*le, uoff=1.*uoff, voff=1.*voff, ueta=1.*ueta, veta=1.*veta)
 	##
 	pprint.pprint(cp)
 	## return

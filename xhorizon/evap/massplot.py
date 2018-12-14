@@ -58,8 +58,8 @@ def massplot(chainparams, params):
 	M = 0.5 * params['Rmax']
 	
 	## ideal lifetimes
-	Tacc  = params['B']
-	Tevap = params['A']
+	Tacc  = params['Tacc']
+	Tevap = params['Tevap']
 
 	## horizon radii
 	Rh = chainparams['Rh']
@@ -243,8 +243,8 @@ def fakeinputs():
 	"""
 	"""
 	## params
-	params={'A': 2.0,
-		 'B': 0.4,
+	params={'Tevap': 2.0,
+		 'Tacc': 0.4,
 		 'Naccrete': 5,
 		 'Rmax': 0.5,
 		 'Rmin': 0.2,

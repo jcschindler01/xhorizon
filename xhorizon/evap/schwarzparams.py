@@ -79,5 +79,5 @@ def SSduvm(Nevap=10, Tevap=5., M=.5, le=.01):
 
 
 
-#SSduvm(Nevap=20, Tevap=10., M=.2, le=.05)
+#mself, du, dv = SSduvm(Nevap=20, Tevap=10., M=.2, le=.05)
 

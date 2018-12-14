@@ -49,7 +49,7 @@ def demo():
 	## save
 	path = "temp-figs/demo"
 	sfp = dict(dpi=800)
-	temp_only = True
+	temp_only = False
 
 	## label
 	label = ''
@@ -59,15 +59,14 @@ def demo():
 
 	## input
 	l  = .01
-	le = .01
+	le = .1
 
 	## input
-	R0 = .05
-	R  = .1
+	R  = .5
 
 	## evap
-	dv = .2
-	Tevap = 1.
+	Nevap = 10
+	Tevap = 10.
 
 	## accrete
 	Nacc = 5
@@ -95,9 +94,9 @@ def demo():
 	if ftype==1:
 		params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=1.*l)))
 	## evap
-	params.update(dict(Rmin=1.*R0, Rmax=1.*R, dv_evap=1.*dv, l=1.*le, A=1.*Tevap))
+	params.update(dict(Rmax=1.*R, le=1.*le, Tevap=1.*Tevap, Nevap=1*Nevap))
 	## accrete
-	params.update(dict(B=1.*Tacc, Naccrete=1*Nacc))
+	params.update(dict(Tacc=1.*Tacc, Naccrete=1*Nacc))
 	## offset
 	params.update(dict(voff=1.*voff, veta=1.*veta, uoff=1.*uoff, ueta=1.*ueta))
 
@@ -124,7 +123,7 @@ def demo():
 	reglist, chainparams = xh.evap.create_evap(params, seed=seed)
 
 	## draw
-	if False:
+	if True:
 		print("plot")
 		pp = dict(l=1.*l, R=1.*R)
 		xh.evap.drawreg(reglist, chainparams, fparams=pp)
