@@ -230,20 +230,20 @@ def chain_masker(reglist, chainparams):
 	return reglist, chainparams
 
 
-def shellparams_list(Rmax=1., le=.1, Nevap=5, Tevap=10., functype=xh.mf.schwarzschild, fparams=dict()):
+def shellparams_list(Rmax=1., le=.1, Nevap=5, Tevap=10., Tacc=1., Naccrete=1, functype=xh.mf.schwarzschild, fparams=dict()):
 	"""
 	"""
 	## init
 	m, du, dv = xh.evap.SSp.SSduvm(Nevap=1*Nevap, Tevap=1.*Tevap, M=0.5*Rmax, le=1.*le)
 	m, du, dv = m[::-1], du[::-1], dv[::-1]
-	print m
-	print du
-	print dv
+	mdudv = [m, du, dv]
 	## get shellparams
 	sp = []
 	for i in range(len(m)):
 		func = functype(R=2.*m[i], **fparams)
-		sp += [dict(func=copy.deepcopy(func), Rself=1.*func.fparams['R'], du=1.*du[i], dv=1.*dv[i], le=1.*le, Tevap=1.*Tevap, Nevap=1*Nevap)]
+		sp += [dict(func=copy.deepcopy(func), Rself=1.*func.fparams['R'], du=1.*du[i], dv=1.*dv[i], le=1.*le, Tevap=1.*Tevap, Nevap=1*Nevap, mdudv=mdudv)]
+	## edit final one
+	sp[-1]['dv'] = 1.*Tacc/Naccrete
 	## print
 	pprint.pprint(sp)
 	## return
@@ -318,7 +318,7 @@ def formevap_input(Rmax=1., le=.01, Tevap=1., Tacc=1., Nevap=5, Naccrete=5, uoff
 	du  += [0.]
 	dv  += [0.]
 	## evap
-	sp = shellparams_list(Rmax=1.*Rmax, Nevap=Nevap, le=1.*le, Tevap=1.*Tevap, functype=functype1, fparams=fparams1)
+	sp = shellparams_list(Rmax=1.*Rmax, Nevap=Nevap, le=1.*le, Tevap=1.*Tevap, Naccrete=1*Naccrete, Tacc=1.*Tacc, functype=functype1, fparams=fparams1)
 	for i in range(len(sp)):
 		funclist += [sp[i]['func']]
 		du  += [sp[i]['du']]

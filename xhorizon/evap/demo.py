@@ -69,7 +69,7 @@ def demo():
 	Tevap = 10.
 
 	## accrete
-	Nacc = 1
+	Nacc = 3
 	Tacc = .4
 
 	## seed
