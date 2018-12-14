@@ -50,36 +50,34 @@ def zero(m, mprev=1., dv=1., T=1., M=1., l=1.):
 	return dv-2.*drstar, du
 
 
-Nevap = 10
-T = 100.
-M = .1
-l = .1
-
-## u
-u = np.linspace(1e-9,T-1e-9,Nevap)
-
-## m(u)
-m = M * (1. - u/T)**(1./3.)
-
-## r(u)
-r = 2.*m + l
-
-## v(u)
-v = u + 2.*F(r,m)
-
-## du dv dm
-du = u[1:]-u[:-1]
-dv = v[1:]-v[:-1]
-dm = m[1:]-m[:-1]
-
-## mself mprev
-mself = m[1:]
-mprev = m[:-1]
-
-## drstar
-drstar = F(R(mself)+l,mself) - F(R(mprev)+l,mself)
+def SSduvm(Nevap=10, Tevap=5., M=.5, le=.01):
+	"""
+	"""
+	## u
+	u = np.linspace(1e-9,Tevap-1e-9,Nevap)
+	## m(u)
+	m = M * (1. - u/Tevap)**(1./3.)
+	## r(u)
+	r = 2.*m + le
+	## v(u)
+	v = u + 2.*F(r,m)
+	## du dv dm
+	du = u[1:]-u[:-1]
+	dv = v[1:]-v[:-1]
+	dm = m[1:]-m[:-1]
+	## mself mprev
+	mself = m[1:]
+	mprev = m[:-1]
+	## drstar
+	drstar = F(R(mself)+le,mself) - F(R(mprev)+le,mself)
+	## zero
+	zero = dv-du-2.*drstar
+	## print 
+	print "mean error in dv-du-2.*drstar = %s"%(np.mean(np.abs(zero)))
+	## return
+	return mself, du, dv
 
 
-print np.mean(drstar)
 
+#SSduvm(Nevap=20, Tevap=10., M=.2, le=.05)
 

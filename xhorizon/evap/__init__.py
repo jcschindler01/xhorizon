@@ -8,3 +8,6 @@ from demo import demo
 import draw
 
 import massplot
+
+
+import schwarzparams as SSp
