@@ -50,13 +50,13 @@ def zero(m, mprev=1., dv=1., T=1., M=1., l=1.):
 	return dv-2.*drstar, du
 
 
-Nevap = 20
-T = 10.
-M = 1.
+Nevap = 10
+T = 100.
+M = .1
 l = .1
 
 ## u
-u = np.linspace(0,T,Nevap)
+u = np.linspace(1e-9,T-1e-9,Nevap)
 
 ## m(u)
 m = M * (1. - u/T)**(1./3.)
@@ -67,11 +67,19 @@ r = 2.*m + l
 ## v(u)
 v = u + 2.*F(r,m)
 
-## du dv
+## du dv dm
 du = u[1:]-u[:-1]
 dv = v[1:]-v[:-1]
 dm = m[1:]-m[:-1]
 
-print du
-print dv
-print dm
+## mself mprev
+mself = m[1:]
+mprev = m[:-1]
+
+## drstar
+drstar = F(R(mself)+l,mself) - F(R(mprev)+l,mself)
+
+
+print np.mean(drstar)
+
+
