@@ -51,6 +51,9 @@ def demo():
 	sfp = dict(dpi=800)
 	temp_only = False
 
+	## draw
+	draw = True
+
 	## label
 	label = ''
 
@@ -59,17 +62,17 @@ def demo():
 
 	## input
 	l  = .01
-	le = .1
+	le = .01
 
 	## input
-	R  = .5
+	R  = .1
 
 	## evap
 	Nevap = 10
-	Tevap = 10.
+	Tevap = 20.
 
 	## accrete
-	Nacc = 3
+	Nacc = 2
 	Tacc = .4
 
 	## seed
@@ -123,7 +126,7 @@ def demo():
 	reglist, chainparams = xh.evap.create_evap(params, seed=seed)
 
 	## draw
-	if True:
+	if draw:
 		print("plot")
 		pp = dict(l=1.*l, R=1.*R)
 		xh.evap.drawreg(reglist, chainparams, fparams=pp)
