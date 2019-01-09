@@ -11,6 +11,7 @@ import matplotlib.colors
 
 import xhorizon as xh
 from xhorizon.shell_junction import interpolators as interp
+from helpers import irr
 
 
 ############## plot reglist ####################
@@ -308,7 +309,7 @@ def make_rlines(reglist, chainparams, l=.05, R=1., sty={}):
 	rlines(reglist, scale*x, sty=style, inf=25., npoints=1001.)
 
 
-def vticks(reglist, dv=1., inf1=100., inf2=50.5, sty={}):
+def vticks(reglist, dv=1., inf1=100., inf2=50.+irr, sty={}):
 	"""
 	Remainder lets dv carry across regions.
 	"""
@@ -349,7 +350,7 @@ def vticks(reglist, dv=1., inf1=100., inf2=50.5, sty={}):
 
 
 
-def uticks(reglist, du=1., inf1=100., inf2=50.1, sty={}):
+def uticks(reglist, du=1., inf1=100., inf2=50.+irr, sty={}):
 	"""
 	Remainder lets dv carry across regions.
 	"""
@@ -366,17 +367,26 @@ def uticks(reglist, du=1., inf1=100., inf2=50.1, sty={}):
 					## get min and max
 					umin = np.max([b.uvbounds['umin'], -inf2])
 					umax = np.min([b.uvbounds['umax'],  inf2])
-					## make array
-					uu = remainder + np.arange(umin, umax, du)
-					## get new remainder
-					remainder = du - (umax - uu[-1])
-					## make and add curve
-					crv = xh.curve()
-					crv.uv = np.array([1.*uu, inf1+0.*uu])
-					style = dict(markeredgecolor='k', alpha=.3, marker=(2,0,-45), ls='none', markersize=7, zorder=100)
-					style.update(sty)
-					crv.sty.update(style)
-					b.add_curves_uv([crv])
+					## is it too small
+					toosmall = False
+					if umax-umin <= remainder:
+						toosmall = True
+					## if too small adjust remainder
+					if toosmall==True:
+						remainder = remainder - (umax-umin)
+					## if big enough go
+					if toosmall==False:
+						## make array
+						uu = remainder + np.arange(umin, umax, du)
+						## get new remainder
+						remainder = du - (umax - uu[-1])
+						## make and add curve
+						crv = xh.curve()
+						crv.uv = np.array([1.*uu, inf1+0.*uu])
+						style = dict(markeredgecolor='k', alpha=.3, marker=(2,0,-45), ls='none', markersize=7, zorder=100)
+						style.update(sty)
+						crv.sty.update(style)
+						b.add_curves_uv([crv])
 
 
 ## custom hatch
