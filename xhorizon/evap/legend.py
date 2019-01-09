@@ -110,7 +110,7 @@ def legend():
 		hand += [mpl.lines.Line2D([], [], c='w')]
 
 		## r = inf
-		labels += [r"$r=\infty \;\; (\textrm{width} \propto (1+3m) )$"]
+		labels += [r"$r=\infty \;\; (\textrm{width} \propto (1+2m/M) )$"]
 		rline_inf_sty2 = rline_inf_sty.copy()
 		rline_inf_sty2.update(dict(lw=3, ls='dashed', dashes=(6,4)))
 		hand += [(mpl.lines.Line2D([], [], **rline_inf_sty ),
