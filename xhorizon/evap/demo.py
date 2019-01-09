@@ -14,6 +14,8 @@ def demo():
 	plt.rcParams['axes.linewidth'] = .4
 	plt.rcParams['xtick.major.size'] = 2
 	plt.rcParams['ytick.major.size'] = 2
+	plt.rcParams['lines.solid_capstyle'] = 'butt'
+	plt.rcParams['lines.dash_capstyle'] = 'butt'
 	## figure size
 	fig_width  = 2.5  ## inches
 	fig_aspect = 1.68   ## height/width
@@ -49,7 +51,7 @@ def demo():
 	## save
 	path = "temp-figs/demo"
 	sfp = dict(dpi=800)
-	temp_only = False
+	temp_only = True
 
 	## draw
 	draw = True
@@ -68,12 +70,12 @@ def demo():
 	R  = .1
 
 	## evap
-	Nevap = 10
+	Nevap = 1
 	Tevap = 20.
 
 	## accrete
-	Nacc = 2
-	Tacc = .4
+	Nacc = 1
+	Tacc = .5
 
 	## seed
 	seed = 0
