@@ -23,7 +23,7 @@ singularity_sty     = dict(ls='dashed', dashes=(2,2))
 rline_inf_sty       = dict(lw=1.5, c='0.48', zorder=10000)
 rline_hor_sty       = dict(lw=0.4, c='k', zorder=9999)
 rline_sty           = dict(ls='-', zorder=10, lw=.6, alpha=.5)
-acc_shells_sty      = dict(lw=0.6, ls='dashed', dashes=(3,3), c='0.6', zorder=2000)
+acc_shells_sty      = dict(lw=0.6, ls='dashed', dashes=(3,3), zorder=2000)
 evap_shells_out_sty = acc_shells_sty
 evap_shells_in_sty  = dict(lw=1., ls='dashed', dashes=(1,1.2), c='0.6', zorder=2000)
 fill_horizons_sty   = dict(fc='none', ec='k', lw=0, hatch='c', zorder=9990)
@@ -128,6 +128,8 @@ def rline_hor(reglist, npoints=5001, sty={}):
 				## add
 				b.add_curves_uv(cvs)
 
+def shell_col(x):
+	return np.array([1.,1.,1.]) - 0.3*(1.+x)
 
 def acc_shells(reglist, chainparams, sty={}, inf=50., npoints=5001):
 	"""
@@ -135,14 +137,20 @@ def acc_shells(reglist, chainparams, sty={}, inf=50., npoints=5001):
 	"""
 	Rh = chainparams['Rh']
 	v0 = chainparams['fs_v0']-1e-15
+	m = chainparams['m']
+	M = np.max(m)
 	for i in range(len(reglist[:-1])):
 		reg = reglist[i]
 		## accretion only
 		if Rh[i+1]>Rh[i]:
 			##
 			for b in reg.blocks:
+				## mass
+				dm = m[i+1] - m[i]
+				print("ACC SHELL COLOR dm/M=%s"%(dm/M))
+				col = shell_col(dm/M)
 				## style
-				style = dict(lw=0.2, ls='dashed', dashes=(4,4), c='0.65', zorder=2000)
+				style = dict(lw=0.2, ls='dashed', dashes=(4,4), c=1.*col, zorder=2000)
 				style.update(sty)
 				## v value
 				vv = v0[i:i+1]
