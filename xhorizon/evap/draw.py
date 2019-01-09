@@ -325,17 +325,26 @@ def vticks(reglist, dv=1., inf1=100., inf2=50.5, sty={}):
 					## get min and max
 					vmin = np.max([b.uvbounds['vmin'], -inf2])
 					vmax = np.min([b.uvbounds['vmax'],  inf2])
-					## make array
-					vv = remainder + np.arange(vmin, vmax, dv)
-					## get new remainder
-					remainder = dv - (vmax - vv[-1])
-					## make and add curve
-					crv = xh.curve()
-					crv.uv = np.array([-inf1+0.*vv, 1.*vv])
-					style = dict(markeredgecolor='k', alpha=0.3, ls='none', marker=(2,0,45), markersize=7, zorder=-100)
-					style.update(sty)
-					crv.sty.update(style)
-					b.add_curves_uv([crv])
+					## is it too small
+					toosmall = False
+					if vmax-vmin <= remainder:
+						toosmall = True
+					## if too small adjust remainder
+					if toosmall==True:
+						remainder = remainder - (vmax-vmin)
+					## if big enough go
+					if toosmall==False:
+						## make array
+						vv = remainder + np.arange(vmin, vmax, dv)
+						## get new remainder
+						remainder = dv - (vmax - vv[-1])
+						## make and add curve
+						crv = xh.curve()
+						crv.uv = np.array([-inf1+0.*vv, 1.*vv])
+						style = dict(markeredgecolor='k', alpha=0.3, ls='none', marker=(2,0,45), markersize=7, zorder=-100)
+						style.update(sty)
+						crv.sty.update(style)
+						b.add_curves_uv([crv])
 
 
 
