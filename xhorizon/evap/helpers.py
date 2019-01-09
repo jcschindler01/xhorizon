@@ -9,6 +9,9 @@ import copy
 import xhorizon as xh
 from xhorizon.shell_junction import interpolators as interp
 
+### constants ###
+irr = .5 * ((np.pi+np.e)%1.)
+
 ################ tools for choosing junction corner radius ###############
 
 
