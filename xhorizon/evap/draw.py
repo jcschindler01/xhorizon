@@ -25,7 +25,7 @@ rline_hor_sty       = dict(lw=0.4, c='k', zorder=9999)
 rline_sty           = dict(ls='-', zorder=10, lw=.6, alpha=.5)
 acc_shells_sty      = dict(lw=0.6, ls='dashed', dashes=(3,3), zorder=2000)
 evap_shells_out_sty = acc_shells_sty
-evap_shells_in_sty  = dict(lw=1., ls='dashed', dashes=(1,1.2), c='0.6', zorder=2000)
+evap_shells_in_sty  = dict(lw=1., ls='dashed', dashes=(1,1.2), zorder=2000)
 fill_horizons_sty   = dict(fc='none', ec='k', lw=0, hatch='c', zorder=9990)
 fill_density_sty    = dict(zorder=100)
 tick_sty            = dict(markersize=10, markeredgecolor='k', alpha=.3, zorder=100)
@@ -163,6 +163,8 @@ def evap_shells_out(reglist, chainparams, sty={}, inf=100., npoints=5001):
 	"""
 	Rh = chainparams['Rh']
 	u0 = chainparams['fs_u0']-1e-15
+	m = chainparams['m']
+	M = np.max(m)
 	for i in range(len(reglist[:-1])):
 		reg = reglist[i]
 		## evap only
@@ -170,8 +172,12 @@ def evap_shells_out(reglist, chainparams, sty={}, inf=100., npoints=5001):
 			## outgoing
 			for b in reg.blocks:
 				if not np.isfinite(b.uvbounds['vmax']):
+					## mass
+					dm = - (m[i+1] - m[i])
+					print("EVAP OUT SHELL COLOR dm/M=%s"%(dm/M))
+					col = shell_col(dm/M)
 					## style
-					style = dict(lw=0.2, ls='dashed', dashes=(4,4), c='0.65', zorder=2000)
+					style = dict(lw=0.2, ls='dashed', dashes=(4,4), c=1.*col, zorder=2000)
 					style.update(sty)
 					## u value
 					uu = u0[i:i+1]
@@ -187,6 +193,8 @@ def evap_shells_in(reglist, chainparams, sty={}, inf=5., npoints=5001):
 	u0 = chainparams['fs_u0']
 	v0 = chainparams['fs_v0']-1e-15
 	r0 = chainparams['fs_r0']
+	m = chainparams['m']
+	M = np.max(m)
 	for i in range(len(reglist[:-1])):
 		reg = reglist[i]
 		## evap only
@@ -197,8 +205,12 @@ def evap_shells_in(reglist, chainparams, sty={}, inf=5., npoints=5001):
 			rr = r0[i:i+1]
 			## ingoing
 			for b in reg.blocks:
+				## mass
+				dm = - (m[i+1] - m[i])
+				print("EVAP IN SHELL COLOR dm/M=%s"%(dm/M))
+				col = shell_col(dm/M)
 				## style
-				style = dict(lw=0.9, ls=':', c='0.65', zorder=2000)
+				style = dict(lw=0.9, ls=':', c=1.*col, zorder=2000)
 				style.update(sty)
 				## inner blocks
 				if b.rj[1]<rr:
