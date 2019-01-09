@@ -71,11 +71,11 @@ def demo():
 
 	## evap
 	Nevap = 1
-	Tevap = 20.
+	Tevap = 10.
 
 	## accrete
-	Nacc = 1
-	Tacc = .5
+	Nacc = 5
+	Tacc = 2.
 
 	## seed
 	seed = 0
