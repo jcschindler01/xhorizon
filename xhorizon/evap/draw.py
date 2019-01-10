@@ -129,7 +129,8 @@ def rline_hor(reglist, npoints=5001, sty={}):
 				b.add_curves_uv(cvs)
 
 def shell_col(x):
-	return np.array([1.,1.,1.]) - 0.3*(1.+x)
+	Cmax = .8
+	return np.array([1.,1.,1.]) - 0.33*(1.+2.*x)*Cmax
 
 def acc_shells(reglist, chainparams, sty={}, inf=50., npoints=5001):
 	"""
