@@ -51,31 +51,31 @@ def demo():
 	## save
 	path = "temp-figs/demo"
 	sfp = dict(dpi=800)
-	temp_only = True
+	temp_only = False
 
 	## draw
 	draw = True
 
 	## label
-	label = ''
+	label = '$(a)$'
 
 	# func type
 	ftype = 1
 
 	## input
-	l  = .01
-	le = .01
+	l  = 1e-4
+	le = 1e-4
 
 	## input
-	R  = .1
+	R  = 2e-3
 
 	## evap
-	Nevap = 10.
-	Tevap = 20.
+	Nevap = 6
+	Tevap = 10.
 
 	## accrete
-	Nacc = 5
-	Tacc = 2.
+	Nacc = 2
+	Tacc = .2
 
 	## seed
 	seed = 0
@@ -86,7 +86,7 @@ def demo():
 
 	## uu
 	uoff = 0.
-	ueta = 1.
+	ueta = 0.
 
 
 	## params
@@ -132,16 +132,18 @@ def demo():
 		print("plot")
 		pp = dict(l=1.*l, R=1.*R)
 		xh.evap.drawreg(reglist, chainparams, fparams=pp)
-			
+
 
 	## label
-	if False:
+	if True:
 		plt.annotate(s=label, xy=(.95,.97), xycoords='axes fraction', ha='right', va='top', size=8)
 
 
 	## param label
-	if False:
-		plabel = "\n".join([r"$l_{ev}=%s$"%(le), r"", r"$l=%s$"%(l), r"$2M=%s$"%(R)])
+	if True:
+		plabel = [r"$l_{ev}=%3s$"%(le), r"", r"$l=%3s$"%(l), r"$2M=%3s$"%(R)]
+		plabel += [r"", r"$\tau_{acc}=%3s$"%(Tacc), r"$\tau_{ev}=%3s$"%(Tevap)]
+		plabel = "\n".join(plabel)
 		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
 
 	## mass plot
