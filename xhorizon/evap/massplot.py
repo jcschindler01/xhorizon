@@ -43,8 +43,8 @@ def massplot(chainparams, params):
 		plt.ylim(-.1,1.1)
 		plt.grid(1, alpha=.15, zorder=0)
 	## labels
-	ax1.set_xlabel(r"$v/\tau_{f}$", labelpad=-6)
-	ax2.set_xlabel(r"$u/\tau_{e}$", labelpad=-6)
+	ax1.set_xlabel(r"$v/\tau_{acc}$", labelpad=-6)
+	ax2.set_xlabel(r"$u/\tau_{ev}$", labelpad=-6)
 	## labels
 	ax1.set_title("$(d)$ Formation Dynamics")
 	ax2.set_title("$(e)$ Evaporation Dynamics")
@@ -217,8 +217,8 @@ def massplot(chainparams, params):
 
 	## legend
 	red1, red2 = (1.,0.,0.,.15), (1.,0.,0.,.4)
-	a1, = plt.plot([], [], label=r"$m_u\!(u)$ ideal", color='r', linestyle="dashed", dashes=(3,3), lw=1.5)
-	a2 = matplotlib.patches.Patch(label=r"$m_u\!(u)$ numerical", color=red1, ec=red2, lw=.7)
+	a1, = plt.plot([], [], label=r"$m_u\!(u)$ (ideal)", color='r', linestyle="dashed", dashes=(3,3), lw=1.5)
+	a2 = matplotlib.patches.Patch(label=r"$m_u\!(u)$ (numerical)", color=red1, ec=red2, lw=.7)
 
 	## make legend
 	leg1 = plt.legend(handles=[a1,a2], loc='lower left', numpoints=10, fontsize=6)
