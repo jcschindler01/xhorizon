@@ -22,7 +22,7 @@ def legend():
 	plt.rcParams['axes.linewidth'] = .4
 	## figure size
 	fig_height = 1.68 * 2.5  ## inches
-	fig_width = 1.51  ## inches
+	fig_width = 1.54  ## inches
 	## axis loc
 	## define figure and axes
 	plt.figure(1, figsize=(fig_width, fig_height))
@@ -79,11 +79,14 @@ def legend():
 		## shells
 		labels += [r"positive-mass shells ($\sigma>0$)"]
 		acc_shells_sty.update(dict(dashes=(2.5,2.5), lw=.8))
-		hand += [mpl.lines.Line2D([], [], **acc_shells_sty)]
+		hand += [mpl.lines.Line2D([], [], c='0.5', **acc_shells_sty)]
 		## shells
 		labels += [r"negative-mass shells ($\sigma<0$)"]
 		evap_shells_in_sty.update(dict())
-		hand += [mpl.lines.Line2D([], [], **evap_shells_in_sty)]
+		hand += [mpl.lines.Line2D([], [], c='0.5', **evap_shells_in_sty)]
+		## shells
+		labels += [r"(shell darkness $ \sim \Delta m /M$)"]
+		hand += [mpl.lines.Line2D([], [], c='w')]
 
 		## blank
 		labels += [r""]
@@ -110,7 +113,7 @@ def legend():
 		hand += [mpl.lines.Line2D([], [], c='w')]
 
 		## r = inf
-		labels += [r"$r=\infty \;\; (\textrm{width} \propto (1+2m/M) )$"]
+		labels += [r"$r=\infty \;\; (\textrm{width} \! \propto \! (1 \! + \! 2m/M) )$"]
 		rline_inf_sty2 = rline_inf_sty.copy()
 		rline_inf_sty2.update(dict(lw=3, ls='dashed', dashes=(6,4)))
 		hand += [(mpl.lines.Line2D([], [], **rline_inf_sty ),
