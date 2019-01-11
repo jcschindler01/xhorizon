@@ -31,7 +31,6 @@ fill_density_sty    = dict(zorder=100)
 tick_sty            = dict(markersize=10, markeredgecolor='k', alpha=.3, zorder=100)
 
 
-
 def drawreg(reglist, chainparams, fparams=dict()):
 	"""
 	Plot all regions in reglist.
@@ -46,9 +45,9 @@ def drawreg(reglist, chainparams, fparams=dict()):
 	acc_shells(reglist, chainparams, sty=acc_shells_sty, inf=100., npoints=1001)
 	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=1001)
 	evap_shells_in(reglist, chainparams, sty=evap_shells_in_sty, inf=100., npoints=1001)
-	make_rlines(reglist, chainparams, l=l, R=R, sty=rline_sty)
-	vticks(reglist, sty=tick_sty)
-	uticks(reglist, sty=tick_sty)
+	make_rlines(reglist, chainparams, l=l, R=R, Tevap=10., sty=rline_sty)
+	vticks(reglist, dv=0.5, sty=tick_sty)
+	uticks(reglist, du=0.5, sty=tick_sty)
 	## plot
 	for reg in reglist:
 		reg.rplot()
@@ -308,7 +307,7 @@ def dstyle(rho, cm=plt.cm.Oranges, sty={}, ovr={}):
 		
 			
 
-def make_rlines(reglist, chainparams, l=.05, R=1., sty={}):
+def make_rlines(reglist, chainparams, l=.05, R=1., Tevap=None, sty={}):
 	"""
 	"""
 	## params
@@ -326,8 +325,14 @@ def make_rlines(reglist, chainparams, l=.05, R=1., sty={}):
 	## R scale
 	x = np.arange(0.,25.01,.5)
 	scale = R
-	style.update(dict(c='m' ))
+	style.update(dict(c='m'))
 	rlines(reglist, scale*x, sty=style, inf=25., npoints=1001.)
+	## Tevap scale
+	if Tevap is not None:
+		x = np.arange(0.,2.501,.05)
+		scale = Tevap
+		style.update(dict(c='#0000f0'))
+		rlines(reglist, scale*x, sty=style, inf=25., npoints=1001.)
 
 
 def vticks(reglist, dv=1., inf1=100., inf2=50.+irr, sty={}):
