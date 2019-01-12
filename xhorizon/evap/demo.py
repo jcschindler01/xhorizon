@@ -41,8 +41,8 @@ def demo():
 		plt.xticks([1,2])
 		plt.yticks([-1,0,1])
 		## lims
-		sq = 1.14
-		x0 = .93
+		sq = 1.14 + .4
+		x0 = .93 -.4
 		plt.xlim(x0,x0+sq)
 		plt.ylim(-0.5*aspect*sq,0.5*aspect*sq)
 	################################
@@ -57,7 +57,7 @@ def demo():
 	draw = True
 
 	## label
-	label = '$(a)$'
+	label = '$(c)$'
 
 	# func type
 	ftype = 1
@@ -70,18 +70,18 @@ def demo():
 	R  = 2e-3
 
 	## evap
-	Nevap = 6
+	Nevap = 12
 	Tevap = 10.
 
 	## accrete
-	Nacc = 2
-	Tacc = .2
+	Nacc = 5
+	Tacc = .5
 
 	## seed
-	seed = 0
+	seed = -1
 
 	## vv
-	voff = -Tacc - 0.
+	voff = -Tacc - 9.
 	veta = 1.
 
 	## uu
@@ -139,10 +139,17 @@ def demo():
 		plt.annotate(s=label, xy=(.95,.97), xycoords='axes fraction', ha='right', va='top', size=8)
 
 
-	## param label
-	if True:
+	## auto param label
+	if False:
 		plabel = [r"$l_{ev}=%3s$"%(le), r"", r"$l=%3s$"%(l), r"$2M=%3s$"%(R)]
 		plabel += [r"", r"$\tau_{acc}=%3s$"%(Tacc), r"$\tau_{ev}=%3s$"%(Tevap)]
+		plabel = "\n".join(plabel)
+		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
+
+	## manual param label
+	if False:
+		plabel = [r"$\tau_{ev}=%s$"%(Tevap), r"$\tau_{acc}=%s$"%(Tacc)]
+		plabel += [r"", r"$M=10^{-3}$", r"$l_{ev}=l=10^{-4}$"]
 		plabel = "\n".join(plabel)
 		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
 
