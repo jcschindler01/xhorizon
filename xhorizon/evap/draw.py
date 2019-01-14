@@ -215,7 +215,7 @@ def evap_shells_in(reglist, chainparams, sty={}, inf=5., npoints=5001):
 				## inner blocks
 				if b.rj[1]<rr:
 					## values
-					u = np.linspace(-inf,inf,npoints)
+					u = np.sort(np.concatenate([np.linspace(-1.,1.,npoints),np.linspace(-inf,inf,npoints)]))
 					v = vv+0.*u
 					## make curve
 					cv = xh.curve()
