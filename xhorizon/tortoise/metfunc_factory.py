@@ -124,12 +124,12 @@ def hayward(R=1.,l=0.1):
 	return func
 
 
-def dS(L=1.):
+def dS(L=10.):
 	############################# INPUT #############################
 	## parameters
 	L = float(L)
 	fparams = dict(L=L)
-	Fparams = dict(eps=1e-9, inf=100., npoints_interp=500)
+	Fparams = dict(eps=1e-9, inf=20.*L, npoints_interp=500)
 	## metric function
 	f = lambda r: 1. - (r/L)**2
 	## zeroes and slopes of f(r)
@@ -150,12 +150,12 @@ def dS(L=1.):
 	return func
 
 
-def AdS(L=1.):
+def AdS(L=10.):
 	############################# INPUT #############################
 	## parameters
 	L = float(L)
 	fparams = dict(L=L)
-	Fparams = dict(eps=1e-9, inf=50., npoints_interp=500)
+	Fparams = dict(eps=1e-9, inf=20.*L, npoints_interp=500)
 	## metric function
 	f = lambda r: 1. + (r/L)**2
 	## zeroes and slopes of f(r)
@@ -175,6 +175,58 @@ def AdS(L=1.):
 	## return
 	return func
 
+
+
+def Hay_dS(l=.1, R=1., L=10.):
+	############################# INPUT #############################
+	## parameters
+	l, R, L = float(l), float(R), float(L)
+	fparams = dict(l=l,R=R,L=L)
+	Fparams = dict(eps=1e-9, inf=20.*L, npoints_interp=500)
+	## metric function
+	f = lambda r: 1. - R*r**2/(R*l**2+r**3) - r**2/L**2
+	## zeroes and slopes of f(r)
+	ri = math_util.pos_real_roots(np.array([-1.,0.,L**2,-R*l**2-R*L**2,0.,R*(L**2)*(l**2)]))
+	ki = ( R * ri**4 - 2. * R**2 * l**2 * ri ) / ( R * l**2 + ri**3 )**2 - 2.*ri / L**2
+	## info
+	info = {
+		'Type' : "Hayward - de Sitter",
+		'Metric Function' : r"$f(r) = 1 - Rr^2/(Rl^2+r^3) - (r/L)^2$",
+		'Parameters' : ', '.join([r"$l=%r$"%l,r"$R=%r$"%R,r"$L=%r$"%L])
+		}
+	#################################################################
+	## store params in dict
+	params = dict(fparams=fparams, Fparams=Fparams, f=f, ri=ri, ki=ki, info=info)
+	## build
+	func = build_metfunc(params)
+	## return
+	return func
+
+
+def Hay_AdS(l=.1, R=1., L=10.):
+	############################# INPUT #############################
+	## parameters
+	l, R, L = float(l), float(R), float(L)
+	fparams = dict(l=l,R=R,L=L)
+	Fparams = dict(eps=1e-9, inf=20.*L, npoints_interp=500)
+	## metric function
+	f = lambda r: 1. - R*r**2/(R*l**2+r**3) + r**2/L**2
+	## zeroes and slopes of f(r)
+	ri = math_util.pos_real_roots(np.array([ 1.,0.,L**2, R*l**2-R*L**2,0.,R*(L**2)*(l**2)]))
+	ki = ( R * ri**4 - 2. * R**2 * l**2 * ri ) / ( R * l**2 + ri**3 )**2 + 2.*ri / L**2
+	## info
+	info = {
+		'Type' : "Hayward - Anti de Sitter",
+		'Metric Function' : r"$f(r) = 1 - Rr^2/(Rl^2+r^3) + (r/L)^2$",
+		'Parameters' : ', '.join([r"$l=%r$"%l,r"$R=%r$"%R,r"$L=%r$"%L])
+		}
+	#################################################################
+	## store params in dict
+	params = dict(fparams=fparams, Fparams=Fparams, f=f, ri=ri, ki=ki, info=info)
+	## build
+	func = build_metfunc(params)
+	## return
+	return func
 
 
 def negativeAdS(L=1.):
