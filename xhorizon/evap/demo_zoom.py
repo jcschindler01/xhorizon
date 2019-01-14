@@ -18,14 +18,14 @@ def demo():
 	plt.rcParams['lines.dash_capstyle'] = 'butt'
 	## figure size
 	fig_width  = 2.5  ## inches
-	fig_aspect = 1.68   ## height/width
+	fig_aspect = 1.12   ## height/width
 	fig_height = fig_width * fig_aspect
 	## axis size
-	width  = 0.86   ## x fraction
-	aspect = 1.84   ## absolute height/width
+	width  = 0.84   ## x fraction
+	aspect = 1.2   ## absolute height/width
 	height = aspect * width / fig_aspect    ## y fraction
 	## axis loc
-	left, bottom = .12, .05     ## x fraction, y fraction
+	left, bottom = .14, .08     ## x fraction, y fraction
 	## define figure and axes
 	plt.figure(1,figsize=(fig_width,fig_height))
 	ax1 = plt.axes([left,bottom,width,height], aspect=1.)
@@ -35,14 +35,15 @@ def demo():
 		## set axis
 		plt.sca(axx)
 		## labels
-		plt.xlabel('$V-U$', labelpad=-7)
-		plt.ylabel('$V+U$', labelpad=-4)
+		plt.xlabel('$V-U$', labelpad=-6)
+		plt.ylabel('$V+U$', labelpad=-3)
 		## ticks
-		plt.xticks([1,2])
-		plt.yticks([-1,0,1])
+		lbx = .1
+		plt.xticks([1,1.+2.*lbx])
+		plt.yticks([-lbx,0,lbx])
 		## lims
-		sq = 1.14 + .4
-		x0 = .93 -.4
+		sq = .26 #1.14 + .4
+		x0 = .98 #.93 -.4
 		plt.xlim(x0,x0+sq)
 		plt.ylim(-0.5*aspect*sq,0.5*aspect*sq)
 	################################
@@ -57,31 +58,31 @@ def demo():
 	draw = True
 
 	## label
-	label = '$(c)$'
+	label = ''
 
 	# func type
 	ftype = 1
 
 	## input
-	l  = 1e-4
-	le = 1e-4
+	l  = 1e-3
+	le = 1e-2
 
 	## input
-	R  = 2e-3
+	R  = 2e-1
 
 	## evap
-	Nevap = 12
-	Tevap = 10.
+	Nevap = 3
+	Tevap = .2
 
 	## accrete
-	Nacc = 5
-	Tacc = .5
+	Nacc = 3
+	Tacc = .2
 
 	## seed
-	seed = -1
+	seed = 0
 
 	## vv
-	voff = -Tacc - 9.
+	voff = -Tacc - 0.
 	veta = 1.
 
 	## uu
@@ -140,11 +141,11 @@ def demo():
 
 
 	## auto param label
-	if False:
-		plabel = [r"$l_{ev}=%3s$"%(le), r"", r"$l=%3s$"%(l), r"$2M=%3s$"%(R)]
-		plabel += [r"", r"$\tau_{acc}=%3s$"%(Tacc), r"$\tau_{ev}=%3s$"%(Tevap)]
+	if True:
+		plabel = [r"$\tau_{acc}=%3s$"%(Tacc), r"$\tau_{ev}=%3s$"%(Tevap)]
+		plabel += [r"", r"$2M=%3s$"%(R), r"$l=%3s$"%(l), r"", r"$l_{ev}=%3s$"%(le)]
 		plabel = "\n".join(plabel)
-		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
+		plt.annotate(s=plabel, xy=(.95,.03), zorder=99999, xycoords='axes fraction', ha='right', va='bottom', size=8)
 
 	## manual param label
 	if False:
