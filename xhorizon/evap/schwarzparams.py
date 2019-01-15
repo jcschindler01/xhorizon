@@ -76,6 +76,6 @@ def SSduvm(Nevap=1e4, Tevap=1e4, M=.5, le=1e-4):
 	return mself, du, dv
 
 
-SSduvm()
+#SSduvm()
 
 
