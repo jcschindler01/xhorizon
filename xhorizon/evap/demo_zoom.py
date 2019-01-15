@@ -142,7 +142,8 @@ def demo():
 
 	## auto param label
 	if True:
-		plabel = [r"$\tau_{acc}=%3s$"%(Tacc), r"$\tau_{ev}=%3s$"%(Tevap)]
+		#plabel = [r"$\tau_{acc}=%3s$"%(Tacc), r"$\tau_{ev}=%3s$"%(Tevap)]
+		plabel = [r"$\tau_{acc}=%3s$"%(Tacc), r"$\tau_{ev}=%3s$"%(10.)]
 		plabel += [r"", r"$2M=%3s$"%(R), r"$l=%3s$"%(l), r"", r"$l_{ev}=%3s$"%(le)]
 		plabel = "\n".join(plabel)
 		plt.annotate(s=plabel, xy=(.95,.03), zorder=99999, xycoords='axes fraction', ha='right', va='bottom', size=8)
