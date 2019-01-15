@@ -45,7 +45,7 @@ def drawreg(reglist, chainparams, fparams=dict()):
 	acc_shells(reglist, chainparams, sty=acc_shells_sty, inf=100., npoints=1001)
 	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=1001)
 	evap_shells_in(reglist, chainparams, sty=evap_shells_in_sty, inf=100., npoints=1001)
-	make_rlines(reglist, chainparams, l=l, R=R, Tevap=10., sty=rline_sty)
+	make_rlines(reglist, chainparams, l=l, R=R, Tevap=None, sty=rline_sty)
 	vticks(reglist, dv=0.5, sty=tick_sty)
 	uticks(reglist, du=0.5, sty=tick_sty)
 	## plot
@@ -257,12 +257,12 @@ def fill_density(reglist, sty={}):
 		## default to zero
 		density = 0.*x
 		## vac spacetimes
-		vac = ['Schwarzschild', 'Minkowski']
+		vac = ['Schwarzschild', 'Minkowski','Anti de Sitter']
 		if reg.metfunc.info['Type'] in vac:
 			for b in reg.blocks:
 				b.fill(dstyle(0.))
 		## hayward
-		if reg.metfunc.info['Type'] == 'Hayward':
+		if reg.metfunc.info['Type'] in ['Hayward','Hayward - Anti de Sitter']:
 			## get params
 			l = reg.metfunc.fparams['l']
 			R = reg.metfunc.fparams['R']
