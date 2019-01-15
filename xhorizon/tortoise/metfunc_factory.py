@@ -229,6 +229,51 @@ def Hay_AdS(l=.1, R=1., L=10.):
 	return func
 
 
+def Hay_dS_cutoff(l=.1, R=1., L=10.):
+	############################# INPUT #############################
+	## parameters
+	l, R, L = float(l), float(R), float(L)
+	fparams = dict(l=l,R=R,L=L)
+	Fparams = dict(eps=1e-9, inf=20.*L, npoints_interp=500)
+	## L0
+	ri = math_util.pos_real_roots(np.array([-1.,0.,L**2,-R*l**2-R*L**2,0.,R*(L**2)*(l**2)]))
+	L0 = ri[-1] - 0.1*(ri[-1] - ri[-2])
+	## metric function
+	def f(r):
+		if type(r)==float:
+			if r<=L0:
+				return 1. - r**2/L**2
+			if r>L0:
+				return 1. - R*r**2/(R*l**2+r**3) - r**2/L**2
+		if type(r)==np.ndarray:
+			ff = np.nan*r
+			mask = r> L0
+			ff[mask] = 1. - R*r[mask]**2/(R*l**2+r[mask]**3) - r[mask]**2/L**2
+			mask = r<=L0
+			ff[mask] = 1. - r[mask]**2/L**2
+			return 1.*ff
+	## zeroes and slopes of f(r)
+	ri = math_util.pos_real_roots(np.array([-1.,0.,L**2,-R*l**2-R*L**2,0.,R*(L**2)*(l**2)]))
+	ki = ( R * ri**4 - 2. * R**2 * l**2 * ri ) / ( R * l**2 + ri**3 )**2 - 2.*ri / L**2
+	## should be just one though because of cutoff
+	ri = ri[-1:]
+	ki = ki[-1:]
+	## info
+	info = {
+		'Type' : "Hayward - de Sitter with Cutoff",
+		'Metric Function' : r"De Sitter inside cutoff length, Hay-dS outside cutoff length.",
+		'Parameters' : ', '.join([r"$l=%r$"%l,r"$R=%r$"%R,r"$L=%r$"%L])
+		}
+	#################################################################
+	## store params in dict
+	params = dict(fparams=fparams, Fparams=Fparams, f=f, ri=ri, ki=ki, info=info)
+	## build
+	func = build_metfunc(params)
+	## return
+	return func
+
+
+
 def negativeAdS(L=1.):
 	############################# INPUT #############################
 	## parameters
