@@ -63,12 +63,12 @@ def demo():
 	ftype = 2
 
 	## input	
-	L = 10.
-	l  = .05
-	le = .005
+	L = 1.
+	l  = .01
+	le = .01
 
 	## input
-	R  = 1.
+	R  = .2
 
 	## evap
 	Nevap = 1
@@ -82,7 +82,7 @@ def demo():
 	seed = 0
 
 	## vv
-	voff = 0.#-Tacc - 0.
+	voff = 0. #-Tacc - 0.
 	veta = 1.
 
 	## uu
