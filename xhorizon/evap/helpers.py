@@ -33,6 +33,11 @@ def get_rinf_uv0(reglist, v0=[]):
 			uv = np.array([u,v])
 			r0[i] = b.tr_of_uv(uv)[1]
 	r0 = .85*np.min(r0)
+	## bug fix for AdS
+	if not np.isfinite(r0):
+		if 'L' in reglist[0].metfunc.fparams.keys():
+			r0=1.9*reglist[0].metfunc.fparams['L']
+	## return
 	return r0
 
 
