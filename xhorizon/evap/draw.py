@@ -48,6 +48,7 @@ def drawreg(reglist, chainparams, fparams=dict()):
 	make_rlines(reglist, chainparams, l=l, R=R, Tevap=None, sty=rline_sty)
 	vticks(reglist, dv=0.5, sty=tick_sty)
 	uticks(reglist, du=0.5, sty=tick_sty)
+	tticks(reglist, dt=0.5, sty=tick_sty)
 	## plot
 	for reg in reglist:
 		reg.rplot()
@@ -215,7 +216,7 @@ def evap_shells_in(reglist, chainparams, sty={}, inf=5., npoints=5001):
 				## inner blocks
 				if b.rj[1]<rr:
 					## values
-					u = np.sort(np.concatenate([np.linspace(-1.,1.,npoints),np.linspace(-inf,inf,npoints)]))
+					u = np.sort(np.concatenate([np.linspace(-1e-3,-1.,npoints//2),np.linspace(1e-3,1.,npoints//2),np.linspace(-inf,inf,npoints)]))
 					v = vv+0.*u
 					## make curve
 					cv = xh.curve()
@@ -413,6 +414,54 @@ def uticks(reglist, du=1., inf1=100., inf2=50.+irr, sty={}):
 						style.update(sty)
 						crv.sty.update(style)
 						b.add_curves_uv([crv])
+
+
+
+def tticks(reglist, dt=1., inf1=1., inf2=50.+irr, sty={}):
+	"""
+	Remainder lets dt carry across regions.
+	"""
+	if reglist[0].metfunc.info['Type']=='Anti de Sitter':
+		inf1 = 9.*reglist[0].metfunc.fparams['L']
+		## init
+		remainder = 0.
+		## regions
+		for reg in reglist:
+			## blocks
+			for b in reg.blocks:
+				## last blocks only
+				if b.j == reg.blocks[-1].j:
+					## outer last blocks only
+					if (not np.isfinite(b.uvbounds['vmax'])) or (not np.isfinite(b.uvbounds['umin'])):
+						## get min and max
+						umin = np.max([b.uvbounds['umin'], -inf2])
+						umax = np.min([b.uvbounds['umax'],  inf2])
+						vmin = np.max([b.uvbounds['vmin'], -inf2])
+						vmax = np.min([b.uvbounds['vmax'],  inf2])
+						tmin = 0.5*(vmin+umin)
+						tmax = 0.5*(vmax+umax)
+						## is it too small
+						toosmall = False
+						if tmax-tmin <= remainder:
+							toosmall = True
+						## if too small adjust remainder
+						if toosmall==True:
+							remainder = remainder - (tmax-tmin)
+						## if big enough go
+						if toosmall==False:
+							print "HELLLOOOOOOOOO tticks"
+							print tmin, tmax, dt
+							## make array
+							tt = remainder + np.arange(tmin, tmax, dt)
+							## get new remainder
+							remainder = dt - (tmax - tt[-1])
+							## make and add curve
+							crv = xh.curve()
+							crv.tr = np.array([1.*tt,1.*inf1])
+							style = dict(markeredgecolor='k', alpha=.3, marker=(2,0,90), ls='none', markersize=7, zorder=100)
+							style.update(sty)
+							crv.sty.update(style)
+							b.add_curves_tr([crv])
 
 
 ## custom hatch
