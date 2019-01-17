@@ -156,9 +156,8 @@ def acc_shells(reglist, chainparams, sty={}, inf=50., npoints=5001):
 				## v value
 				vv = v0[i:i+1]
 				## curve
-				uvb = b.uvbounds.copy()
-				uvb.update(vmax=0)
 				b.add_curves_uv(xh.cm.uvlines(vv, uv='v', uvbounds=b.uvbounds, sty=style, c=0., inf=inf, npoints=npoints))
+
 
 def evap_shells_out(reglist, chainparams, sty={}, inf=100., npoints=5001):
 	"""
@@ -349,7 +348,7 @@ def vticks(reglist, dv=1., inf1=100., inf2=50.+irr, sty={}):
 		## blocks
 		for b in reg.blocks:
 			## last blocks only
-			if b.j == reg.blocks[-1].j:
+			if b.j == len(reg.metfunc.rj)-2:
 				## outer last blocks only
 				if not np.isfinite(b.uvbounds['umin']):
 					## get min and max
@@ -390,7 +389,7 @@ def uticks(reglist, du=1., inf1=100., inf2=50.+irr, sty={}):
 		## blocks
 		for b in reg.blocks:
 			## last blocks only
-			if b.j == reg.blocks[-1].j:
+			if b.j == len(reg.metfunc.rj)-2:
 				## outer last blocks only
 				if not np.isfinite(b.uvbounds['vmax']):
 					## get min and max
@@ -432,7 +431,7 @@ def tticks(reglist, dt=1., inf1=1., inf2=50.+irr, sty={}):
 			## blocks
 			for b in reg.blocks:
 				## last blocks only
-				if b.j == reg.blocks[-1].j:
+				if b.j == len(reg.metfunc.rj)-2:
 					## outer last blocks only
 					if (not np.isfinite(b.uvbounds['vmax'])) or (not np.isfinite(b.uvbounds['umin'])):
 						## get min and max
