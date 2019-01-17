@@ -45,7 +45,7 @@ def drawreg(reglist, chainparams, fparams=dict()):
 	acc_shells(reglist, chainparams, sty=acc_shells_sty, inf=100., npoints=1001)
 	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=1001)
 	evap_shells_in(reglist, chainparams, sty=evap_shells_in_sty, inf=100., npoints=1001)
-	make_rlines(reglist, chainparams, l=l, R=R, Tevap=5., sty=rline_sty)
+	make_rlines(reglist, chainparams, l=l, R=R, Tevap=None, sty=rline_sty)
 	vticks(reglist, dv=0.5, sty=tick_sty)
 	uticks(reglist, du=0.5, sty=tick_sty)
 	tticks(reglist, dt=0.5, sty=tick_sty)
