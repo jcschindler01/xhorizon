@@ -41,8 +41,8 @@ def demo():
 		plt.xticks([1,2])
 		plt.yticks([-1,0,1])
 		## lims
-		sq = 1.14
-		x0 = .93
+		sq = 1.2
+		x0 = .86
 		plt.xlim(x0,x0+sq)
 		plt.ylim(-0.5*aspect*sq,0.5*aspect*sq)
 	################################
@@ -159,6 +159,11 @@ def demo():
 		plabel += [r"", r"$M=10^{-3}$", r"$l_{ev}=l=10^{-4}$"]
 		plabel = "\n".join(plabel)
 		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
+
+	## r=infty label
+	if True:
+		plt.annotate(s=r"$r=0$",      xy=(.95, 0.), ha='center', va='center', size=7, rotation=90)
+		plt.annotate(s=r"$r=\infty$", xy=(1.5, 0.), ha='center', va='center', size=7, rotation=-90)
 
 	## mass plot
 	mpgo = True
