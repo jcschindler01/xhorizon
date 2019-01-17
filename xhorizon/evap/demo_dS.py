@@ -4,6 +4,7 @@ def demo():
 	import matplotlib.pyplot as plt
 	import xhorizon as xh
 	from massplot import massplot
+	import helpers
 
 	"""
 	"""
@@ -38,12 +39,12 @@ def demo():
 		plt.xlabel('$V-U$', labelpad=-7)
 		plt.ylabel('$V+U$', labelpad=-4)
 		## ticks
-		plt.xticks([1,2])
-		plt.yticks([-1,0,1])
+		plt.xticks([-1,1])
+		plt.yticks([-1,1])
 		## lims
-		sq = 6.
-		x0 = -2.5
-		y0 = 1.
+		sq = 3.
+		x0 = -1.5
+		y0 = 0.
 		plt.xlim(x0,x0+sq)
 		plt.ylim(y0-0.5*aspect*sq,y0+0.5*aspect*sq)
 	################################
@@ -55,26 +56,27 @@ def demo():
 	temp_only = True
 
 	## draw
-	draw = False
+	draw = True
 
 	## label
 	label = '$(b)$'
 
 	## input	
-	L = 10.
 	l  = .01
 	le = .01
 
 	## input
-	R  = .2
+	R  = .1
 
+	## input
+	L = 5.
 
 	## accrete
-	Tacc = .75
+	Tacc = 1.
 
 
 	## vv
-	voff = 0. #-Tacc - 0.
+	voff = -.4*Tacc - 0.
 
 	## params
 	seed = 0
@@ -83,28 +85,126 @@ def demo():
 	chainparams = dict()
 
 ##################################
-	## go
-	# func0 = xh.mf.dS(L=1.*L)
-	# func1 = xh.mf.Hay_dS(l=1.*l, R=1.*R, L=1.*L)
-	# func2 = xh.mf.Hay_dS_cutoff(l=1.*l, R=1.*R, L=1.*L)
-	# func3 = xh.mf.dS(L=1.*L)
-	# funclist = [func0, func1, func2, func3]
 
-
-
-	# reg0 = xh.reg.MAXreg(func0, boundary=True, rlines=True)
-	# reg1 = xh.reg.EFreg( func1, boundary=True, rlines=True)
-	# reg2 = xh.reg.MAXreg(func2, boundary=True, rlines=True)
-	# reg3 = xh.reg.MAXreg(func3, boundary=True, rlines=True)
-	# reglist = [reg0, reg1, reg2, reg3]
-
-	# for reg in reglist[2:3]:
-	# 	reg.rplot()
-
+	## func
+	func0 = xh.mf.dS(L=1.*L)
+	func1 = xh.mf.Hay_dS(l=1.*l, R=1.*R, L=1.*L)
 	func2 = xh.mf.Hay_dS_cutoff(l=1.*l, R=1.*R, L=1.*L)
+	func3 = xh.mf.dS(L=1.*L)
+	funclist = [func0, func1, func2, func3]
 
-	print type(func2.rj[-1])
-	print func2.f(func2.rj[-1])
+	## need to match 1 and 2 at infinty
+	c12 = func2.F(10.*L) - func1.F(10.*L)
+
+	## regions
+	deflines = False
+	reg0 = xh.reg.MAXreg(func0, boundary=deflines, rlines=deflines)
+	reg1 = xh.reg.EFreg( func1, boundary=deflines, rlines=deflines)
+	reg2 = xh.reg.MAXreg(func2, rparams=dict(c=1.*c12), boundary=deflines, rlines=deflines)
+	reg3 = xh.reg.MAXreg(func3, boundary=deflines, rlines=deflines)
+	reglist = [reg0, reg1, reg2, reg3]
+
+	## modify Hay-AdS region to add extra blocks
+	## top
+	b  = reg1.blocks[3]
+	cdlu = 1.*b.bparams['cdlu'] + 1.
+	cdlv = 1.*b.bparams['cdlv'] + 1.
+	epsu = -1.*b.bparams['epsu']
+	epsv = -1.*b.bparams['epsv']
+	bparams = dict(cdlu=1.*cdlu, cdlv=1.*cdlv, epsu=1.*epsu, epsv=1.*epsv)
+	reg1.blocks += [xh.block(b.master, b.j, dict(cdlu=1.*cdlu, cdlv=1.*cdlv, epsu=1.*epsu, epsv=1.*epsv))]
+	## right
+	b  = reg1.blocks[2]
+	cdlu = 1.*b.bparams['cdlu'] - 1.
+	cdlv = 1.*b.bparams['cdlv'] + 1.
+	epsu = -1.*b.bparams['epsu']
+	epsv = -1.*b.bparams['epsv']
+	bparams = dict(cdlu=1.*cdlu, cdlv=1.*cdlv, epsu=1.*epsu, epsv=1.*epsv)
+	reg1.blocks += [xh.block(b.master, b.j, dict(cdlu=1.*cdlu, cdlv=1.*cdlv, epsu=1.*epsu, epsv=1.*epsv))]
+
+
+	## chain params
+	m  = np.array([0., 0.5*R, 0., 0.])
+	Rh = np.array([0., func1.rj[2], 0., 0.])
+	va = 1.*voff
+	vb = 1.*va + 1.*Tacc
+
+	#### initial region
+	## passive slice
+	sliceloc0 = dict(v0=1.*va, r0=3.*L)
+	pslice0 = xh.junc.pslice(reg0, ublocks=[1,2], vblocks=[0,1], **sliceloc0)
+
+	#### Hay-AdS region
+	## active slice
+	aslice1 = xh.junc.aslice(reg1, ublocks=[3,5], vblocks=[0,1,2,3], U0=pslice0.U_of_r_at_v0, V0=pslice0.V_of_r_at_u0, r_refs=[pslice0.reg.metfunc.r_ref], **sliceloc0)
+	## modify transformations
+	reg1.U_of_udl = aslice1.U_of_udl_at_v0
+	reg1.V_of_vdl = aslice1.V_of_vdl_at_u0
+	## passive slice
+	sliceloc1 = dict(v0=1.*vb, r0=Rh[1]+le)
+	pslice1 = xh.junc.pslice(reg1, ublocks=[2,4], vblocks=[0,1,2,3], **sliceloc1)
+
+	#### Cutoff region
+	## modify transformations
+	reg2.U_of_udl = reg1.U_of_udl
+	reg2.V_of_vdl = reg1.V_of_vdl
+
+	#### Final region
+	## active slice
+	aslice3 = xh.junc.aslice(reg3, ublocks=[0,3], vblocks=[0,1], U0=pslice1.U_of_r_at_v0, V0=pslice1.V_of_r_at_u0, r_refs=[pslice1.reg.metfunc.r_ref], **sliceloc1)
+	ub = 1.*aslice3.u0
+	## modify transformations
+	reg3.U_of_udl = aslice3.U_of_udl_at_v0
+	reg3.V_of_vdl = aslice3.V_of_vdl_at_u0
+
+
+	#### mask
+	## initial region
+	reg0.blocks = reg0.blocks[0:2]
+	for b in reg0.blocks:
+		b.uvbounds.update(dict(vmax=1.*va))
+	# Cutoff region
+	reg2.blocks = reg2.blocks[2:3]
+	reg2.blocks[0].bparams.update(reg1.blocks[-1].bparams)
+	reg2.blocks[0].update()
+	# Hay-AdS region past slice
+	reg1.blocks = reg1.blocks[0:5]
+	for b in reg1.blocks[0:4]:
+		b.uvbounds.update(dict(vmin=1.*va))
+	# Hay-AdS future slice
+	newblocks = []
+	for i in [0,1]:
+		newblocks += [xh.block(reg1.blocks[i].master, reg1.blocks[i].j, reg1.blocks[i].bparams)]
+		newblocks[-1].uvbounds.update(reg1.blocks[i].uvbounds)
+		newblocks[-1].uvbounds.update(dict(vmax=1.*vb))
+	for i in [2]:
+		newblocks += [xh.block(reg1.blocks[i].master, reg1.blocks[i].j, reg1.blocks[i].bparams)]
+		newblocks[-1].uvbounds.update(reg1.blocks[i].uvbounds)
+		newblocks[-1].uvbounds.update(dict(umin=1.*ub, vmax=1.*vb))
+	for i in [2,4]:
+		newblocks += [xh.block(reg1.blocks[i].master, reg1.blocks[i].j, reg1.blocks[i].bparams)]
+		newblocks[-1].uvbounds.update(reg1.blocks[i].uvbounds)
+		newblocks[-1].uvbounds.update(dict(umax=1.*ub))
+	for i in [3]:
+		newblocks += [xh.block(reg1.blocks[i].master, reg1.blocks[i].j, reg1.blocks[i].bparams)]
+		newblocks[-1].uvbounds.update(reg1.blocks[i].uvbounds)
+		newblocks[-1].uvbounds.update(dict())	
+	## reset Hay-AdS blocks to masked ones
+	reg1.blocks = newblocks
+	## final region
+	reg3.blocks = [reg3.blocks[0],reg3.blocks[3]]
+	reg3.blocks[0].uvbounds.update(dict(vmin=1.*vb, umin=1.*ub))
+	reg3.blocks[1].uvbounds.update(dict(umin=1.*ub))
+
+	## chainparams
+	m = 1.*m
+	Rh = 1.*Rh
+	fs_v0 = np.array([1.*va, 1.*vb, 0., 0.])
+	fs_u0 = np.array([0., 1.*ub, 0., 0.])
+	fs_r0 = 1.*Rh+le
+	chainparams.update(dict(m=1.*m, Rh=1.*Rh, fs_r0=1.*fs_r0, fs_u0=1.*fs_u0, fs_v0=1.*fs_v0))
+
+
 
 ######################################
 
@@ -112,8 +212,7 @@ def demo():
 	if draw:
 		print("plot")
 		pp = dict(l=1.*l, R=1.*R)
-		xh.evap.drawreg(reglist, chainparams, fparams=pp)
-
+		xh.evap.draw_dS.drawreg(reglist, chainparams, fparams=pp)
 
 	## label
 	if True:
@@ -121,9 +220,9 @@ def demo():
 
 
 	## auto param label
-	if False:
+	if True:
+		#plabel = [r"", r"$\tau_{acc}=%3s$"%(Tacc), r"$\tau_{ev}=%3s$"%(Tevap)]
 		plabel = [r"$l_{ev}=%3s$"%(le), r"", r"$l=%3s$"%(l), r"$2M=%3s$"%(R), r"$L=%3s$"%(L)]
-		#plabel += [r"", r"$\tau_{acc}=%3s$"%(Tacc), r"$\tau_{ev}=%3s$"%(Tevap)]
 		plabel = "\n".join(plabel)
 		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
 
@@ -145,7 +244,7 @@ def demo():
 
 
 	## return
-	return None
+	return reglist, chainparams
 
 
 
