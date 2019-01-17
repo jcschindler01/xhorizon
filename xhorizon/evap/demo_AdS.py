@@ -63,26 +63,26 @@ def demo():
 	ftype = 2
 
 	## input	
-	L = 10.
-	l  = 1e-4
-	le = 1e-4
+	L = 1.
+	l  = .01
+	le = .01
 
 	## input
-	R  = 2e-3
+	R  = .2
 
 	## evap
-	Nevap = 15
+	Nevap = 1
 	Tevap = 10.
 
 	## accrete
-	Nacc = 5
-	Tacc = .5
+	Nacc = 1
+	Tacc = .75
 
 	## seed
 	seed = 0
 
 	## vv
-	voff = -Tacc - 0.
+	voff = 0. #-Tacc - 0.
 	veta = 1.
 
 	## uu
