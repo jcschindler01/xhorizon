@@ -40,7 +40,7 @@ def drawreg(reglist, chainparams, fparams=dict()):
 
 	## lines
 	rline_zero(reglist, sty=rline_zero_sty, sty2=singularity_sty, npoints=1001)
-	rline_inf_col(reglist, sty=rline_inf_sty, npoints=1001, M=0.5*R)
+	rline_inf_col(reglist, sty=rline_inf_sty, npoints=5001, inf=100., M=0.5*R)
 	rline_hor(reglist, sty=rline_hor_sty)
 	acc_shells(reglist, chainparams, sty=acc_shells_sty, inf=100., npoints=1001)
 	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=1001)
@@ -77,9 +77,15 @@ def rline_zero(reglist, npoints=5001, inf=100., sty={}, sty2={}):
 				## singularity style
 				if b.sgnf<0.:
 					style.update(sty2)
+				## cutoff style
+				if reg.metfunc.info['Type'] in ['Hayward - de Sitter with Cutoff']:
+					lw = 1.5*(1.+ 2.)
+					style.update(lw=lw)
 				## curve
-				cv = xh.cm.rstarlines_special_2([0.], b.uvbounds, c=0., sty=style, inf=1.*inf, npoints=1.*npoints, eps=1e-12)
+				cv = xh.cm.rstarlines_special_2([0.], b.uvbounds, c=1.*reg.rparams['c'], sty=style, inf=1.*inf, npoints=1.*npoints, eps=1e-12)
 				b.add_curves_uv(cv)
+				
+
 
 
 
@@ -105,7 +111,10 @@ def rline_inf_col(reglist, npoints=5001, inf=100., sty={}, M=.5):
 				lw = lw0 * (1.+2.*m/M)
 				style.update(dict(lw=lw))
 				## curve
-				b.add_curves_uv(xh.cm.block_boundary_2(b, sty=style, inf=100., npoints=npoints)[-1:])
+				style.update(solid_capstyle='projecting')
+				b.add_curves_uv(xh.cm.block_boundary_2(b, sty=style, inf=2., npoints=npoints)[-1:])
+				style.update(solid_capstyle='butt')
+				b.add_curves_uv(xh.cm.block_boundary_2(b, sty=style, inf=inf, npoints=npoints)[-1:])
 
 
 def rline_hor(reglist, npoints=5001, sty={}):
@@ -173,18 +182,19 @@ def evap_shells_out(reglist, chainparams, sty={}, inf=100., npoints=5001):
 		if Rh[i+1]<Rh[i]:
 			## outgoing
 			for b in reg.blocks:
-				if not np.isfinite(b.uvbounds['vmax']):
-					## mass
-					dm = - (m[i+1] - m[i])
-					print("EVAP OUT SHELL COLOR dm/M=%s"%(dm/M))
-					col = shell_col(dm/M)
-					## style
-					style = dict(lw=0.2, ls='dashed', dashes=(4,4), c=1.*col, zorder=2000)
-					style.update(sty)
-					## u value
-					uu = u0[i:i+1]
-					## curve
-					b.add_curves_uv(xh.cm.uvlines(uu, uv='u', uvbounds=b.uvbounds, sty=style, c=0., inf=inf, npoints=npoints))
+				if b.bparams['epsu']>0.:
+					if not np.isfinite(b.uvbounds['vmax']):
+						## mass
+						dm = - (m[i+1] - m[i])
+						print("EVAP OUT SHELL COLOR dm/M=%s"%(dm/M))
+						col = shell_col(dm/M)
+						## style
+						style = dict(lw=0.2, ls='dashed', dashes=(4,4), c=1.*col, zorder=2000)
+						style.update(sty)
+						## u value
+						uu = u0[i:i+1]
+						## curve
+						b.add_curves_uv(xh.cm.uvlines(uu, uv='u', uvbounds=b.uvbounds, sty=style, c=0., inf=inf, npoints=npoints))
 
 
 def evap_shells_in(reglist, chainparams, sty={}, inf=5., npoints=5001):
@@ -325,13 +335,13 @@ def make_rlines(reglist, chainparams, l=.05, R=1., Tevap=None, sty={}):
 	style.update(dict(c='c'))
 	rlines(reglist, scale*x, sty=style, inf=10., npoints=2001.)
 	## R scale
-	x = np.arange(0.,25.01,.5)
+	x = np.arange(0.,20.01,.5)
 	scale = R
 	style.update(dict(c='m'))
 	rlines(reglist, scale*x, sty=style, inf=25., npoints=1001.)
 	## Tevap scale
 	if Tevap is not None:
-		x = np.arange(0.,25.01,.5)
+		x = np.arange(.8,25.01,.5)
 		scale = Tevap
 		style.update(dict(c='#0000f0'))
 		rlines(reglist, scale*x, sty=style, inf=25., npoints=1001.)

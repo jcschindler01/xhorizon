@@ -42,13 +42,13 @@ def demo():
 		plt.xticks([-1,1])
 		plt.yticks([-1,1])
 		## lims
-		sq = 3.
-		x0 = -1.5
+		sq = 2.4
+		x0 = -1.2
 		y0 = 0.
 		plt.xlim(x0,x0+sq)
 		plt.ylim(y0-0.5*aspect*sq,y0+0.5*aspect*sq)
 	################################
-	
+
 
 	## save
 	path = "temp-figs/demo"
@@ -66,13 +66,13 @@ def demo():
 	le = .01
 
 	## input
-	R  = .1
+	R  = .2
 
 	## input
 	L = 5.
 
 	## accrete
-	Tacc = 1.
+	Tacc = 1.25
 
 
 	## vv
@@ -180,8 +180,12 @@ def demo():
 	for i in [2]:
 		newblocks += [xh.block(reg1.blocks[i].master, reg1.blocks[i].j, reg1.blocks[i].bparams)]
 		newblocks[-1].uvbounds.update(reg1.blocks[i].uvbounds)
-		newblocks[-1].uvbounds.update(dict(umin=1.*ub, vmax=1.*vb))
-	for i in [2,4]:
+		newblocks[-1].uvbounds.update(dict(umax=1.*ub, vmax=1.*vb))
+	for i in [2]:
+		newblocks += [xh.block(reg1.blocks[i].master, reg1.blocks[i].j, reg1.blocks[i].bparams)]
+		newblocks[-1].uvbounds.update(reg1.blocks[i].uvbounds)
+		newblocks[-1].uvbounds.update(dict(umax=1.*ub, vmin=1.*vb))
+	for i in [4]:
 		newblocks += [xh.block(reg1.blocks[i].master, reg1.blocks[i].j, reg1.blocks[i].bparams)]
 		newblocks[-1].uvbounds.update(reg1.blocks[i].uvbounds)
 		newblocks[-1].uvbounds.update(dict(umax=1.*ub))
@@ -204,7 +208,7 @@ def demo():
 	fs_r0 = 1.*Rh+le
 	chainparams.update(dict(m=1.*m, Rh=1.*Rh, fs_r0=1.*fs_r0, fs_u0=1.*fs_u0, fs_v0=1.*fs_v0))
 
-
+	print(chainparams)
 
 ######################################
 
@@ -232,6 +236,13 @@ def demo():
 		plabel += [r"", r"$M=10^{-3}$", r"$l_{ev}=l=10^{-4}$"]
 		plabel = "\n".join(plabel)
 		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
+
+	## r=infty label
+	if True:
+		plt.annotate(s=r"$r=\infty$", xy=(0., 1.), ha='center', va='center', size=7)
+		plt.annotate(s=r"$r=\infty$", xy=(0.,-1.05), ha='center', va='center', size=7)
+		plt.annotate(s=r"$r=0$", xy=(-1.1, 0.), ha='center', va='center', size=7, rotation=90)
+		plt.annotate(s=r"$r=0$", xy=(1.02, 0.), ha='center', va='center', size=7, rotation=-90)
 
 	## save
 	if True:
