@@ -45,7 +45,7 @@ def drawreg(reglist, chainparams, fparams=dict()):
 	acc_shells(reglist, chainparams, sty=acc_shells_sty, inf=100., npoints=1001)
 	evap_shells_out(reglist, chainparams, sty=evap_shells_out_sty, inf=100., npoints=1001)
 	evap_shells_in(reglist, chainparams, sty=evap_shells_in_sty, inf=100., npoints=1001)
-	make_rlines(reglist, chainparams, l=l, R=R, Tevap=None, sty=rline_sty)
+	make_rlines(reglist, chainparams, l=l, R=R, Tevap=5., sty=rline_sty)
 	vticks(reglist, dv=0.5, sty=tick_sty)
 	uticks(reglist, du=0.5, sty=tick_sty)
 	tticks(reglist, dt=0.5, sty=tick_sty)
@@ -258,12 +258,12 @@ def fill_density(reglist, sty={}):
 		## default to zero
 		density = 0.*x
 		## vac spacetimes
-		vac = ['Schwarzschild', 'Minkowski','Anti de Sitter']
+		vac = ['Schwarzschild', 'Minkowski', 'Anti de Sitter', 'de Sitter', 'Hayward - de Sitter with Cutoff']
 		if reg.metfunc.info['Type'] in vac:
 			for b in reg.blocks:
 				b.fill(dstyle(0.))
 		## hayward
-		if reg.metfunc.info['Type'] in ['Hayward','Hayward - Anti de Sitter']:
+		if reg.metfunc.info['Type'] in ['Hayward', 'Hayward - Anti de Sitter', 'Hayward - de Sitter']:
 			## get params
 			l = reg.metfunc.fparams['l']
 			R = reg.metfunc.fparams['R']
@@ -330,7 +330,7 @@ def make_rlines(reglist, chainparams, l=.05, R=1., Tevap=None, sty={}):
 	rlines(reglist, scale*x, sty=style, inf=25., npoints=1001.)
 	## Tevap scale
 	if Tevap is not None:
-		x = np.arange(0.,2.501,.05)
+		x = np.arange(0.,25.01,.5)
 		scale = Tevap
 		style.update(dict(c='#0000f0'))
 		rlines(reglist, scale*x, sty=style, inf=25., npoints=1001.)
