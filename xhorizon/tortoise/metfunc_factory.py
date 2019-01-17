@@ -240,7 +240,7 @@ def Hay_dS_cutoff(l=.1, R=1., L=10.):
 	L0 = ri[-1] - 0.1*(ri[-1] - ri[-2])
 	## metric function
 	def f(r):
-		if type(r)==float:
+		if type(r) in [float, np.float64]:
 			if r<=L0:
 				return 1. - r**2/L**2
 			if r>L0:
