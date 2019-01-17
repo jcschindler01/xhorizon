@@ -57,10 +57,10 @@ def demo():
 	draw = True
 
 	## label
-	label = '$(c)$'
+	label = '$(a)$'
 
 	# func type
-	ftype = 1
+	ftype = 2
 
 	## input
 	l  = 1e-4
@@ -68,6 +68,9 @@ def demo():
 
 	## input
 	R  = 2e-3
+
+	## if background
+	L = 10.
 
 	## evap
 	Nevap = 12
@@ -78,10 +81,10 @@ def demo():
 	Tacc = .5
 
 	## seed
-	seed = -1
+	seed = 0
 
 	## vv
-	voff = -Tacc - 9.
+	voff = -Tacc - 0.
 	veta = 1.
 
 	## uu
@@ -98,6 +101,9 @@ def demo():
 	#### hayward
 	if ftype==1:
 		params.update(dict(functype0=xh.mf.minkowski, fparams0=dict(), functype1=xh.mf.hayward, fparams1=dict(l=1.*l)))
+	#### AdS
+	if ftype==2:
+		params.update(dict(functype0=xh.mf.AdS, fparams0=dict(L=1.*L), functype1=xh.mf.Hay_AdS, fparams1=dict(l=1.*l, L=1.*L)))
 	## evap
 	params.update(dict(Rmax=1.*R, le=1.*le, Tevap=1.*Tevap, Nevap=1*Nevap))
 	## accrete
