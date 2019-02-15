@@ -1,0 +1,1940 @@
+--- .\__init__.py	(original)
++++ .\__init__.py	(refactored)
+@@ -38,23 +38,23 @@
+ 		interpolators
+ """
+ 
+-from diagram_tools.plotstyle import *
++from .diagram_tools.plotstyle import *
+ 
+-from diagram_tools.curve_class import curve
+-from diagram_tools.diagram_classes import diagram, region, block
++from .diagram_tools.curve_class import curve
++from .diagram_tools.diagram_classes import diagram, region, block
+ 
+-from tortoise.metfunc_tests import func_test
++from .tortoise.metfunc_tests import func_test
+ 
+-import diagram_tools.region_factory as reg
+-import tortoise.metfunc_factory as mf
++from . import diagram_tools.region_factory as reg
++from . import tortoise.metfunc_factory as mf
+ 
+-import diagram_tools.block_masks as mask
+-import diagram_tools.curvemakers as cm
+-import diagram_tools.block_fill as fill
++from . import diagram_tools.block_masks as mask
++from . import diagram_tools.curvemakers as cm
++from . import diagram_tools.block_fill as fill
+ 
+-import shell_junction as junc
+-import shell_junction.reg_corner_masks as cornermask
++from . import shell_junction as junc
++from . import shell_junction.reg_corner_masks as cornermask
+ 
+-import evap
++from . import evap
+ 
+ 
+--- .\diagram_tools\block_fill.py	(original)
++++ .\diagram_tools\block_fill.py	(refactored)
+@@ -7,8 +7,8 @@
+ import matplotlib.pyplot as plt
+ import matplotlib as mpl
+ 
+-import curve_class as cc
+-from curvemakers import rstarlines_special_2, block_boundary, block_boundary_2, rlines, rstarlines
++from . import curve_class as cc
++from .curvemakers import rstarlines_special_2, block_boundary, block_boundary_2, rlines, rstarlines
+ 
+ 
+ 
+@@ -238,7 +238,7 @@
+ 
+ 
+ if __name__=='__main__':
+-	print "TESTS"
++	print("TESTS")
+ 	#test1()
+ 	#test2()
+ 
+--- .\diagram_tools\block_masks.py	(original)
++++ .\diagram_tools\block_masks.py	(refactored)
+@@ -5,7 +5,7 @@
+ 
+ import numpy as np
+ 
+-from curve_class import curve
++from .curve_class import curve
+ 
+ 
+ """
+@@ -192,9 +192,9 @@
+ 	yout = mask_split_array(y,mask)
+ 	zout = mask_split_array(z,mask)
+ 	## print outputs
+-	print xout
+-	print yout
+-	print zout
++	print(xout)
++	print(yout)
++	print(zout)
+ 	## plot
+ 	plt.plot(x,y,'b-',lw=15, label='unmasked')
+ 	plt.plot(x[mask],y[mask],'y-',lw=10, label='naive numpy mask')
+@@ -228,8 +228,8 @@
+ 	xyout = mask_split_2darray(xy,mask)
+ 	xzout = mask_split_2darray(xz,mask)
+ 	## print outputs
+-	print xyout
+-	print xzout
++	print(xyout)
++	print(xzout)
+ 	## plot
+ 	plt.plot(xy[0],xy[1],'b-',lw=15, label='unmasked')
+ 	plt.plot(xy[0][mask],xy[1][mask],'y-',lw=10, label='naive numpy mask')
+--- .\diagram_tools\coord_transf.py	(original)
++++ .\diagram_tools\coord_transf.py	(refactored)
+@@ -163,7 +163,7 @@
+ 	"""
+ 	Test that uv_of_tr and tr_of_uv are stable numerical inverses.
+ 	"""
+-	print "\nTEST 1"
++	print("\nTEST 1")
+ 	## input ##
+ 	npts = 100.
+ 	t = 10. * ( 2.*np.random.rand(npts) - 1. )
+@@ -183,22 +183,22 @@
+ 		rnew = r_of_uv(uvnew, Finv, c)
+ 	## results of test
+ 	if False:
+-		print "uv = ", uv
+-		print "tr = ", tr
+-		print "r = ", r
++		print("uv = ", uv)
++		print("tr = ", tr)
++		print("r = ", r)
+ 	if True:
+-		print "max diff uv = ", np.max(np.abs(uvnew-uv))
+-		print "max diff tr = ", np.max(np.abs(trnew-tr))
+-		print "max diff r = ", np.max(np.abs(rnew-r))
+-	## end
+-	print "END TEST 1\n"
++		print("max diff uv = ", np.max(np.abs(uvnew-uv)))
++		print("max diff tr = ", np.max(np.abs(trnew-tr)))
++		print("max diff r = ", np.max(np.abs(rnew-r)))
++	## end
++	print("END TEST 1\n")
+ 
+ 
+ def test2():
+ 	"""
+ 	Test that H and Hinv are stable numerical inverses.
+ 	"""
+-	print "\nTEST 2"
++	print("\nTEST 2")
+ 	## input ##
+ 	s = np.linspace(-20.,20.,2001)
+ 	k = 1.
+@@ -212,20 +212,20 @@
+ 		xnew = Hinv(ynew, k)
+ 		ynew = H(xnew, k)
+ 	if False:
+-		print "x = ", x
+-		print "y = ", y
++		print("x = ", x)
++		print("y = ", y)
+ 	if True:
+-		print "max diff x = ", np.max(np.abs(xnew-x))
+-		print "max diff y = ", np.max(np.abs(ynew-y))
+-	## end
+-	print "END TEST 2\n"
++		print("max diff x = ", np.max(np.abs(xnew-x)))
++		print("max diff y = ", np.max(np.abs(ynew-y)))
++	## end
++	print("END TEST 2\n")
+ 
+ 
+ def test3():
+ 	"""
+ 	Test that h and hinv are stable numerical inverses.
+ 	"""
+-	print "\nTEST 3"
++	print("\nTEST 3")
+ 	## input ##
+ 	s = np.linspace(-20.,20.,2001)
+ 	kpm = np.array([-1.,2.])
+@@ -242,20 +242,20 @@
+ 		xnew = hinv(ynew)
+ 		ynew = h(xnew)
+ 	if False:
+-		print "x = ", x
+-		print "y = ", y
++		print("x = ", x)
++		print("y = ", y)
+ 	if True:
+-		print "max diff x = ", np.max(np.abs(xnew-x))
+-		print "max diff y = ", np.max(np.abs(ynew-y))
+-	## end
+-	print "END TEST 3\n"
++		print("max diff x = ", np.max(np.abs(xnew-x)))
++		print("max diff y = ", np.max(np.abs(ynew-y)))
++	## end
++	print("END TEST 3\n")
+ 
+ 
+ def test4():
+ 	"""
+ 	Plot h and hinv.
+ 	"""
+-	print "\nTEST 4"
++	print("\nTEST 4")
+ 	## input ##
+ 	s = np.linspace(-20.,20.,2001)
+ 	kpm = np.array([-0.6,0.2])
+@@ -281,14 +281,14 @@
+ 	plt.legend(loc='lower right', fontsize=10)
+ 	plt.show()
+ 	## end
+-	print "END TEST 4\n"
++	print("END TEST 4\n")
+ 
+ 
+ def test5():
+ 	"""
+ 	Plot H and Hinv.
+ 	"""
+-	print "\nTEST 5"
++	print("\nTEST 5")
+ 	## input ##
+ 	s = np.linspace(-20.,20.,10001)
+ 	k = -10.
+@@ -310,7 +310,7 @@
+ 	plt.legend(loc='lower right', fontsize=10)
+ 	plt.show()
+ 	## end
+-	print "END TEST 5\n"
++	print("END TEST 5\n")
+ 
+ ## run test routines if this module is main
+ 
+--- .\diagram_tools\curvemakers.py	(original)
++++ .\diagram_tools\curvemakers.py	(refactored)
+@@ -13,8 +13,8 @@
+ 
+ import numpy as np
+ 
+-from curve_class import curve
+-from block_masks import rstar_limits
++from .curve_class import curve
++from .block_masks import rstar_limits
+ 
+ 
+ 
+--- .\diagram_tools\diagram_classes.py	(original)
++++ .\diagram_tools\diagram_classes.py	(refactored)
+@@ -10,9 +10,9 @@
+ import numpy as np
+ import matplotlib.pyplot as plt
+ 
+-import coord_transf as coord
+-from block_masks import rstar_minmax, uv_range
+-import block_fill
++from . import coord_transf as coord
++from .block_masks import rstar_minmax, uv_range
++from . import block_fill
+ 
+ 
+ 
+@@ -301,7 +301,7 @@
+ 		## # warn if not consistent
+ 		if consistent == False:
+ 			messages += ["END WARNING"]
+-			print '\n' + '\n'.join(messages) + '\n'
++			print('\n' + '\n'.join(messages) + '\n')
+ 		## return
+ 		return consistent
+ 
+--- .\diagram_tools\region_factory.py	(original)
++++ .\diagram_tools\region_factory.py	(refactored)
+@@ -4,9 +4,9 @@
+ 
+ import numpy as np
+ 
+-from curve_class import curve
+-from diagram_classes import region, block
+-import curvemakers as cm
++from .curve_class import curve
++from .diagram_classes import region, block
++from . import curvemakers as cm
+ 
+ 
+ 
+--- .\evap\__init__.py	(original)
++++ .\evap\__init__.py	(refactored)
+@@ -1,14 +1,14 @@
+ 
+-from evap import *
++from .evap import *
+ 
+-from draw import drawreg
++from .draw import drawreg
+ 
+-from demo import demo
++from .demo import demo
+ 
+-import draw
+-import draw_dS
++from . import draw
++from . import draw_dS
+ 
+-import massplot
++from . import massplot
+ 
+ 
+-import schwarzparams as SSp
++from . import schwarzparams as SSp
+--- .\evap\demo.py	(original)
++++ .\evap\demo.py	(refactored)
+@@ -3,7 +3,7 @@
+ 	import numpy as np
+ 	import matplotlib.pyplot as plt
+ 	import xhorizon as xh
+-	from massplot import massplot
++	from .massplot import massplot
+ 
+ 	"""
+ 	"""
+--- .\evap\demo_AdS.py	(original)
++++ .\evap\demo_AdS.py	(refactored)
+@@ -3,7 +3,7 @@
+ 	import numpy as np
+ 	import matplotlib.pyplot as plt
+ 	import xhorizon as xh
+-	from massplot import massplot
++	from .massplot import massplot
+ 
+ 	"""
+ 	"""
+--- .\evap\demo_dS.py	(original)
++++ .\evap\demo_dS.py	(refactored)
+@@ -3,8 +3,8 @@
+ 	import numpy as np
+ 	import matplotlib.pyplot as plt
+ 	import xhorizon as xh
+-	from massplot import massplot
+-	import helpers
++	from .massplot import massplot
++	from . import helpers
+ 
+ 	"""
+ 	"""
+--- .\evap\demo_zoom.py	(original)
++++ .\evap\demo_zoom.py	(refactored)
+@@ -3,7 +3,7 @@
+ 	import numpy as np
+ 	import matplotlib.pyplot as plt
+ 	import xhorizon as xh
+-	from massplot import massplot
++	from .massplot import massplot
+ 
+ 	"""
+ 	"""
+--- .\evap\draw.py	(original)
++++ .\evap\draw.py	(refactored)
+@@ -11,7 +11,7 @@
+ 
+ import xhorizon as xh
+ from xhorizon.shell_junction import interpolators as interp
+-from helpers import irr
++from .helpers import irr
+ 
+ 
+ ############## plot reglist ####################
+@@ -98,7 +98,7 @@
+ 				rstar = b.master.metfunc.rstar_ref[-1]
+ 				## mass
+ 				m = 0.
+-				if 'R' in b.master.metfunc.fparams.keys():
++				if 'R' in list(b.master.metfunc.fparams.keys()):
+ 					m = 0.5 * b.master.metfunc.fparams['R']
+ 				## linewidth
+ 				lw0 = 1.*style['lw']
+@@ -148,7 +148,7 @@
+ 			for b in reg.blocks:
+ 				## mass
+ 				dm = m[i+1] - m[i]
+-				print("ACC SHELL COLOR dm/M=%s"%(dm/M))
++				print(("ACC SHELL COLOR dm/M=%s"%(dm/M)))
+ 				col = shell_col(dm/M)
+ 				## style
+ 				style = dict(lw=0.2, ls='dashed', dashes=(4,4), c=1.*col, zorder=2000)
+@@ -175,7 +175,7 @@
+ 				if not np.isfinite(b.uvbounds['vmax']):
+ 					## mass
+ 					dm = - (m[i+1] - m[i])
+-					print("EVAP OUT SHELL COLOR dm/M=%s"%(dm/M))
++					print(("EVAP OUT SHELL COLOR dm/M=%s"%(dm/M)))
+ 					col = shell_col(dm/M)
+ 					## style
+ 					style = dict(lw=0.2, ls='dashed', dashes=(4,4), c=1.*col, zorder=2000)
+@@ -208,7 +208,7 @@
+ 			for b in reg.blocks:
+ 				## mass
+ 				dm = - (m[i+1] - m[i])
+-				print("EVAP IN SHELL COLOR dm/M=%s"%(dm/M))
++				print(("EVAP IN SHELL COLOR dm/M=%s"%(dm/M)))
+ 				col = shell_col(dm/M)
+ 				## style
+ 				style = dict(lw=0.9, ls=':', c=1.*col, zorder=2000)
+@@ -449,8 +449,8 @@
+ 							remainder = remainder - (tmax-tmin)
+ 						## if big enough go
+ 						if toosmall==False:
+-							print "HELLLOOOOOOOOO tticks"
+-							print tmin, tmax, dt
++							print("HELLLOOOOOOOOO tticks")
++							print(tmin, tmax, dt)
+ 							## make array
+ 							tt = remainder + np.arange(tmin, tmax, dt)
+ 							## get new remainder
+--- .\evap\draw_dS.py	(original)
++++ .\evap\draw_dS.py	(refactored)
+@@ -11,7 +11,7 @@
+ 
+ import xhorizon as xh
+ from xhorizon.shell_junction import interpolators as interp
+-from helpers import irr
++from .helpers import irr
+ 
+ 
+ ############## plot reglist ####################
+@@ -104,7 +104,7 @@
+ 				rstar = b.master.metfunc.rstar_ref[-1]
+ 				## mass
+ 				m = 0.
+-				if 'R' in b.master.metfunc.fparams.keys():
++				if 'R' in list(b.master.metfunc.fparams.keys()):
+ 					m = 0.5 * b.master.metfunc.fparams['R']
+ 				## linewidth
+ 				lw0 = 1.*style['lw']
+@@ -157,7 +157,7 @@
+ 			for b in reg.blocks:
+ 				## mass
+ 				dm = m[i+1] - m[i]
+-				print("ACC SHELL COLOR dm/M=%s"%(dm/M))
++				print(("ACC SHELL COLOR dm/M=%s"%(dm/M)))
+ 				col = shell_col(dm/M)
+ 				## style
+ 				style = dict(lw=0.2, ls='dashed', dashes=(4,4), c=1.*col, zorder=2000)
+@@ -186,7 +186,7 @@
+ 					if not np.isfinite(b.uvbounds['vmax']):
+ 						## mass
+ 						dm = - (m[i+1] - m[i])
+-						print("EVAP OUT SHELL COLOR dm/M=%s"%(dm/M))
++						print(("EVAP OUT SHELL COLOR dm/M=%s"%(dm/M)))
+ 						col = shell_col(dm/M)
+ 						## style
+ 						style = dict(lw=0.2, ls='dashed', dashes=(4,4), c=1.*col, zorder=2000)
+@@ -219,7 +219,7 @@
+ 			for b in reg.blocks:
+ 				## mass
+ 				dm = - (m[i+1] - m[i])
+-				print("EVAP IN SHELL COLOR dm/M=%s"%(dm/M))
++				print(("EVAP IN SHELL COLOR dm/M=%s"%(dm/M)))
+ 				col = shell_col(dm/M)
+ 				## style
+ 				style = dict(lw=0.9, ls=':', c=1.*col, zorder=2000)
+@@ -460,8 +460,8 @@
+ 							remainder = remainder - (tmax-tmin)
+ 						## if big enough go
+ 						if toosmall==False:
+-							print "HELLLOOOOOOOOO tticks"
+-							print tmin, tmax, dt
++							print("HELLLOOOOOOOOO tticks")
++							print(tmin, tmax, dt)
+ 							## make array
+ 							tt = remainder + np.arange(tmin, tmax, dt)
+ 							## get new remainder
+--- .\evap\evap.py	(original)
++++ .\evap\evap.py	(refactored)
+@@ -12,7 +12,7 @@
+ import scipy.optimize as opt
+ 
+ import xhorizon as xh
+-from helpers import *
++from .helpers import *
+ 
+ 
+ 
+@@ -39,10 +39,10 @@
+ 		ps_matchmode = list of strings, each either 'ru' or 'rv', to determine how past slice is sliced when pslice is active
+ 		ps_matchmode = list of strings, each either 'ru' or 'rv', to determine how future slice is sliced when fslice is active
+ 	"""
+-	print "du funclist_chain"
+-	print repr(du)
+-	print "dv funclist_chain"
+-	print repr(dv)
++	print("du funclist_chain")
++	print(repr(du))
++	print("dv funclist_chain")
++	print(repr(dv))
+ 	## init default values
+ 	if u0==None:
+ 		u0 = np.zeros(len(funclist))
+@@ -66,7 +66,7 @@
+ 	fs_r0   = [np.nan for funcx in funclist]
+ 	fs_u0   = [np.nan for funcx in funclist]
+ 	fs_v0   = [np.nan for funcx in funclist]
+-	i0 = range(len(funclist))[1*seed]
++	i0 = list(range(len(funclist)))[1*seed]
+ 	ps_matchpop = [mp(mmm) for mmm in ps_matchmode]
+ 	fs_matchpop = [mp(mmm) for mmm in fs_matchmode]
+ 	## seed region
+@@ -80,9 +80,9 @@
+ 		## get past passive slice location from inputs and matchpop
+ 		sliceloc = dict(u0=ps_u0[i], v0=ps_v0[i], r0=ps_r0[i])
+ 		sliceloc.pop(ps_matchpop[i])
+-		print "i=%s pslice loc: %s"%(i,sliceloc)
++		print("i=%s pslice loc: %s"%(i,sliceloc))
+ 		## execute past passive slice at sliceloc
+-		pslice[i] = xh.junc.pslice(reglist[i], ublocks=[-1], vblocks=range(len(reglist[i].blocks)), **sliceloc)
++		pslice[i] = xh.junc.pslice(reglist[i], ublocks=[-1], vblocks=list(range(len(reglist[i].blocks))), **sliceloc)
+ 		## update past passive slice location to true values
+ 		ps_u0[i], ps_v0[i], ps_r0[i]  = 1.*pslice[i].u0, 1.*pslice[i].v0, 1.*pslice[i].r0
+ 		#### future passive slice
+@@ -93,9 +93,9 @@
+ 		## get future passive slice location from inputs and matchpop
+ 		sliceloc = dict(u0=fs_u0[i], v0=fs_v0[i], r0=fs_r0[i])
+ 		sliceloc.pop(fs_matchpop[i])
+-		print "i=%s fslice loc: %s"%(i,sliceloc)
++		print("i=%s fslice loc: %s"%(i,sliceloc))
+ 		## execute future passive slice at sliceloc
+-		fslice[i] = xh.junc.pslice(reglist[i], ublocks=[-1], vblocks=range(len(reglist[i].blocks)), **sliceloc)
++		fslice[i] = xh.junc.pslice(reglist[i], ublocks=[-1], vblocks=list(range(len(reglist[i].blocks))), **sliceloc)
+ 		## update future passive slice location to true values
+ 		fs_u0[i], fs_v0[i], fs_r0[i]  = 1.*fslice[i].u0, 1.*fslice[i].v0, 1.*fslice[i].r0
+ 	## forward regions
+@@ -109,9 +109,9 @@
+ 		## get past active slice location from inputs and matchpop
+ 		sliceloc = dict(u0=ps_u0[i], v0=ps_v0[i], r0=ps_r0[i])
+ 		sliceloc.pop(ps_matchpop[i])
+-		print "i=%s pslice loc: %s"%(i,sliceloc)
++		print("i=%s pslice loc: %s"%(i,sliceloc))
+ 		## execute past active slice at sliceloc
+-		pslice[i] = xh.junc.aslice(reglist[i], ublocks=[-1], vblocks=range(len(reglist[i].blocks)), U0=fslice[i-1].U_of_r_at_v0, V0=fslice[i-1].V_of_r_at_u0, r_refs=[fslice[i-1].reg.metfunc.r_ref], **sliceloc)
++		pslice[i] = xh.junc.aslice(reglist[i], ublocks=[-1], vblocks=list(range(len(reglist[i].blocks))), U0=fslice[i-1].U_of_r_at_v0, V0=fslice[i-1].V_of_r_at_u0, r_refs=[fslice[i-1].reg.metfunc.r_ref], **sliceloc)
+ 		## update past active slice location to true values
+ 		ps_u0[i], ps_v0[i], ps_r0[i]  = 1.*pslice[i].u0, 1.*pslice[i].v0, 1.*pslice[i].r0
+ 		#### modify transformations
+@@ -126,9 +126,9 @@
+ 		## get past active slice location from inputs and matchpop
+ 		sliceloc = dict(u0=fs_u0[i], v0=fs_v0[i], r0=fs_r0[i])
+ 		sliceloc.pop(fs_matchpop[i])
+-		print "i=%s fslice loc: %s"%(i,sliceloc)
++		print("i=%s fslice loc: %s"%(i,sliceloc))
+ 		## execute future passive slice at sliceloc
+-		fslice[i] = xh.junc.pslice(reglist[i], ublocks=[-1], vblocks=range(len(reglist[i].blocks)), **sliceloc)
++		fslice[i] = xh.junc.pslice(reglist[i], ublocks=[-1], vblocks=list(range(len(reglist[i].blocks))), **sliceloc)
+ 		## update future passive slice location to true values
+ 		fs_u0[i], fs_v0[i], fs_r0[i]  = 1.*fslice[i].u0, 1.*fslice[i].v0, 1.*fslice[i].r0
+ 		##### iterate
+@@ -145,9 +145,9 @@
+ 		## get future active slice location from inputs and matchpop
+ 		sliceloc = dict(u0=fs_u0[i], v0=fs_v0[i], r0=fs_r0[i])
+ 		sliceloc.pop(fs_matchpop[i])
+-		print "i=%s fslice loc: %s"%(i,sliceloc)
++		print("i=%s fslice loc: %s"%(i,sliceloc))
+ 		## execute future active slice at sliceloc
+-		fslice[i] = xh.junc.aslice(reglist[i], ublocks=[-1], vblocks=range(len(reglist[i].blocks)), U0=pslice[i+1].U_of_r_at_v0, V0=pslice[i+1].V_of_r_at_u0, r_refs=[pslice[i+1].reg.metfunc.r_ref], **sliceloc)
++		fslice[i] = xh.junc.aslice(reglist[i], ublocks=[-1], vblocks=list(range(len(reglist[i].blocks))), U0=pslice[i+1].U_of_r_at_v0, V0=pslice[i+1].V_of_r_at_u0, r_refs=[pslice[i+1].reg.metfunc.r_ref], **sliceloc)
+ 		## update future active slice location to true values
+ 		fs_u0[i], fs_v0[i], fs_r0[i]  = 1.*fslice[i].u0, 1.*fslice[i].v0, 1.*fslice[i].r0
+ 		#### modify transformations
+@@ -162,9 +162,9 @@
+ 		## get past passive slice location from inputs and matchpop
+ 		sliceloc = dict(u0=ps_u0[i], v0=ps_v0[i], r0=ps_r0[i])
+ 		sliceloc.pop(ps_matchpop[i])
+-		print "i=%s pslice loc: %s"%(i,sliceloc)
++		print("i=%s pslice loc: %s"%(i,sliceloc))
+ 		## execute past passive slice at sliceloc
+-		pslice[i] = xh.junc.pslice(reglist[i], ublocks=[-1], vblocks=range(len(reglist[i].blocks)), **sliceloc)
++		pslice[i] = xh.junc.pslice(reglist[i], ublocks=[-1], vblocks=list(range(len(reglist[i].blocks))), **sliceloc)
+ 		## update future passive slice location to true values
+ 		ps_u0[i], ps_v0[i], ps_r0[i]  = 1.*pslice[i].u0, 1.*pslice[i].v0, 1.*pslice[i].r0
+ 		##### iterate
+@@ -173,9 +173,9 @@
+ 	## make sliceparams dict
+ 	chainparams = dict(Rh=1.*np.array(Rh), ps_u0=1.*np.array(ps_u0), ps_v0=1.*np.array(ps_v0), ps_r0=1.*np.array(ps_r0), fs_u0=1.*np.array(fs_u0), fs_v0=1.*np.array(fs_v0), fs_r0=1.*np.array(fs_r0), i0=1*i0, ps_matchmode=ps_matchmode, fs_matchmode=fs_matchmode, funclist=funclist)
+ 	##
+-	print "\n"
++	print("\n")
+ 	pprint.pprint(chainparams)
+-	print "\n"
++	print("\n")
+ 	## return
+ 	return reglist, chainparams
+ 
+@@ -267,13 +267,13 @@
+ 	ps_matchmode = None #['ru' for i in range(len(funclist))]         ### Edit matchmode here
+ 	fs_matchmode = None #['ru' for i in range(len(funclist))]         ### Edit matchmode here
+ 	## iterator
+-	ii = range(len(funclist))
++	ii = list(range(len(funclist)))
+ 	## get rinf
+ 	rinf = np.nan * Rh
+ 	for i in ii:
+ 		ia, ib = max(0, i-1), min(i+2, len(ii))
+ 		rinf[i] = get_rinf_uv0(reglist[ia:ib], v0=1.*v0)
+-	print rinf	
++	print(rinf)	
+ 	## correct first and last r0 values
+ 	r0p[0]  = 1.*rinf[0]
+ 	r0f[-1] = 1.*rinf[-1]
+@@ -360,13 +360,13 @@
+ 	pprint.pprint("params = %s"%(params))
+ 	pprint.pprint("seed = %s"%(seed))
+ 	## formevap_input
+-	print "inputs"
++	print("inputs")
+ 	funclist, cp = xh.evap.formevap_input(**params)
+ 	## funclist_chain
+-	print "chain"
++	print("chain")
+ 	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=seed, **cp)
+ 	## chain_masker
+-	print "mask"
++	print("mask")
+ 	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
+ 	## print
+ 	pprint.pprint(chainparams)
+--- .\evap\helpers.py	(original)
++++ .\evap\helpers.py	(refactored)
+@@ -35,7 +35,7 @@
+ 	r0 = .85*np.min(r0)
+ 	## bug fix for AdS
+ 	if not np.isfinite(r0):
+-		if 'L' in reglist[0].metfunc.fparams.keys():
++		if 'L' in list(reglist[0].metfunc.fparams.keys()):
+ 			r0=1.9*reglist[0].metfunc.fparams['L']
+ 	## return
+ 	return r0
+@@ -199,7 +199,7 @@
+ 	## get rvals
+ 	Rvals = np.zeros(len(reglist))
+ 	for i, reg in enumerate(reglist):
+-		if 'R' in reg.metfunc.fparams.keys():
++		if 'R' in list(reg.metfunc.fparams.keys()):
+ 			x = reg.metfunc.fparams['R']
+ 			Rvals[i] = x
+ 	## get colvals
+@@ -217,7 +217,7 @@
+ 	## rvals
+ 	Rvals = np.zeros(len(reglist))
+ 	for i, reg in enumerate(reglist):
+-		if 'R' in reg.metfunc.fparams.keys():
++		if 'R' in list(reg.metfunc.fparams.keys()):
+ 			x = reg.metfunc.fparams['R']
+ 			Rvals[i] = 1.*x
+ 	## log
+@@ -259,10 +259,10 @@
+ 	good = True
+ 	## check
+ 	if not (len(R)==len(du) and len(R)==len(dv)):
+-		print "MISMATCHED INPUT ARRAY LENGTHS"
++		print("MISMATCHED INPUT ARRAY LENGTHS")
+ 		good = False
+ 	if not np.all(R>0.):
+-		print "RADIUS MUST BE POSITIVE"
++		print("RADIUS MUST BE POSITIVE")
+ 		good = False
+ 	## return
+ 	return good
+@@ -296,14 +296,14 @@
+ 	## radius
+ 	RRu = []
+ 	for i in iu:
+-		if 'R' in reglist[i].metfunc.fparams.keys():
++		if 'R' in list(reglist[i].metfunc.fparams.keys()):
+ 			RRu += [reglist[i].metfunc.fparams['R']]
+ 		else:
+ 			RRu += [0.]
+ 	## radius
+ 	RRv = []
+ 	for i in iv:
+-		if 'R' in reglist[i].metfunc.fparams.keys():
++		if 'R' in list(reglist[i].metfunc.fparams.keys()):
+ 			RRv += [reglist[i].metfunc.fparams['R']]
+ 		else:
+ 			RRv += [0.]
+@@ -318,18 +318,18 @@
+ 	## array
+ 	iu,iv,uu,vv,rru,rrv,RRu,RRv = np.array(iu),np.array(iv),np.array(uu),np.array(vv),np.array(rru),np.array(rrv),np.array(RRu),np.array(RRv)
+ 	## print
+-	print "\n"
+-	print "CHECK_UVR:"
+-	print "iu  = %r"%(iu)
+-	print "iv  = %r"%(iv)
+-	print "uu  = %r"%(uu)
+-	print "vv  = %r"%(vv)
+-	print "rru = %r"%(rru)
+-	print "rrv = %r"%(rrv)
+-	print "RRu = %r"%(RRu)
+-	print "RRv = %r"%(RRv)
+-	print "rru/RRu = " + repr(rru/RRu)
+-	print "\n"
++	print("\n")
++	print("CHECK_UVR:")
++	print("iu  = %r"%(iu))
++	print("iv  = %r"%(iv))
++	print("uu  = %r"%(uu))
++	print("vv  = %r"%(vv))
++	print("rru = %r"%(rru))
++	print("rrv = %r"%(rrv))
++	print("RRu = %r"%(RRu))
++	print("RRv = %r"%(RRv))
++	print("rru/RRu = " + repr(rru/RRu))
++	print("\n")
+ 
+ 
+ ############################################################################
+@@ -342,7 +342,7 @@
+ 	## loop
+ 	for i in range(len(reglist)):
+ 		fp = reglist[i].metfunc.fparams
+-		if 'R' in fp.keys():
++		if 'R' in list(fp.keys()):
+ 			m[i] = 0.5*fp['R']
+ 	## return
+ 	return 1.*m
+@@ -369,13 +369,13 @@
+ 
+ 
+ def sliceprint(pslice, aslice, Rh1, Rh2):
+-	print "\n"
+-	print "                          %22r, %22r, %22r, %22r, %22r"%('Rh', 'r', 'r-Rh', 'u', 'v')
+-	print "PSlice:"
+-	print "Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, pslice.r0, pslice.r0-Rh1, pslice.u0, pslice.v0)
+-	print "ASlice:"
+-	print "Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, aslice.r0, aslice.r0-Rh2, aslice.u0, aslice.v0)
+-	print "\n"
++	print("\n")
++	print("                          %22r, %22r, %22r, %22r, %22r"%('Rh', 'r', 'r-Rh', 'u', 'v'))
++	print("PSlice:")
++	print("Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, pslice.r0, pslice.r0-Rh1, pslice.u0, pslice.v0))
++	print("ASlice:")
++	print("Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, aslice.r0, aslice.r0-Rh2, aslice.u0, aslice.v0))
++	print("\n")
+ 
+ 
+ def mp(matchmode):
+--- .\evap\legend.py	(original)
++++ .\evap\legend.py	(refactored)
+@@ -3,7 +3,7 @@
+ import numpy as np
+ import matplotlib.pyplot as plt
+ import matplotlib as mpl
+-from draw import *
++from .draw import *
+ import matplotlib.colors
+ 
+ 
+--- .\evap\massplot.py	(original)
++++ .\evap\massplot.py	(refactored)
+@@ -160,20 +160,20 @@
+ 
+ 
+ 	## more checks
+-	print "r1-Rh"
+-	print repr(r1-Rh)
+-	print "Rh/2m"
+-	print repr(Rh/2*m)
+-	print "mcrit/M"
+-	print repr(mcrit/M)
++	print("r1-Rh")
++	print(repr(r1-Rh))
++	print("Rh/2m")
++	print(repr(Rh/2*m))
++	print("mcrit/M")
++	print(repr(mcrit/M))
+ 
+ 	## print checks
+-	print "m evap"
+-	print repr(mevap)
+-	print "du evap"
+-	print repr(duevap)
+-	print "dv evap"
+-	print repr(dvevap)
++	print("m evap")
++	print(repr(mevap))
++	print("du evap")
++	print(repr(duevap))
++	print("dv evap")
++	print(repr(dvevap))
+ 
+ 
+ 
+--- .\evap\schwarzparams.py	(original)
++++ .\evap\schwarzparams.py	(refactored)
+@@ -70,8 +70,8 @@
+ 	## zero
+ 	zero = dv-du-2.*drstar
+ 	## print 
+-	print "|dv-du-2.*drstar| (mean) = %s"%(np.mean(np.abs(zero)))
+-	print "|dv-du-2.*drstar| (total) = %s"%(Nevap*np.mean(np.abs(zero)))
++	print("|dv-du-2.*drstar| (mean) = %s"%(np.mean(np.abs(zero))))
++	print("|dv-du-2.*drstar| (total) = %s"%(Nevap*np.mean(np.abs(zero))))
+ 	## return
+ 	return mself, du, dv
+ 
+--- .\evap\tests.py	(original)
++++ .\evap\tests.py	(refactored)
+@@ -11,8 +11,8 @@
+ import pprint
+ import datetime
+ 
+-from evap import *
+-from helpers import *
++from .evap import *
++from .helpers import *
+ 
+ 
+ def main():
+@@ -40,7 +40,7 @@
+ 	Test functionality of get_rinf_uv0.
+ 	"""
+ 	##
+-	print "\nTEST 1\n"
++	print("\nTEST 1\n")
+ 	## regions
+ 	reg1 = xh.reg.EFreg(xh.mf.schwarzschild())
+ 	reg2 = xh.reg.EFreg(xh.mf.hayward())
+@@ -51,9 +51,9 @@
+ 	## get
+ 	rinf = get_rinf_uv0(reglist,v0=v0)
+ 	## print
+-	print rinf
+-	##
+-	print "\nEND TEST 1\n"
++	print(rinf)
++	##
++	print("\nEND TEST 1\n")
+ 
+ 
+ 
+@@ -62,7 +62,7 @@
+ 	Test functionality of accrete.
+ 	"""
+ 	##
+-	print "\nTEST 2\n"
++	print("\nTEST 2\n")
+ 	## create initial region
+ 	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False,boundary=False)]
+ 	## create accreted regions
+@@ -79,7 +79,7 @@
+ 		reg.rplot()
+ 	plt.show()
+ 	##
+-	print "\nEND TEST 2\n"
++	print("\nEND TEST 2\n")
+ 
+ 
+ 
+@@ -88,7 +88,7 @@
+ 	Test functionality of accretion.
+ 	"""
+ 	##
+-	print "\nTEST 3\n"
++	print("\nTEST 3\n")
+ 	## params
+ 	v = np.linspace(0,1,5)
+ 	m = .2 + .8*v
+@@ -104,7 +104,7 @@
+ 		reg.rplot()
+ 	plt.show()
+ 	##
+-	print "\nEND TEST 3\n"
++	print("\nEND TEST 3\n")
+ 
+ 
+ 
+@@ -115,7 +115,7 @@
+ 	Test functionality of evap.
+ 	"""
+ 	##
+-	print "\nTEST 4\n"
++	print("\nTEST 4\n")
+ 	## create initial region
+ 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
+ 	reglist = [reg0]
+@@ -140,7 +140,7 @@
+ 		## show plot
+ 		plt.savefig("temp-figs/test4.png", dpi=400)
+ 		##
+-	print "\nEND TEST 4\n"
++	print("\nEND TEST 4\n")
+ 
+ 
+ def test5():
+@@ -148,7 +148,7 @@
+ 	Test functionality of evaporation().
+ 	"""
+ 	##
+-	print "\nTEST 5\n"
++	print("\nTEST 5\n")
+ 	## create initial region
+ 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
+ 	reglist = [reg0]
+@@ -180,7 +180,7 @@
+ 		## show plot
+ 		plt.savefig("temp-figs/test5.png", dpi=200)
+ 		##
+-	print "\nEND TEST 5\n"
++	print("\nEND TEST 5\n")
+ 	## return
+ 	return reglist
+ 
+@@ -190,7 +190,7 @@
+ 	Test functionality of formevap().
+ 	"""
+ 	##
+-	print "\nTEST 6\n"
++	print("\nTEST 6\n")
+ 	## accrete params
+ 	N = 4.
+ 	R0, R = .8, 1.
+@@ -224,7 +224,7 @@
+ 	## show plot
+ 	plt.savefig("temp-figs/test6.png", dpi=600)
+ 	##
+-	print "\nEND TEST 6\n"
++	print("\nEND TEST 6\n")
+ 
+ 
+ def test7():
+@@ -232,7 +232,7 @@
+ 	Test functionality of get_uvdl_of_UV().
+ 	"""
+ 	##
+-	print "\nTEST 7\n"
++	print("\nTEST 7\n")
+ 	## create evaporated regions
+ 	reglist = xh.evap.formevap(rparams=dict(s0=10.))
+ 	## resquish
+@@ -259,7 +259,7 @@
+ 	plt.show()
+ 	plt.savefig("temp-figs/test7.png", dpi=400)
+ 	##
+-	print "\nEND TEST 7\n"
++	print("\nEND TEST 7\n")
+ 
+ 
+ 
+@@ -268,7 +268,7 @@
+ 	Test functionality of EF cornermask.
+ 	"""
+ 	##
+-	print "\nTEST 8\n"
++	print("\nTEST 8\n")
+ 	## make region
+ 	func = xh.mf.schwarzschild()
+ 	reg = xh.reg.EFreg(func)
+@@ -283,7 +283,7 @@
+ 	reg.rplot()
+ 	plt.show()
+ 	##
+-	print "\nEND TEST 8\n"
++	print("\nEND TEST 8\n")
+ 
+ 
+ 
+@@ -293,7 +293,7 @@
+ 	Test functionality of split abcd helper.
+ 	"""
+ 	##
+-	print "\nTEST 9\n"
++	print("\nTEST 9\n")
+ 	## make region
+ 	func = xh.mf.schwarzschild()
+ 	reg = xh.reg.EFreg(func)
+@@ -302,8 +302,8 @@
+ 		abcd = 'bcd'
+ 		reglist = xh.evap.split_reg_abcd(reg, abcd=abcd, u0=0., v0=0.)
+ 	##
+-	print len(reglist)
+-	print reglist
++	print(len(reglist))
++	print(reglist)
+ 	##
+ 	plt.figure()
+ 	plt.xlim(-3,3)
+@@ -312,7 +312,7 @@
+ 		reg.rplot()
+ 	plt.show()
+ 	##
+-	print "\nEND TEST 9\n"
++	print("\nEND TEST 9\n")
+ 
+ 
+ 
+@@ -321,7 +321,7 @@
+ 	Test direct formation of joint. Formerly was evap.debug.go().
+ 	"""
+ 	##
+-	print "\nTEST 10\n"
++	print("\nTEST 10\n")
+ 	for ux in [15.]:
+ 		## params
+ 		R1 = 1.
+@@ -345,13 +345,13 @@
+ 		Rh1, Rh2 = reg1.blocks[-1].rj[0], reg2.blocks[-1].rj[0]
+ 		## passive slice of reg1
+ 		r1 = reg1.blocks[-1].r_of_uv(np.array([[u1],[v1]]))[0]
+-		pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), r0=r1, u0=u1)
++		pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=list(range(len(reg1.blocks))), r0=r1, u0=u1)
+ 		## active slice of reg2
+-		aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=pslice.r0, u0=u2, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
++		aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=list(range(len(reg2.blocks))), r0=pslice.r0, u0=u2, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
+ 		## plot slice
+ 		if False:
+-			print 'REG1 PSLICE U(r,v0)=red, V(r,u0)=blue'
+-			print 'REG2 ASLICE U(r,v0)=red, V(r,u0)=blue'
++			print('REG1 PSLICE U(r,v0)=red, V(r,u0)=blue')
++			print('REG2 ASLICE U(r,v0)=red, V(r,u0)=blue')
+ 			plt.figure()
+ 			plt.title('REG1 PSLICE U(r,v0)=red, V(r,u0)=blue\nREG2 ASLICE U(r,v0)=mag, V(r,u0)=cyan')
+ 			plt.xlabel('r')
+@@ -369,17 +369,17 @@
+ 			## junction radius
+ 			plt.plot([pslice.r0, pslice.r0], [-1.,1.], 'k-' )
+ 		## print slice params
+-		print "\n"
+-		print "                          %22r, %22r, %22r, %22r, %22r"%('Rh', 'r', 'r/Rh', 'u', 'v')
+-		print "Pslice Inputs:"
+-		print "Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, r1, r1/Rh1, u1, v1)
+-		print "From PSlice:"
+-		print "Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, pslice.r0, pslice.r0/Rh1, pslice.u0, pslice.v0)
+-		print "Aslice Inputs:"
+-		print "Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, pslice.r0, pslice.r0/Rh2, u2, '?')
+-		print "From ASlice:"
+-		print "Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, aslice.r0, aslice.r0/Rh2, aslice.u0, aslice.v0)
+-		print "\n"
++		print("\n")
++		print("                          %22r, %22r, %22r, %22r, %22r"%('Rh', 'r', 'r/Rh', 'u', 'v'))
++		print("Pslice Inputs:")
++		print("Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, r1, r1/Rh1, u1, v1))
++		print("From PSlice:")
++		print("Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, pslice.r0, pslice.r0/Rh1, pslice.u0, pslice.v0))
++		print("Aslice Inputs:")
++		print("Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, pslice.r0, pslice.r0/Rh2, u2, '?'))
++		print("From ASlice:")
++		print("Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, aslice.r0, aslice.r0/Rh2, aslice.u0, aslice.v0))
++		print("\n")
+ 		## reglist
+ 		reglist = []
+ 		## split regions
+@@ -393,13 +393,13 @@
+ 		reglist += reglist1
+ 		reglist += reglist2
+ 		## print block uvbounds
+-		print "\n"
+-		print '%22r, %22r, %22r, %22r, %22r, %22r'%('R', 'b.rj', 'vmin', 'vmax', 'umin', 'umax')
++		print("\n")
++		print('%22r, %22r, %22r, %22r, %22r, %22r'%('R', 'b.rj', 'vmin', 'vmax', 'umin', 'umax'))
+ 		for i in range(len(reglist)):
+ 			reg = reglist[i]
+ 			for b in reg.blocks:
+-					print '%22s, %22s, %22r, %22r, %22r, %22r'%(reg.metfunc.fparams['R'], b.rj, b.uvbounds['vmin'], b.uvbounds['vmax'], b.uvbounds['umin'], b.uvbounds['umax'])
+-		print "\n"
++					print('%22s, %22s, %22r, %22r, %22r, %22r'%(reg.metfunc.fparams['R'], b.rj, b.uvbounds['vmin'], b.uvbounds['vmax'], b.uvbounds['umin'], b.uvbounds['umax']))
++		print("\n")
+ 		## draw diagram
+ 		if True:
+ 			## add lines
+@@ -417,7 +417,7 @@
+ 	## show plots
+ 	plt.show()
+ 	##
+-	print "\nEND TEST 10\n"
++	print("\nEND TEST 10\n")
+ 
+ 
+ 
+@@ -430,7 +430,7 @@
+ 	Build from bottom.
+ 	"""
+ 	##
+-	print "\nTEST 11\n"
++	print("\nTEST 11\n")
+ 	## reglist
+ 	reglist = []
+ 	## funcs
+@@ -443,8 +443,8 @@
+ 	u0 = 1.*u0
+ 	v0 = 1.*v0
+ 	r0 = reg1.blocks[-1].r_of_uv(np.array([[u0],[v0]]))[0]
+-	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), r0=1.*r0, u0=1.*u0)
+-	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=1.*pslice.r0, v0=1.*pslice.v0, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
++	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=list(range(len(reg1.blocks))), r0=1.*r0, u0=1.*u0)
++	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=list(range(len(reg2.blocks))), r0=1.*pslice.r0, v0=1.*pslice.v0, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
+ 	reg2.U_of_udl = aslice.U_of_udl_at_v0
+ 	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
+ 	reglist += xh.evap.split_reg_abcd(reg1,  abcd='dbc', u0=1.*pslice.u0, v0=1.*pslice.v0)
+@@ -456,8 +456,8 @@
+ 	u0 = 1.*aslice.u0 + du
+ 	v0 = 1.*aslice.v0 + dv
+ 	r0 = reg1.blocks[-1].r_of_uv(np.array([[u0],[v0]]))[0]
+-	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), r0=1.*r0, u0=1.*u0)
+-	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=1.*pslice.r0, v0=1.*pslice.v0, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
++	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=list(range(len(reg1.blocks))), r0=1.*r0, u0=1.*u0)
++	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=list(range(len(reg2.blocks))), r0=1.*pslice.r0, v0=1.*pslice.v0, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
+ 	reg2.U_of_udl = aslice.U_of_udl_at_v0
+ 	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
+ 	reglist += xh.evap.split_reg_abcd(reg1,  abcd='dbc', u0=1.*pslice.u0, v0=1.*pslice.v0)
+@@ -468,7 +468,7 @@
+ 	## show
+ 	plt.show()
+ 	##
+-	print "\nEND TEST 11\n"
++	print("\nEND TEST 11\n")
+ 
+ 
+ 
+@@ -479,7 +479,7 @@
+ 	Build from top.
+ 	"""
+ 	##
+-	print "\nTEST 12\n"
++	print("\nTEST 12\n")
+ 	## reglist
+ 	reglist = []
+ 	## funcs
+@@ -491,8 +491,8 @@
+ 	reg2 = xh.reg.EFreg(funclist.pop(-1), boundary=False, rlines=False)
+ 	u0 = 1.*u0
+ 	r0 = 1.*reg2.blocks[-1].rj[0] + 1.*dr0
+-	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=range(len(reg1.blocks)), r0=1.*r0, u0=1.*u0)
+-	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=1.*pslice.r0, u0=1.*pslice.u0, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
++	pslice = xh.junc.pslice(reg1, ublocks=[-1], vblocks=list(range(len(reg1.blocks))), r0=1.*r0, u0=1.*u0)
++	aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=list(range(len(reg2.blocks))), r0=1.*pslice.r0, u0=1.*pslice.u0, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
+ 	reg2.U_of_udl = aslice.U_of_udl_at_v0
+ 	reg2.V_of_vdl = aslice.V_of_vdl_at_u0
+ 	reglist += xh.evap.split_reg_abcd(reg1,  abcd='a', u0=1.*pslice.u0, v0=1.*pslice.v0)
+@@ -502,8 +502,8 @@
+ 	reg3 = xh.reg.EFreg(funclist.pop(-1), boundary=False, rlines=False)
+ 	u0 = 1.*aslice.u0 - 1.*du
+ 	r0 = 1.*reg3.blocks[-1].rj[0] + 1.*dr0
+-	pslice = xh.junc.pslice(reg2, ublocks=[-1], vblocks=range(len(reg1.blocks)), r0=1.*r0, u0=1.*u0)
+-	aslice = xh.junc.aslice(reg3, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=1.*pslice.r0, u0=1.*pslice.u0, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
++	pslice = xh.junc.pslice(reg2, ublocks=[-1], vblocks=list(range(len(reg1.blocks))), r0=1.*r0, u0=1.*u0)
++	aslice = xh.junc.aslice(reg3, ublocks=[-1], vblocks=list(range(len(reg2.blocks))), r0=1.*pslice.r0, u0=1.*pslice.u0, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
+ 	reg3.U_of_udl = aslice.U_of_udl_at_v0
+ 	reg3.V_of_vdl = aslice.V_of_vdl_at_u0
+ 	for reg in reglist[-3:-1]:
+@@ -519,7 +519,7 @@
+ 	## show
+ 	plt.show()
+ 	##
+-	print "\nEND TEST 12\n"
++	print("\nEND TEST 12\n")
+ 
+ 
+ 
+@@ -530,7 +530,7 @@
+ 	Test evap.evap.funclist_chain().
+ 	"""
+ 	##
+-	print "\nTEST 13\n"
++	print("\nTEST 13\n")
+ 	## make funclist
+ 	R=np.array([0.,.5,1.,.7,0.])
+ 	funclist  = xh.evap.formevap_funclist(R=R)
+@@ -555,7 +555,7 @@
+ 	rgp(reglist)
+ 	plt.show()
+ 	##
+-	print "\nEND TEST 13\n"
++	print("\nEND TEST 13\n")
+ 
+ 
+ 
+@@ -565,7 +565,7 @@
+ 	Test evap.evap.shellparams_list().
+ 	"""
+ 	##
+-	print "\nTEST 14\n"
++	print("\nTEST 14\n")
+ 	##
+ 	## shellparams
+ 	sp = xh.evap.shellparams_list(Rmin=.2, Rmax=1., dv=1., l=.1, A=10., functype=xh.mf.schwarzschild, fparams=dict())
+@@ -611,7 +611,7 @@
+ 	plt.show()
+ 	##
+ 	##
+-	print "\nEND TEST 14\n"
++	print("\nEND TEST 14\n")
+ 
+ 
+ 
+@@ -621,7 +621,7 @@
+ 	Test evap.evap.shellparams_list().
+ 	"""
+ 	##
+-	print "\nTEST 15\n"
++	print("\nTEST 15\n")
+ 	##
+ 	## shellparams
+ 	sp = xh.evap.shellparams_list(Rmin=.2, Rmax=1., dv=1., l=.1, A=1., functype=xh.mf.schwarzschild, fparams=dict())
+@@ -634,19 +634,19 @@
+ 	r0p = np.roll(r0f,1)
+ 	v0 = 0.*np.linspace(-4, 4, len(funclist))
+ 	##
+-	print "chain"
++	print("chain")
+ 	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=0, du=1.*du, dv=1.*dv, r0p=1.*r0p, r0f=1.*r0f, v0=1.*v0)
+ 	pprint.pprint(chainparams)
+ 	##
+-	print "mask"
++	print("mask")
+ 	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
+ 	pprint.pprint(chainparams)
+ 	##
+-	print "plot"
++	print("plot")
+ 	rgp(reglist)
+ 	plt.savefig('temp-figs/test15.png', dpi=200)
+ 	##
+-	print "\nEND TEST 15\n"
++	print("\nEND TEST 15\n")
+ 
+ 
+ 
+@@ -655,7 +655,7 @@
+ 	Test evap.evap.formevap_input() with funclist_chain().
+ 	"""
+ 	##
+-	print "\nTEST 16\n"
++	print("\nTEST 16\n")
+ 	## params
+ 	params = dict()
+ 	## funcs
+@@ -669,27 +669,27 @@
+ 	## seed
+ 	seed = 0
+ 	##
+-	print "inputs"
++	print("inputs")
+ 	funclist, cp = formevap_input(**params)
+ 	##
+-	print "chain"
++	print("chain")
+ 	reglist, chainparams = funclist_chain(funclist, seed=seed, **cp)
+ 	##
+-	print "mask"
++	print("mask")
+ 	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
+ 	pprint.pprint(chainparams)
+ 	##
+-	print "plot"
++	print("plot")
+ 	rgp(reglist[:])
+ 	plt.xlim(0,3)
+ 	plt.ylim(-1.5,1.5)
+ 	##
+-	print "save fig"
++	print("save fig")
+ 	fname =  datetime.datetime.now().strftime("Test16_%Y-%m-%d_%H-%M-%S-%f")
+ 	plt.title(fname)
+ 	plt.savefig("temp-figs/%s.png"%(fname), dpi=400)
+ 	##
+-	print "save txt"
++	print("save txt")
+ 	ff = open("temp-figs/%s.txt"%(fname), 'w')
+ 	ff.write("%s\n"%(fname))
+ 	ff.write('\n')
+@@ -697,7 +697,7 @@
+ 	ff.write('\n')
+ 	ff.write('Output:\nchainparams=\n%s\n'%(pprint.pformat(chainparams)))
+ 	##
+-	print "\nEND TEST 16\n"
++	print("\nEND TEST 16\n")
+ 
+ 
+ main()
+--- .\shell_junction\__init__.py	(original)
++++ .\shell_junction\__init__.py	(refactored)
+@@ -2,7 +2,7 @@
+ 
+ 
+ 
+-from active_slice_class import active_slice as aslice
+-from passive_slice_class import passive_slice as pslice
++from .active_slice_class import active_slice as aslice
++from .passive_slice_class import passive_slice as pslice
+ 
+-from helpers import set_ruv0, schwarz_dtr_masses, slicecheck
++from .helpers import set_ruv0, schwarz_dtr_masses, slicecheck
+--- .\shell_junction\active_slice_class.py	(original)
++++ .\shell_junction\active_slice_class.py	(refactored)
+@@ -5,8 +5,8 @@
+ 
+ 
+ import numpy as np
+-import interpolators as interp
+-from helpers import *
++from . import interpolators as interp
++from .helpers import *
+ 
+ 
+ 
+--- .\shell_junction\helpers.py	(original)
++++ .\shell_junction\helpers.py	(refactored)
+@@ -177,8 +177,8 @@
+ 
+ def slicecheck(sl,reg):
+ 	if (np.abs(sl.u0)>=2.*reg.rparams['s0']) or (np.abs(sl.v0)>=2.*reg.rparams['s0']):
+-		print "Error: u0 or v0 out of range."
+-		print sl.u0, sl.v0
++		print("Error: u0 or v0 out of range.")
++		print(sl.u0, sl.v0)
+ 		sl, reg = None, None
+ 	return sl, reg
+ 
+--- .\shell_junction\interpolators.py	(original)
++++ .\shell_junction\interpolators.py	(refactored)
+@@ -87,7 +87,7 @@
+ 		y = Array of values f(x).
+ 	"""
+ 	if np.any(np.logical_not(np.isfinite(np.array([b,s0,1./b])))):
+-		print 'mu, s0, b = %s, %s, %s'%(mu, s0, b)
++		print('mu, s0, b = %s, %s, %s'%(mu, s0, b))
+ 
+ 	## init
+ 	x  = 1.*x
+@@ -157,7 +157,7 @@
+ 	Test interp_with_smooth_extrap.
+ 	"""
+ 	##
+-	print "\nTEST 2\n"
++	print("\nTEST 2\n")
+ 	## params
+ 	A = 1e1
+ 	mux = [.1,1.,10.]
+@@ -184,7 +184,7 @@
+ 	plt.grid()
+ 	plt.show()
+ 	##
+-	print "\nEND TEST 2\n"
++	print("\nEND TEST 2\n")
+ 
+ 
+ 
+@@ -194,7 +194,7 @@
+ 	Decreasing functions now work.
+ 	"""
+ 	##
+-	print "\nTEST 3\n"
++	print("\nTEST 3\n")
+ 	## params
+ 	A = -10.
+ 	mu = 1.
+@@ -217,7 +217,7 @@
+ 	plt.grid()
+ 	plt.show()
+ 	##
+-	print "\nEND TEST 3\n"
++	print("\nEND TEST 3\n")
+ 
+ 
+ 
+@@ -227,9 +227,9 @@
+ 
+ 	import matplotlib.pyplot as plt
+ 
+-	print "\n\nTESTS\n"
++	print("\n\nTESTS\n")
+ 	#test2()
+ 	test3()
+-	print "\nEND TESTS\n"
+-
+-
++	print("\nEND TESTS\n")
++
++
+--- .\shell_junction\passive_slice_class.py	(original)
++++ .\shell_junction\passive_slice_class.py	(refactored)
+@@ -5,8 +5,8 @@
+ 
+ 
+ import numpy as np
+-import interpolators as interp
+-from helpers import *
++from . import interpolators as interp
++from .helpers import *
+ 
+ 
+ 
+--- .\shell_junction\reg_corner_masks.py	(original)
++++ .\shell_junction\reg_corner_masks.py	(refactored)
+@@ -59,7 +59,7 @@
+ 	## keep blocks only if no nan in uvbounds values
+ 	keep = []
+ 	for b in reg.blocks:
+-		if not np.nan in b.uvbounds.values():
++		if not np.nan in list(b.uvbounds.values()):
+ 			keep += [b]
+ 	reg.blocks = keep
+ 	## return
+@@ -102,7 +102,7 @@
+ 	## keep blocks only if no nan in uvbounds values
+ 	keep = []
+ 	for b in reg.blocks:
+-		if not np.nan in b.uvbounds.values():
++		if not np.nan in list(b.uvbounds.values()):
+ 			keep += [b]
+ 	reg.blocks = keep
+ 	## return
+@@ -145,7 +145,7 @@
+ 	## keep blocks only if no nan in uvbounds values
+ 	keep = []
+ 	for b in reg.blocks:
+-		if not np.nan in b.uvbounds.values():
++		if not np.nan in list(b.uvbounds.values()):
+ 			keep += [b]
+ 	reg.blocks = keep
+ 	## return
+--- .\shell_junction\tests.py	(original)
++++ .\shell_junction\tests.py	(refactored)
+@@ -6,9 +6,9 @@
+ 
+ import numpy as np
+ 
+-from active_slice_class import active_slice
+-from passive_slice_class import passive_slice
+-from helpers import *
++from .active_slice_class import active_slice
++from .passive_slice_class import passive_slice
++from .helpers import *
+ 
+ 
+ 
+@@ -24,7 +24,7 @@
+ 	"""
+ 	import xhorizon2 as xh
+ 	##
+-	print "\nTEST 1\n"
++	print("\nTEST 1\n")
+ 	## params
+ 	func = xh.mf.hayward()
+ 	ublocks, vblocks = [2,5,3], [0,1,2]
+@@ -35,13 +35,13 @@
+ 	#r = r[r<10.]
+ 	r, uvdl_u0, uvdl_v0 = uvdl_of_r_at_uv0(r, reg, ublocks=ublocks, vblocks=vblocks, v0=v0, u0=u0)
+ 	## print
+-	print "\n"
+-	print "u0, v0 = %s, %s"%(u0,v0)
+-	print "r, uvdl_u0, uvdl_v0 = ..."
+-	print r
+-	print uvdl_u0
+-	print uvdl_v0
+-	print "\n"
++	print("\n")
++	print("u0, v0 = %s, %s"%(u0,v0))
++	print("r, uvdl_u0, uvdl_v0 = ...")
++	print(r)
++	print(uvdl_u0)
++	print(uvdl_v0)
++	print("\n")
+ 	## plot
+ 	plt.figure(1, figsize=(12,5))
+ 	## left subfig
+@@ -78,7 +78,7 @@
+ 	##
+ 	plt.show()
+ 	##
+-	print "\nEND TEST 1\n"
++	print("\nEND TEST 1\n")
+ 
+ 
+ 
+@@ -88,13 +88,13 @@
+ 	"""
+ 	import xhorizon2 as xh
+ 	##
+-	print "\nTEST 2\n"
++	print("\nTEST 2\n")
+ 	##
+ 	reg = xh.reg.MAXreg(xh.mf.minkowski())
+ 	r0, u0, v0 = set_ruv0(reg, r0=5, u0=8)
+-	print 'r0=%s, u0=%s, v0=%s'%(r0,u0,v0)
+-	##
+-	print "\nEND TEST 2\n"
++	print('r0=%s, u0=%s, v0=%s'%(r0,u0,v0))
++	##
++	print("\nEND TEST 2\n")
+ 
+ 
+ 
+@@ -106,7 +106,7 @@
+ 	"""
+ 	import xhorizon2 as xh
+ 	##
+-	print "\nTEST 3\n"
++	print("\nTEST 3\n")
+ 	## define func and region
+ 	func = xh.mf.schwarzschild()
+ 	reg = xh.reg.MAXreg(func,rlines=False)
+@@ -163,7 +163,7 @@
+ 			i+=1
+ 	##
+ 	plt.show()
+-	print "\nEND TEST 3\n"
++	print("\nEND TEST 3\n")
+ 
+ 
+ 
+@@ -175,7 +175,7 @@
+ 	"""
+ 	import xhorizon2 as xh
+ 	##
+-	print "\nTEST 4\n"
++	print("\nTEST 4\n")
+ 	## define func and region
+ 	func = xh.mf.schwarzschild()
+ 	reg = xh.reg.MAXreg(func,rlines=False)
+@@ -237,7 +237,7 @@
+ 				i+=1
+ 		##
+ 		plt.show()
+-	print "\nEND TEST 4\n"
++	print("\nEND TEST 4\n")
+ 
+ 
+ 
+@@ -248,7 +248,7 @@
+ 	## import
+ 	import xhorizon2 as xh
+ 	## start
+-	print "\nTEST 6\n"
++	print("\nTEST 6\n")
+ 	## define func and region
+ 	func = xh.mf.schwarzschild()
+ 	reg = xh.reg.MAXreg(func,rlines=True)
+@@ -270,7 +270,7 @@
+ 		plt.plot(slc.uvdl_u0[1], slc.UV_u0[1], 'bx')
+ 		plt.show()
+ 	## done
+-	print "\nEND TEST 5\n"
++	print("\nEND TEST 5\n")
+ 
+ 
+ 
+@@ -282,7 +282,7 @@
+ 	"""
+ 	import xhorizon2 as xh
+ 	##
+-	print "\nTEST 6\n"
++	print("\nTEST 6\n")
+ 	## define func and region
+ 	func = xh.mf.schwarzschild()
+ 	reg = xh.reg.MAXreg(func,rlines=True)
+@@ -353,7 +353,7 @@
+ 			plt.scatter(slc.uvdl_v0[0], slc.UV_v0[0], marker='x', s=10 , c=cvals, cmap=cmaps[1], zorder=5100)
+ 		##
+ 		plt.show()
+-	print "\nEND TEST 6\n"
++	print("\nEND TEST 6\n")
+ 
+ 
+ 
+@@ -365,7 +365,7 @@
+ 	"""
+ 	import xhorizon2 as xh
+ 	##
+-	print "\nTEST 7\n"
++	print("\nTEST 7\n")
+ 	## define func and region
+ 	func = xh.mf.schwarzschild()
+ 	reg = xh.reg.MAXreg(func,rlines=True)
+@@ -439,7 +439,7 @@
+ 			plt.scatter(slc.uvdl_v0[0], slc.UV_v0[0], marker='x', s=10 , c=cvals, cmap=cmaps[1], zorder=5100)
+ 		##
+ 		plt.show()
+-	print "\nEND TEST 7\n"
++	print("\nEND TEST 7\n")
+ 
+ 
+ 
+@@ -450,7 +450,7 @@
+ 	"""
+ 	import xhorizon2 as xh
+ 	##
+-	print "\nTEST 8\n"
++	print("\nTEST 8\n")
+ 	## define func and region
+ 	func = xh.mf.hayward()
+ 	reg = xh.reg.MAXreg(func,rlines=True)
+@@ -524,7 +524,7 @@
+ 			plt.scatter(slc.uvdl_v0[0], slc.UV_v0[0], marker='x', s=10 , c=cvals, cmap=cmaps[1], zorder=5100)
+ 		##
+ 		plt.show()
+-	print "\nEND TEST 8\n"
++	print("\nEND TEST 8\n")
+ 
+ 
+ 
+@@ -537,7 +537,7 @@
+ 	"""
+ 	import xhorizon2 as xh
+ 	##
+-	print "\nTEST 9\n"
++	print("\nTEST 9\n")
+ 	## define func and region
+ 	func = xh.mf.schwarzschild()
+ 	reg = xh.reg.MAXreg(func,rlines=True)
+@@ -608,7 +608,7 @@
+ 			plt.scatter(slc.uvdl_v0[0], slc.UV_v0[0], marker='x', s=10 , c=cvals, cmap=cmaps[1], zorder=5100)
+ 		##
+ 		plt.show()
+-	print "\nEND TEST 9\n"
++	print("\nEND TEST 9\n")
+ 
+ 
+ 
+@@ -621,7 +621,7 @@
+ 	"""
+ 	import xhorizon2 as xh
+ 	##
+-	print "\nTEST 10\n"
++	print("\nTEST 10\n")
+ 	## define func and region
+ 	func = xh.mf.hayward()   ##schwarzschild()
+ 	reg = xh.reg.MAXreg(func,rlines=True)
+@@ -690,7 +690,7 @@
+ 			plt.scatter(slc.r, slc.UV_v0[0], marker='x', s=10 , c=cvals, cmap=cmaps[1], zorder=5100)
+ 		##
+ 		plt.show()
+-	print "\nEND TEST 10\n"
++	print("\nEND TEST 10\n")
+ 
+ 
+ 
+@@ -699,8 +699,8 @@
+ 
+ 	import matplotlib.pyplot as plt
+ 
+-	print "\n\nTESTS\n"
++	print("\n\nTESTS\n")
+ 	test10()
+-	print "\nEND TESTS\n"
+-
+-
++	print("\nEND TESTS\n")
++
++
+--- .\tortoise\metfunc_factory.py	(original)
++++ .\tortoise\metfunc_factory.py	(refactored)
+@@ -8,9 +8,9 @@
+ import numpy as np
+ 
+ 
+-from metfunc_class import metfunc
+-import tortoise
+-import math_util
++from .metfunc_class import metfunc
++from . import tortoise
++from . import math_util
+ 
+ 
+ """
+@@ -349,9 +349,9 @@
+ 	func.kj = np.concatenate( [ np.array([0.]), ki, np.array([0.]) ] )
+ 	func.info = info
+ 	## generate tortoise function and inverse
+-	print "\nThis part is slow, reference F(r) arrays being calculated by integration..."
++	print("\nThis part is slow, reference F(r) arrays being calculated by integration...")
+ 	tort_by_interp = tortoise.F_by_interp(func.f, func.rj, func.Fparams['eps'], npoints=func.Fparams['npoints_interp'])
+-	print "...done.\n"
++	print("...done.\n")
+ 	func.F = tort_by_interp.make_F()
+ 	func.Finv = tort_by_interp.make_Finv()
+ 	## define interval getter, first trapped interval
+@@ -384,10 +384,10 @@
+ 	######### input ########
+ 	func  = hayward(R=.05, l=.01)
+ 	########################
+-	print "\nTEST 9"
+-	print func
+-	print func.rj
+-	print func.info['Type']
++	print("\nTEST 9")
++	print(func)
++	print(func.rj)
++	print(func.info['Type'])
+ 	##
+ 	import matplotlib.pyplot as plt
+ 	plt.plot(func.r_ref, func.rstar_ref, 'kx')
+@@ -395,7 +395,7 @@
+ 	plt.grid()
+ 	plt.show()
+ 	## end
+-	print "END TEST 9\n"
++	print("END TEST 9\n")
+ 
+ 
+ 
+@@ -403,6 +403,6 @@
+ ## run tests if __name__="__main__"
+ 
+ if __name__=="__main__":
+-	print "RUN TESTS"
++	print("RUN TESTS")
+ 	test1()
+ 
+--- .\tortoise\metfunc_tests.py	(original)
++++ .\tortoise\metfunc_tests.py	(refactored)
+@@ -14,14 +14,14 @@
+ 	"""
+ 	Runs a series of tests to verify that metfunc object properties have been properly calculated.
+ 	"""
+-	print '\nRUN FUNC TEST'
+-	print '\n' + '\n'.join(['%s: %s'%(key,func.info[key]) for key in func.info.keys()]) +'\n'
++	print('\nRUN FUNC TEST')
++	print('\n' + '\n'.join(['%s: %s'%(key,func.info[key]) for key in list(func.info.keys())]) +'\n')
+ 	f_test(func, saveplots)
+ 	F_test_0(func, saveplots)
+ 	F_test_1(func, saveplots)
+ 	F_test_2(func, saveplots)
+-	print '\n' + '\n'.join(['%s: %s'%(key,func.info[key]) for key in func.info.keys()]) +'\n'
+-	print 'END FUNC TEST\n'
++	print('\n' + '\n'.join(['%s: %s'%(key,func.info[key]) for key in list(func.info.keys())]) +'\n')
++	print('END FUNC TEST\n')
+ 
+ 
+ 
+--- .\tortoise\tortoise.py	(original)
++++ .\tortoise\tortoise.py	(refactored)
+@@ -85,7 +85,7 @@
+ 
+ 		## determine intervals and initialize reference subarrays
+ 		rj = self.rj
+-		intervals = range(len(rj)-1)
++		intervals = list(range(len(rj)-1))
+ 		r_ref = self.r_ref
+ 		rstar_ref = self.rstar_ref
+ 		r_ref_j = []
+@@ -220,13 +220,13 @@
+ 	maxrel, maxabs = 1e-4, 1e-6
+ 	## execute warnings
+ 	if (val!=0. and relerr > maxrel):
+-		print "\nIntegration Warning: Relative error exceeds %e"%(maxrel)
+-		print "%s from %s to %s"%(func,a,b)
+-		print "val %s, abserr %e, relerr %e"%(val,abserr,relerr)
++		print("\nIntegration Warning: Relative error exceeds %e"%(maxrel))
++		print("%s from %s to %s"%(func,a,b))
++		print("val %s, abserr %e, relerr %e"%(val,abserr,relerr))
+ 	if (np.abs(val) < 1. and abserr > maxabs):
+-		print "\nIntegration Warning: Absolute error exceeds %e"%(maxabs)
+-		print "%s from %s to %s"%(func,a,b)
+-		print "val %s, abserr %e, relerr %e"%(val,abserr,relerr)
++		print("\nIntegration Warning: Absolute error exceeds %e"%(maxabs))
++		print("%s from %s to %s"%(func,a,b))
++		print("val %s, abserr %e, relerr %e"%(val,abserr,relerr))
+ 	## return
+ 	return val
+ 
+@@ -243,7 +243,7 @@
+ 		mask = np.logical_and(r>rj[jj], r<rj[jj+1])
+ 		j[mask] = jj
+ 	if np.any(np.isnan(j)):
+-		print "\nWARNING: Function which_interval() encountered invalid values. Returning nan.\n"
++		print("\nWARNING: Function which_interval() encountered invalid values. Returning nan.\n")
+ 	if asint==True:
+ 		j = j.astype(int)
+ 	return j
+@@ -322,19 +322,19 @@
+ 	a = 1.5
+ 	b = 1. + 1e-11
+ 	########################
+-	print "\nTEST 1"
++	print("\nTEST 1")
+ 	forward      =  integrate(h,a,b)
+ 	neg_backward = -integrate(h,b,a)
+ 	abs_diff = forward - neg_backward
+ 	sumtot = forward + neg_backward
+-	print " forward  = % .18e"%forward
+-	print "-backward = % .18e"%neg_backward
+-	print " abs diff = % .18e"%abs_diff
++	print(" forward  = % .18e"%forward)
++	print("-backward = % .18e"%neg_backward)
++	print(" abs diff = % .18e"%abs_diff)
+ 	if sumtot != 0.:
+ 		rel_diff = 2. * abs_diff / sumtot
+-		print " rel diff = % .18e"%rel_diff
+-	## end
+-	print "END TEST 1\n"
++		print(" rel diff = % .18e"%rel_diff)
++	## end
++	print("END TEST 1\n")
+ 
+ 
+ 
+@@ -348,11 +348,11 @@
+ 	rj = np.array([0.,1.,25.])
+ 	eps = 1e-11
+ 	########################
+-	print "\nTEST 2"
++	print("\nTEST 2")
+ 	Fj = F_refpoints(f,rj,eps)
+-	print "Fj = ", Fj
+-	## end
+-	print "END TEST 2\n"
++	print("Fj = ", Fj)
++	## end
++	print("END TEST 2\n")
+ 
+ 
+ def test3():
+@@ -363,11 +363,11 @@
+ 	r = np.linspace(1e-12, 15, 20)
+ 	rj = np.array([0.,1.,2.,8.,25.])
+ 	########################
+-	print "\nTEST 3"
++	print("\nTEST 3")
+ 	j = which_interval(r, rj)
+-	print "j = ", j
+-	## end
+-	print "END TEST 3\n"
++	print("j = ", j)
++	## end
++	print("END TEST 3\n")
+ 
+ 
+ def test4():
+@@ -380,7 +380,7 @@
+ 	eps = 1e-9
+ 	r = np.linspace(1e-9,7,1000)
+ 	########################
+-	print "\nTEST 4"
++	print("\nTEST 4")
+ 	## numerically calculate values
+ 	rstar = F_by_integration(f,rj,eps,r)
+ 	## know analytical solution
+@@ -391,7 +391,7 @@
+ 	plt.grid()
+ 	plt.show()
+ 	## end
+-	print "END TEST 4\n"
++	print("END TEST 4\n")
+ 
+ 
+ 
+@@ -405,13 +405,13 @@
+ 	eps = 1e-9
+ 	npoints = 500
+ 	########################
+-	print "\nTEST 5"
++	print("\nTEST 5")
+ 	rvals = rspace0(r0,r1,eps,npoints)
+-	print "rvals = ", rvals
++	print("rvals = ", rvals)
+ 	plt.plot(rvals,'kx')
+ 	plt.show()
+ 	## end
+-	print "END TEST 5\n"
++	print("END TEST 5\n")
+ 
+ 
+ def test6():
+@@ -423,13 +423,13 @@
+ 	eps = 1e-9
+ 	npoints = 500
+ 	########################
+-	print "\nTEST 6"
++	print("\nTEST 6")
+ 	rvals = rspace1(rj,eps,npoints)
+-	print "rvals = ", rvals
++	print("rvals = ", rvals)
+ 	plt.plot(rvals,'kx')
+ 	plt.show()
+ 	## end
+-	print "END TEST 6\n"
++	print("END TEST 6\n")
+ 
+ 
+ def test7():
+@@ -442,7 +442,7 @@
+ 	eps = 1e-9
+ 	npoints=500
+ 	########################
+-	print "\nTEST 7"
++	print("\nTEST 7")
+ 	## go
+ 	r, rstar = create_reference(f, rj, eps, npoints)
+ 	## plot
+@@ -450,7 +450,7 @@
+ 	plt.grid()
+ 	plt.show()
+ 	## end
+-	print "END TEST 7\n"
++	print("END TEST 7\n")
+ 
+ 
+ def test8():
+@@ -464,11 +464,11 @@
+ 	npoints=500
+ 	r = np.concatenate([rspace1(rj,eps,npoints), np.linspace(50,-50,1000)])
+ 	########################
+-	print "\nTEST 8"
++	print("\nTEST 8")
+ 	## build F_by_interp
+-	print "only this part is slow...."
++	print("only this part is slow....")
+ 	tort_by_interp = F_by_interp(f, rj, eps, npoints)
+-	print "see?"
++	print("see?")
+ 	## make F
+ 	F = tort_by_interp.make_F()
+ 	## plot
+@@ -476,7 +476,7 @@
+ 	plt.grid()
+ 	plt.show()
+ 	## end
+-	print "END TEST 8\n"
++	print("END TEST 8\n")
+ 
+ 
+ def test9():
+@@ -491,11 +491,11 @@
+ 	rstar = np.linspace(-10,50,5000)
+ 	jvals = [0,1,2]
+ 	########################
+-	print "\nTEST 9"
++	print("\nTEST 9")
+ 	## build F_by_interp
+-	print "only this part is slow...."
++	print("only this part is slow....")
+ 	tort_by_interp = F_by_interp(f, rj, eps, npoints)
+-	print "see?"
++	print("see?")
+ 	## make F
+ 	Finv = tort_by_interp.make_Finv()
+ 	## plot
+@@ -504,7 +504,7 @@
+ 	plt.grid()
+ 	plt.show()
+ 	## end
+-	print "END TEST 9\n"
++	print("END TEST 9\n")
+ 
+ 
+ 
+@@ -512,7 +512,7 @@
+ ## run tests if __name__="__main__"
+ 
+ if __name__=="__main__":
+-	print "RUN TESTS"
++	print("RUN TESTS")
+ 	test1()
+ 	test2()
+ 	test3()

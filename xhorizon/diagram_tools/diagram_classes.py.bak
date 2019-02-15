@@ -10,9 +10,9 @@ which are used to construct and plot diagrams.
 import numpy as np
 import matplotlib.pyplot as plt
 
-from . import coord_transf as coord
-from .block_masks import rstar_minmax, uv_range
-from . import block_fill
+import coord_transf as coord
+from block_masks import rstar_minmax, uv_range
+import block_fill
 
 
 
@@ -301,7 +301,7 @@ class block:
 		## # warn if not consistent
 		if consistent == False:
 			messages += ["END WARNING"]
-			print('\n' + '\n'.join(messages) + '\n')
+			print '\n' + '\n'.join(messages) + '\n'
 		## return
 		return consistent
 

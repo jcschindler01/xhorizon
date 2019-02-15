@@ -5,8 +5,8 @@ This module defines a class used for evaluating coordinate transformations at nu
 
 
 import numpy as np
-from . import interpolators as interp
-from .helpers import *
+import interpolators as interp
+from helpers import *
 
 
 

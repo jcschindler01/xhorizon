@@ -11,7 +11,7 @@ import matplotlib.colors
 
 import xhorizon as xh
 from xhorizon.shell_junction import interpolators as interp
-from helpers import irr
+from .helpers import irr
 
 
 ############## plot reglist ####################
@@ -98,7 +98,7 @@ def rline_inf_col(reglist, npoints=5001, inf=1000., sty={}, M=.5):
 				rstar = b.master.metfunc.rstar_ref[-1]
 				## mass
 				m = 0.
-				if 'R' in b.master.metfunc.fparams.keys():
+				if 'R' in list(b.master.metfunc.fparams.keys()):
 					m = 0.5 * b.master.metfunc.fparams['R']
 				## linewidth
 				lw0 = 1.*style['lw']
@@ -148,7 +148,7 @@ def acc_shells(reglist, chainparams, sty={}, inf=50., npoints=5001):
 			for b in reg.blocks:
 				## mass
 				dm = m[i+1] - m[i]
-				print("ACC SHELL COLOR dm/M=%s"%(dm/M))
+				print(("ACC SHELL COLOR dm/M=%s"%(dm/M)))
 				col = shell_col(dm/M)
 				## style
 				style = dict(lw=0.2, ls='dashed', dashes=(4,4), c=1.*col, zorder=2000)
@@ -175,7 +175,7 @@ def evap_shells_out(reglist, chainparams, sty={}, inf=100., npoints=5001):
 				if not np.isfinite(b.uvbounds['vmax']):
 					## mass
 					dm = - (m[i+1] - m[i])
-					print("EVAP OUT SHELL COLOR dm/M=%s"%(dm/M))
+					print(("EVAP OUT SHELL COLOR dm/M=%s"%(dm/M)))
 					col = shell_col(dm/M)
 					## style
 					style = dict(lw=0.2, ls='dashed', dashes=(4,4), c=1.*col, zorder=2000)
@@ -208,7 +208,7 @@ def evap_shells_in(reglist, chainparams, sty={}, inf=5., npoints=5001):
 			for b in reg.blocks:
 				## mass
 				dm = - (m[i+1] - m[i])
-				print("EVAP IN SHELL COLOR dm/M=%s"%(dm/M))
+				print(("EVAP IN SHELL COLOR dm/M=%s"%(dm/M)))
 				col = shell_col(dm/M)
 				## style
 				style = dict(lw=0.9, ls=':', c=1.*col, zorder=2000)
@@ -449,8 +449,8 @@ def tticks(reglist, dt=1., inf1=1., inf2=50.+irr, sty={}):
 							remainder = remainder - (tmax-tmin)
 						## if big enough go
 						if toosmall==False:
-							print "HELLLOOOOOOOOO tticks"
-							print tmin, tmax, dt
+							print("HELLLOOOOOOOOO tticks")
+							print(tmin, tmax, dt)
 							## make array
 							tt = remainder + np.arange(tmin, tmax, dt)
 							## get new remainder

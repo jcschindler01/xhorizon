@@ -3,7 +3,7 @@ def demo():
 	import numpy as np
 	import matplotlib.pyplot as plt
 	import xhorizon as xh
-	from .massplot import massplot
+	from massplot import massplot
 
 	"""
 	"""
@@ -41,8 +41,8 @@ def demo():
 		plt.xticks([1,2])
 		plt.yticks([-1,0,1])
 		## lims
-		sq = 1.14 + .4
-		x0 = .93 -.4
+		sq = 1.2
+		x0 = .86
 		plt.xlim(x0,x0+sq)
 		plt.ylim(-0.5*aspect*sq,0.5*aspect*sq)
 	################################
@@ -62,29 +62,27 @@ def demo():
 	# func type
 	ftype = 2
 
-	## input
-	l  = 1e-4
-	le = 1e-4
+	## input	
+	L = 1.
+	l  = .01
+	le = .01
 
 	## input
-	R  = 2e-3
-
-	## if background
-	L = 10.
+	R  = .2
 
 	## evap
-	Nevap = 12
+	Nevap = 1
 	Tevap = 10.
 
 	## accrete
-	Nacc = 5
-	Tacc = .5
+	Nacc = 1
+	Tacc = .75
 
 	## seed
 	seed = 0
 
 	## vv
-	voff = -Tacc - 0.
+	voff = 0. #-Tacc - 0.
 	veta = 1.
 
 	## uu
@@ -104,6 +102,9 @@ def demo():
 	#### AdS
 	if ftype==2:
 		params.update(dict(functype0=xh.mf.AdS, fparams0=dict(L=1.*L), functype1=xh.mf.Hay_AdS, fparams1=dict(l=1.*l, L=1.*L)))
+	#### AdS
+	if ftype==3:
+		params.update(dict(functype0=xh.mf.dS, fparams0=dict(L=1.*L), functype1=xh.mf.Hay_dS, fparams1=dict(l=1.*l, L=1.*L)))
 	## evap
 	params.update(dict(Rmax=1.*R, le=1.*le, Tevap=1.*Tevap, Nevap=1*Nevap))
 	## accrete
@@ -146,9 +147,9 @@ def demo():
 
 
 	## auto param label
-	if False:
-		plabel = [r"$l_{ev}=%3s$"%(le), r"", r"$l=%3s$"%(l), r"$2M=%3s$"%(R)]
-		plabel += [r"", r"$\tau_{acc}=%3s$"%(Tacc), r"$\tau_{ev}=%3s$"%(Tevap)]
+	if True:
+		plabel = [r"$l_{ev}=%3s$"%(le), r"", r"$l=%3s$"%(l), r"$2M=%3s$"%(R), r"$L=%3s$"%(L)]
+		#plabel += [r"", r"$\tau_{acc}=%3s$"%(Tacc), r"$\tau_{ev}=%3s$"%(Tevap)]
 		plabel = "\n".join(plabel)
 		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
 
@@ -158,6 +159,11 @@ def demo():
 		plabel += [r"", r"$M=10^{-3}$", r"$l_{ev}=l=10^{-4}$"]
 		plabel = "\n".join(plabel)
 		plt.annotate(s=plabel, xy=(.95,.03), xycoords='axes fraction', ha='right', va='bottom', size=8)
+
+	## r=infty label
+	if True:
+		plt.annotate(s=r"$r=0$",      xy=(.95, 0.), ha='center', va='center', size=7, rotation=90)
+		plt.annotate(s=r"$r=\infty$", xy=(1.5, 0.), ha='center', va='center', size=7, rotation=-90)
 
 	## mass plot
 	mpgo = True

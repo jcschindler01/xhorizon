@@ -59,7 +59,7 @@ def EFreg2a(reg, abcd=None, u0=None, v0=None):
 	## keep blocks only if no nan in uvbounds values
 	keep = []
 	for b in reg.blocks:
-		if not np.nan in list(b.uvbounds.values()):
+		if not np.nan in b.uvbounds.values():
 			keep += [b]
 	reg.blocks = keep
 	## return
@@ -102,7 +102,7 @@ def EFreg1a(reg, abcd=None, u0=None, v0=None):
 	## keep blocks only if no nan in uvbounds values
 	keep = []
 	for b in reg.blocks:
-		if not np.nan in list(b.uvbounds.values()):
+		if not np.nan in b.uvbounds.values():
 			keep += [b]
 	reg.blocks = keep
 	## return
@@ -145,7 +145,7 @@ def MAXreg2a(reg, abcd=None, u0=None, v0=None):
 	## keep blocks only if no nan in uvbounds values
 	keep = []
 	for b in reg.blocks:
-		if not np.nan in list(b.uvbounds.values()):
+		if not np.nan in b.uvbounds.values():
 			keep += [b]
 	reg.blocks = keep
 	## return
