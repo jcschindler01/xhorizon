@@ -49,6 +49,8 @@ To use:
          $ python
          >>> import xhorizon
  - All set! Call xhorizon's tools from the package as necessary.
+ - Visit the "examples" folder in this directory to learn basic usage.
+
 -------------------------------------------------
 
 -------------------------------------------------
@@ -60,7 +62,8 @@ However, all modules contain detailed commentary and documentation in the source
 We hope to provide external documentation soon!
 
 Tutorial:
-A tutorial and set of examples should be provided soon. Stay tuned!
+To get started creating diagrams, visit the "examples" folder in this directory!
+We hope to provide a more complete tutorial soon.
 -------------------------------------------------
 
 -------------------------------------------------
