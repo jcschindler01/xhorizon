@@ -8,11 +8,12 @@ import matplotlib.pyplot as plt
 
 
 
-def pubrc(tex=True):
+def pubrc(tex=False):
 	## if matplotlib version 2, use classic style
 	if int(mpl.__version__.split('.')[0]) > 1:
 		plt.style.use('classic')
 	## set default rc params for diagrams
+	plt.rcParams['font.family'] = 'serif'
 	## latex settings
 	if tex==True:
 		plt.rcParams['text.usetex'] = True
