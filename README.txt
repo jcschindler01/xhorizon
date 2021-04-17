@@ -32,6 +32,10 @@ https://doi.org/10.1088/1361-6382/aabce2
 -------------------------------------------------
 INSTALLATION AND USAGE
 
+Requires: PYTHON 2.7.9, NUMPY 1.9.1, MATPLOTLIB 1.4.2, SCIPY 0.15.0
+
+(You can probably vary the required versions somewhat and still be compatible. However, Python 3 will definitely not work at the moment, and MatPlotLib 2/3 probably will not either. Hoping to get these supported soon.)
+
 To install:
  - Download a .zip copy of (the desired version of) the directory containing this file from 
          https://github.com/jcschindler01/xhorizon
