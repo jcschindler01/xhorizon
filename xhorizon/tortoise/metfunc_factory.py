@@ -8,9 +8,9 @@ objects from templates.
 import numpy as np
 
 
-from .metfunc_class import metfunc
-from . import tortoise
-from . import math_util
+from xhorizon.tortoise.metfunc_class import metfunc
+from xhorizon.tortoise import tortoise
+from xhorizon.tortoise import math_util
 
 
 """
