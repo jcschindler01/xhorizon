@@ -238,7 +238,7 @@ def test2():
 
 
 if __name__=='__main__':
-	print "TESTS"
+	print("TESTS")
 	#test1()
 	#test2()
 
