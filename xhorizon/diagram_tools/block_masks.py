@@ -5,7 +5,7 @@
 
 import numpy as np
 
-from curve_class import curve
+from .curve_class import curve
 
 
 """
@@ -192,9 +192,9 @@ def test1():
 	yout = mask_split_array(y,mask)
 	zout = mask_split_array(z,mask)
 	## print outputs
-	print xout
-	print yout
-	print zout
+	print(xout)
+	print(yout)
+	print(zout)
 	## plot
 	plt.plot(x,y,'b-',lw=15, label='unmasked')
 	plt.plot(x[mask],y[mask],'y-',lw=10, label='naive numpy mask')
@@ -228,8 +228,8 @@ def test2():
 	xyout = mask_split_2darray(xy,mask)
 	xzout = mask_split_2darray(xz,mask)
 	## print outputs
-	print xyout
-	print xzout
+	print(xyout)
+	print(xzout)
 	## plot
 	plt.plot(xy[0],xy[1],'b-',lw=15, label='unmasked')
 	plt.plot(xy[0][mask],xy[1][mask],'y-',lw=10, label='naive numpy mask')
