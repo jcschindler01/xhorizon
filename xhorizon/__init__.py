@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 plt.style.use("classic")
 
 from . import tortoise
+from . import diagram_tools
 
 
 #from diagram_tools.plotstyle import *
