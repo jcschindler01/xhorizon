@@ -10,7 +10,7 @@ which are used to construct and plot diagrams.
 import numpy as np
 import matplotlib.pyplot as plt
 
-from .coord_transf import coord
+from . import coord_transf as coord
 from .block_masks import rstar_minmax, uv_range
 from . import block_fill
 
