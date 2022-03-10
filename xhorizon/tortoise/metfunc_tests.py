@@ -20,7 +20,7 @@ def func_test(func, saveplots=False):
 	F_test_0(func, saveplots)
 	F_test_1(func, saveplots)
 	F_test_2(func, saveplots)
-	print('\n' + '\n'.join(['%s: %s'%(key,func.info[key]) for key in func.info.keys()]) +'\n')
+	#print('\n' + '\n'.join(['%s: %s'%(key,func.info[key]) for key in func.info.keys()]) +'\n')
 	print('END FUNC TEST\n')
 
 
@@ -34,8 +34,8 @@ def nice_plot_background(func):
 	Plot a horizontal black dotted line at y=0.
 	"""
 	## styles
-	fillparams = [dict(facecolor=r'steelblue', alpha=.15, edgecolor='none', zorder=1),
-				  dict(facecolor=r'lightsage', alpha=.2 , edgecolor='none', zorder=1)]
+	fillparams = [dict(facecolor=r'b', alpha=.15, edgecolor='none', zorder=1),
+				  dict(facecolor=r'g', alpha=.2 , edgecolor='none', zorder=1)]
 	vert_sty = dict(ls='-', c='0.8', lw=1, zorder=5)
 	zero_sty = dict(c='k',lw=.5,ls=':',zorder=3)
 	##
