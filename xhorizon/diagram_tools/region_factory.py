@@ -4,9 +4,9 @@
 
 import numpy as np
 
-from curve_class import curve
-from diagram_classes import region, block
-import curvemakers as cm
+from .curve_class import curve
+from .diagram_classes import region, block
+from . import curvemakers as cm
 
 
 
