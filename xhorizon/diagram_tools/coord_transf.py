@@ -200,7 +200,7 @@ def test2():
 	"""
 	print( "\nTEST 2")
 	## input ##
-	s = np.linspace(-20.,20.,2001)
+	s = np.linspace(-20.,20.,3001)
 	k = 1.
 	##
 	## test H
