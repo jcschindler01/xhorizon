@@ -163,7 +163,7 @@ def test1():
 	"""
 	Test that uv_of_tr and tr_of_uv are stable numerical inverses.
 	"""
-	print "\nTEST 1"
+	print( "\nTEST 1")
 	## input ##
 	npts = 100.
 	t = 10. * ( 2.*np.random.rand(npts) - 1. )
@@ -183,22 +183,22 @@ def test1():
 		rnew = r_of_uv(uvnew, Finv, c)
 	## results of test
 	if False:
-		print "uv = ", uv
-		print "tr = ", tr
-		print "r = ", r
+		print( "uv = ", uv)
+		print( "tr = ", tr)
+		print( "r = ", r)
 	if True:
-		print "max diff uv = ", np.max(np.abs(uvnew-uv))
-		print "max diff tr = ", np.max(np.abs(trnew-tr))
-		print "max diff r = ", np.max(np.abs(rnew-r))
+		print( "max diff uv = ", np.max(np.abs(uvnew-uv)))
+		print( "max diff tr = ", np.max(np.abs(trnew-tr)))
+		print( "max diff r = ", np.max(np.abs(rnew-r)))
 	## end
-	print "END TEST 1\n"
+	print( "END TEST 1\n")
 
 
 def test2():
 	"""
 	Test that H and Hinv are stable numerical inverses.
 	"""
-	print "\nTEST 2"
+	print( "\nTEST 2")
 	## input ##
 	s = np.linspace(-20.,20.,2001)
 	k = 1.
@@ -212,20 +212,20 @@ def test2():
 		xnew = Hinv(ynew, k)
 		ynew = H(xnew, k)
 	if False:
-		print "x = ", x
-		print "y = ", y
+		print( "x = ", x)
+		print( "y = ", y)
 	if True:
-		print "max diff x = ", np.max(np.abs(xnew-x))
-		print "max diff y = ", np.max(np.abs(ynew-y))
+		print( "max diff x = ", np.max(np.abs(xnew-x)))
+		print( "max diff y = ", np.max(np.abs(ynew-y)))
 	## end
-	print "END TEST 2\n"
+	print( "END TEST 2\n")
 
 
 def test3():
 	"""
 	Test that h and hinv are stable numerical inverses.
 	"""
-	print "\nTEST 3"
+	print( "\nTEST 3")
 	## input ##
 	s = np.linspace(-20.,20.,2001)
 	kpm = np.array([-1.,2.])
@@ -242,20 +242,20 @@ def test3():
 		xnew = hinv(ynew)
 		ynew = h(xnew)
 	if False:
-		print "x = ", x
-		print "y = ", y
+		print( "x = ", x)
+		print( "y = ", y)
 	if True:
-		print "max diff x = ", np.max(np.abs(xnew-x))
-		print "max diff y = ", np.max(np.abs(ynew-y))
+		print( "max diff x = ", np.max(np.abs(xnew-x)))
+		print( "max diff y = ", np.max(np.abs(ynew-y)))
 	## end
-	print "END TEST 3\n"
+	print( "END TEST 3\n")
 
 
 def test4():
 	"""
 	Plot h and hinv.
 	"""
-	print "\nTEST 4"
+	print( "\nTEST 4")
 	## input ##
 	s = np.linspace(-20.,20.,2001)
 	kpm = np.array([-0.6,0.2])
@@ -281,14 +281,14 @@ def test4():
 	plt.legend(loc='lower right', fontsize=10)
 	plt.show()
 	## end
-	print "END TEST 4\n"
+	print( "END TEST 4\n")
 
 
 def test5():
 	"""
 	Plot H and Hinv.
 	"""
-	print "\nTEST 5"
+	print( "\nTEST 5")
 	## input ##
 	s = np.linspace(-20.,20.,10001)
 	k = -10.
@@ -310,7 +310,7 @@ def test5():
 	plt.legend(loc='lower right', fontsize=10)
 	plt.show()
 	## end
-	print "END TEST 5\n"
+	print( "END TEST 5\n")
 
 ## run test routines if this module is main
 
