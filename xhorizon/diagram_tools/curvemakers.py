@@ -34,7 +34,7 @@ def rlines(rvals, sty={}, inf=50., t0=0., npoints=1000):
 		## create new curve
 		crv = curve()
 		## define t and r arrays
-		t = t0 + np.linspace(-inf, inf, 2.*npoints+1)
+		t = t0 + np.linspace(-inf, inf, 2*npoints+1)
 		r = rval + 0.*t
 		## add coords to curve
 		crv.tr = np.array([t,r])
@@ -66,7 +66,7 @@ def default_rlines(func, sty={}, inf=50., npoints=1000):
 		rr[-1] = 20.*rscales[-1]
 		rr[0] = 0.5*rscales[0]
 	## create curves
-	cols = ['midnightblue', 'sage']
+	cols = ['b', 'g']
 	crvlist = []
 	for i in range(len(rr)-1):
 		imax = len(rr)-2
@@ -92,7 +92,7 @@ def rstarlines(vals, c=None, sty={}, inf=50., npoints=1000):
 		## create new curve
 		crv = curve()
 		## define t array
-		t = np.linspace(-inf, inf, 2.*npoints+1)
+		t = np.linspace(-inf, inf, 2*npoints+1)
 		## define u and v arrays
 		c = float(c)
 		u = t - val + c
