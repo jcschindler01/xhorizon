@@ -165,7 +165,7 @@ def test1():
 	"""
 	print( "\nTEST 1")
 	## input ##
-	npts = 100.
+	npts = 100
 	t = 10. * ( 2.*np.random.rand(npts) - 1. )
 	r = 10. * np.random.rand(npts)
 	c = 10. * ( 2.*np.random.random() - 1. )
