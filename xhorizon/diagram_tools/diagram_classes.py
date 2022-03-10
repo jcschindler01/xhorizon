@@ -10,9 +10,9 @@ which are used to construct and plot diagrams.
 import numpy as np
 import matplotlib.pyplot as plt
 
-from . import coord_transf as coord
-from .block_masks import rstar_minmax, uv_range
-from . import block_fill
+from xhorizon.diagram_tools import coord_transf as coord
+from xhorizon.diagram_tools.block_masks import rstar_minmax, uv_range
+from xhorizon.diagram_tools import block_fill
 
 
 

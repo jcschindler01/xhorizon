@@ -13,8 +13,8 @@ DEFAULT ZORDER:
 
 import numpy as np
 
-from .curve_class import curve
-from .block_masks import rstar_limits
+from xhorizon.diagram_tools.curve_class import curve
+from xhorizon.diagram_tools.block_masks import rstar_limits
 
 
 

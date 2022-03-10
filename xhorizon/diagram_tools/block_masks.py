@@ -5,7 +5,7 @@
 
 import numpy as np
 
-from .curve_class import curve
+from xhorizon.diagram_tools.curve_class import curve
 
 
 """

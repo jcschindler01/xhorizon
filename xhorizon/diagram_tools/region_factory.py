@@ -4,9 +4,9 @@
 
 import numpy as np
 
-from .curve_class import curve
-from .diagram_classes import region, block
-from . import curvemakers as cm
+from xhorizon.diagram_tools.curve_class import curve
+from xhorizon.diagram_tools.diagram_classes import region, block
+from xhorizon.diagram_tools import curvemakers as cm
 
 
 
