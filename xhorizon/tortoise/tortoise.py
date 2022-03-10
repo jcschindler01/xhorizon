@@ -220,13 +220,13 @@ def integrate(func,a,b):
 	maxrel, maxabs = 1e-4, 1e-6
 	## execute warnings
 	if (val!=0. and relerr > maxrel):
-		print "\nIntegration Warning: Relative error exceeds %e"%(maxrel)
-		print "%s from %s to %s"%(func,a,b)
-		print "val %s, abserr %e, relerr %e"%(val,abserr,relerr)
+		print("\nIntegration Warning: Relative error exceeds %e"%(maxrel))
+		print("%s from %s to %s"%(func,a,b))
+		print("val %s, abserr %e, relerr %e"%(val,abserr,relerr))
 	if (np.abs(val) < 1. and abserr > maxabs):
-		print "\nIntegration Warning: Absolute error exceeds %e"%(maxabs)
-		print "%s from %s to %s"%(func,a,b)
-		print "val %s, abserr %e, relerr %e"%(val,abserr,relerr)
+		print("\nIntegration Warning: Absolute error exceeds %e"%(maxabs))
+		print("%s from %s to %s"%(func,a,b))
+		print("val %s, abserr %e, relerr %e"%(val,abserr,relerr))
 	## return
 	return val
 
@@ -243,7 +243,7 @@ def which_interval(r,rj,asint=True):
 		mask = np.logical_and(r>rj[jj], r<rj[jj+1])
 		j[mask] = jj
 	if np.any(np.isnan(j)):
-		print "\nWARNING: Function which_interval() encountered invalid values. Returning nan.\n"
+		print("\nWARNING: Function which_interval() encountered invalid values. Returning nan.\n")
 	if asint==True:
 		j = j.astype(int)
 	return j
@@ -322,19 +322,19 @@ def test1():
 	a = 1.5
 	b = 1. + 1e-11
 	########################
-	print "\nTEST 1"
+	print("\nTEST 1")
 	forward      =  integrate(h,a,b)
 	neg_backward = -integrate(h,b,a)
 	abs_diff = forward - neg_backward
 	sumtot = forward + neg_backward
-	print " forward  = % .18e"%forward
-	print "-backward = % .18e"%neg_backward
-	print " abs diff = % .18e"%abs_diff
+	print(" forward  = % .18e"%forward)
+	print("-backward = % .18e"%neg_backward)
+	print(" abs diff = % .18e"%abs_diff)
 	if sumtot != 0.:
 		rel_diff = 2. * abs_diff / sumtot
-		print " rel diff = % .18e"%rel_diff
+		print(" rel diff = % .18e"%rel_diff)
 	## end
-	print "END TEST 1\n"
+	print("END TEST 1\n")
 
 
 
@@ -348,11 +348,11 @@ def test2():
 	rj = np.array([0.,1.,25.])
 	eps = 1e-11
 	########################
-	print "\nTEST 2"
+	print("\nTEST 2")
 	Fj = F_refpoints(f,rj,eps)
-	print "Fj = ", Fj
+	print("Fj = ", Fj)
 	## end
-	print "END TEST 2\n"
+	print("END TEST 2\n")
 
 
 def test3():
@@ -363,11 +363,11 @@ def test3():
 	r = np.linspace(1e-12, 15, 20)
 	rj = np.array([0.,1.,2.,8.,25.])
 	########################
-	print "\nTEST 3"
+	print("\nTEST 3")
 	j = which_interval(r, rj)
-	print "j = ", j
+	print("j = ", j)
 	## end
-	print "END TEST 3\n"
+	print("END TEST 3\n")
 
 
 def test4():
@@ -380,7 +380,7 @@ def test4():
 	eps = 1e-9
 	r = np.linspace(1e-9,7,1000)
 	########################
-	print "\nTEST 4"
+	print("\nTEST 4")
 	## numerically calculate values
 	rstar = F_by_integration(f,rj,eps,r)
 	## know analytical solution
@@ -391,7 +391,7 @@ def test4():
 	plt.grid()
 	plt.show()
 	## end
-	print "END TEST 4\n"
+	print("END TEST 4\n")
 
 
 
@@ -405,13 +405,13 @@ def test5():
 	eps = 1e-9
 	npoints = 500
 	########################
-	print "\nTEST 5"
+	print("\nTEST 5")
 	rvals = rspace0(r0,r1,eps,npoints)
-	print "rvals = ", rvals
+	print("rvals = ", rvals)
 	plt.plot(rvals,'kx')
 	plt.show()
 	## end
-	print "END TEST 5\n"
+	print("END TEST 5\n")
 
 
 def test6():
@@ -423,13 +423,13 @@ def test6():
 	eps = 1e-9
 	npoints = 500
 	########################
-	print "\nTEST 6"
+	print( "\nTEST 6")
 	rvals = rspace1(rj,eps,npoints)
-	print "rvals = ", rvals
+	print( "rvals = ", rvals)
 	plt.plot(rvals,'kx')
 	plt.show()
 	## end
-	print "END TEST 6\n"
+	print( "END TEST 6\n")
 
 
 def test7():
@@ -442,7 +442,7 @@ def test7():
 	eps = 1e-9
 	npoints=500
 	########################
-	print "\nTEST 7"
+	print("\nTEST 7")
 	## go
 	r, rstar = create_reference(f, rj, eps, npoints)
 	## plot
@@ -450,7 +450,7 @@ def test7():
 	plt.grid()
 	plt.show()
 	## end
-	print "END TEST 7\n"
+	print("END TEST 7\n")
 
 
 def test8():
@@ -464,11 +464,11 @@ def test8():
 	npoints=500
 	r = np.concatenate([rspace1(rj,eps,npoints), np.linspace(50,-50,1000)])
 	########################
-	print "\nTEST 8"
+	print("\nTEST 8")
 	## build F_by_interp
-	print "only this part is slow...."
+	print("only this part is slow....")
 	tort_by_interp = F_by_interp(f, rj, eps, npoints)
-	print "see?"
+	print("see?")
 	## make F
 	F = tort_by_interp.make_F()
 	## plot
@@ -476,7 +476,7 @@ def test8():
 	plt.grid()
 	plt.show()
 	## end
-	print "END TEST 8\n"
+	print("END TEST 8\n")
 
 
 def test9():
@@ -491,11 +491,11 @@ def test9():
 	rstar = np.linspace(-10,50,5000)
 	jvals = [0,1,2]
 	########################
-	print "\nTEST 9"
+	print("\nTEST 9")
 	## build F_by_interp
-	print "only this part is slow...."
+	print("only this part is slow....")
 	tort_by_interp = F_by_interp(f, rj, eps, npoints)
-	print "see?"
+	print("see?")
 	## make F
 	Finv = tort_by_interp.make_Finv()
 	## plot
@@ -504,7 +504,7 @@ def test9():
 	plt.grid()
 	plt.show()
 	## end
-	print "END TEST 9\n"
+	print("END TEST 9\n")
 
 
 
@@ -512,7 +512,7 @@ def test9():
 ## run tests if __name__="__main__"
 
 if __name__=="__main__":
-	print "RUN TESTS"
+	print("RUN TESTS")
 	test1()
 	test2()
 	test3()

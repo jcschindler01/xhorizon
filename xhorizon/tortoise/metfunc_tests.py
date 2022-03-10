@@ -14,14 +14,14 @@ def func_test(func, saveplots=False):
 	"""
 	Runs a series of tests to verify that metfunc object properties have been properly calculated.
 	"""
-	print '\nRUN FUNC TEST'
-	print '\n' + '\n'.join(['%s: %s'%(key,func.info[key]) for key in func.info.keys()]) +'\n'
+	print('\nRUN FUNC TEST')
+	print('\n' + '\n'.join(['%s: %s'%(key,func.info[key]) for key in func.info.keys()]) +'\n')
 	f_test(func, saveplots)
 	F_test_0(func, saveplots)
 	F_test_1(func, saveplots)
 	F_test_2(func, saveplots)
-	print '\n' + '\n'.join(['%s: %s'%(key,func.info[key]) for key in func.info.keys()]) +'\n'
-	print 'END FUNC TEST\n'
+	print('\n' + '\n'.join(['%s: %s'%(key,func.info[key]) for key in func.info.keys()]) +'\n')
+	print('END FUNC TEST\n')
 
 
 

@@ -8,9 +8,9 @@ objects from templates.
 import numpy as np
 
 
-from metfunc_class import metfunc
-import tortoise
-import math_util
+from .metfunc_class import metfunc
+from . import tortoise
+from . import math_util
 
 
 """
@@ -349,9 +349,9 @@ def build_metfunc(params):
 	func.kj = np.concatenate( [ np.array([0.]), ki, np.array([0.]) ] )
 	func.info = info
 	## generate tortoise function and inverse
-	print "\nThis part is slow, reference F(r) arrays being calculated by integration..."
+	print("\nThis part is slow, reference F(r) arrays being calculated by integration...")
 	tort_by_interp = tortoise.F_by_interp(func.f, func.rj, func.Fparams['eps'], npoints=func.Fparams['npoints_interp'])
-	print "...done.\n"
+	print("...done.\n")
 	func.F = tort_by_interp.make_F()
 	func.Finv = tort_by_interp.make_Finv()
 	## define interval getter, first trapped interval
@@ -384,10 +384,10 @@ def test1():
 	######### input ########
 	func  = hayward(R=.05, l=.01)
 	########################
-	print "\nTEST 9"
-	print func
-	print func.rj
-	print func.info['Type']
+	print("\nTEST 9")
+	print(func)
+	print(func.rj)
+	print(func.info['Type'])
 	##
 	import matplotlib.pyplot as plt
 	plt.plot(func.r_ref, func.rstar_ref, 'kx')
@@ -395,14 +395,13 @@ def test1():
 	plt.grid()
 	plt.show()
 	## end
-	print "END TEST 9\n"
-
+	print("END TEST 9\n")
 
 
 
 ## run tests if __name__="__main__"
 
 if __name__=="__main__":
-	print "RUN TESTS"
+	print("RUN TESTS")
 	test1()
 
