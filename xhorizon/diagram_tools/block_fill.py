@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 from . import curve_class as cc
-from curvemakers import rstarlines_special_2, block_boundary, block_boundary_2, rlines, rstarlines
+from .curvemakers import rstarlines_special_2, block_boundary, block_boundary_2, rlines, rstarlines
 
 
 
