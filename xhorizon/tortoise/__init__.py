@@ -1,6 +1,6 @@
 
-from . import math_util
-from . import metfunc_class
-from . import metfunc_factory
-from . import metfunc_tests
-from . import tortoise
+from xhorizon.tortoise import math_util
+from xhorizon.tortoise import metfunc_class
+from xhorizon.tortoise import metfunc_factory
+from xhorizon.tortoise import metfunc_tests
+from xhorizon.tortoise import tortoise

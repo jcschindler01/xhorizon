@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use("classic")
 
-from . import tortoise
-from . import diagram_tools
+from xhorizon import tortoise
+from xhorizon import diagram_tools
 
 
 #from diagram_tools.plotstyle import *
