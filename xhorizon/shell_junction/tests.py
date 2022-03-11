@@ -6,9 +6,9 @@ Tests for shell_junction modules.
 
 import numpy as np
 
-from active_slice_class import active_slice
-from passive_slice_class import passive_slice
-from helpers import *
+from xhorizon.shell_junction.active_slice_class import active_slice
+from xhorizon.shell_junction.passive_slice_class import passive_slice
+from xhorizon.shell_junction.helpers import *
 
 
 

@@ -5,8 +5,8 @@ This module defines a class used for evaluating coordinate transformations at nu
 
 
 import numpy as np
-import interpolators as interp
-from helpers import *
+import xhorizon.shell_junction.interpolators as interp
+from xhorizon.shell_junction.helpers import *
 
 
 

@@ -7,7 +7,7 @@ from xhorizon.shell_junction import passive_slice_class
 
 
 
-from .active_slice_class import active_slice as aslice
-from .passive_slice_class import passive_slice as pslice
+from xhorizon.shell_junction.active_slice_class import active_slice as aslice
+from xhorizon.shell_junction.passive_slice_class import passive_slice as pslice
 
-from .helpers import set_ruv0, schwarz_dtr_masses, slicecheck
+from xhorizon.shell_junction.helpers import set_ruv0, schwarz_dtr_masses, slicecheck

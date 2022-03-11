@@ -87,7 +87,7 @@ def f1(x, s0=1., mu=0., b=1.):
 		y = Array of values f(x).
 	"""
 	if np.any(np.logical_not(np.isfinite(np.array([b,s0,1./b])))):
-		print 'mu, s0, b = %s, %s, %s'%(mu, s0, b)
+		print('mu, s0, b = %s, %s, %s'%(mu, s0, b))
 
 	## init
 	x  = 1.*x
@@ -157,7 +157,7 @@ def test2():
 	Test interp_with_smooth_extrap.
 	"""
 	##
-	print "\nTEST 2\n"
+	print("\nTEST 2\n")
 	## params
 	A = 1e1
 	mux = [.1,1.,10.]
@@ -184,7 +184,7 @@ def test2():
 	plt.grid()
 	plt.show()
 	##
-	print "\nEND TEST 2\n"
+	print("\nEND TEST 2\n")
 
 
 
@@ -194,7 +194,7 @@ def test3():
 	Decreasing functions now work.
 	"""
 	##
-	print "\nTEST 3\n"
+	print("\nTEST 3\n")
 	## params
 	A = -10.
 	mu = 1.
@@ -217,7 +217,7 @@ def test3():
 	plt.grid()
 	plt.show()
 	##
-	print "\nEND TEST 3\n"
+	print("\nEND TEST 3\n")
 
 
 
@@ -227,9 +227,9 @@ if __name__=="__main__":
 
 	import matplotlib.pyplot as plt
 
-	print "\n\nTESTS\n"
+	print("\n\nTESTS\n")
 	#test2()
 	test3()
-	print "\nEND TESTS\n"
+	print("\nEND TESTS\n")
 
 
