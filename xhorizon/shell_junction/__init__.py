@@ -4,6 +4,7 @@ from xhorizon.shell_junction import interpolators
 from xhorizon.shell_junction import reg_corner_masks
 from xhorizon.shell_junction import active_slice_class
 from xhorizon.shell_junction import passive_slice_class
+from xhorizon.shell_junction import tests
 
 
 

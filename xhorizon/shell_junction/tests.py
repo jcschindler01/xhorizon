@@ -22,9 +22,9 @@ def test1():
 	"""
 	Test uvdl_of_r_at_uv0.
 	"""
-	import xhorizon2 as xh
+	import xhorizon as xh
 	##
-	print "\nTEST 1\n"
+	print("\nTEST 1\n")
 	## params
 	func = xh.mf.hayward()
 	ublocks, vblocks = [2,5,3], [0,1,2]
@@ -35,13 +35,13 @@ def test1():
 	#r = r[r<10.]
 	r, uvdl_u0, uvdl_v0 = uvdl_of_r_at_uv0(r, reg, ublocks=ublocks, vblocks=vblocks, v0=v0, u0=u0)
 	## print
-	print "\n"
-	print "u0, v0 = %s, %s"%(u0,v0)
-	print "r, uvdl_u0, uvdl_v0 = ..."
-	print r
-	print uvdl_u0
-	print uvdl_v0
-	print "\n"
+	print("\n")
+	print("u0, v0 = %s, %s"%(u0,v0))
+	print("r, uvdl_u0, uvdl_v0 = ...")
+	print(r)
+	print(uvdl_u0)
+	print(uvdl_v0)
+	print("\n")
 	## plot
 	plt.figure(1, figsize=(12,5))
 	## left subfig
@@ -78,7 +78,7 @@ def test1():
 	##
 	plt.show()
 	##
-	print "\nEND TEST 1\n"
+	print("\nEND TEST 1\n")
 
 
 
@@ -86,15 +86,15 @@ def test2():
 	"""
 	Test set_ruv0.
 	"""
-	import xhorizon2 as xh
+	import xhorizon as xh
 	##
-	print "\nTEST 2\n"
+	print("\nTEST 2\n")
 	##
 	reg = xh.reg.MAXreg(xh.mf.minkowski())
 	r0, u0, v0 = set_ruv0(reg, r0=5, u0=8)
-	print 'r0=%s, u0=%s, v0=%s'%(r0,u0,v0)
+	print('r0=%s, u0=%s, v0=%s'%(r0,u0,v0))
 	##
-	print "\nEND TEST 2\n"
+	print("\nEND TEST 2\n")
 
 
 
@@ -104,9 +104,9 @@ def test3():
 	"""
 	Test active_slice plotting uvdl ref values.
 	"""
-	import xhorizon2 as xh
+	import xhorizon as xh
 	##
-	print "\nTEST 3\n"
+	print("\nTEST 3\n")
 	## define func and region
 	func = xh.mf.schwarzschild()
 	reg = xh.reg.MAXreg(func,rlines=False)
@@ -163,7 +163,7 @@ def test3():
 			i+=1
 	##
 	plt.show()
-	print "\nEND TEST 3\n"
+	print("\nEND TEST 3\n")
 
 
 
@@ -173,9 +173,9 @@ def test4():
 	"""
 	Test active_slice UV ref values.
 	"""
-	import xhorizon2 as xh
+	import xhorizon as xh
 	##
-	print "\nTEST 4\n"
+	print("\nTEST 4\n")
 	## define func and region
 	func = xh.mf.schwarzschild()
 	reg = xh.reg.MAXreg(func,rlines=False)
@@ -237,7 +237,7 @@ def test4():
 				i+=1
 		##
 		plt.show()
-	print "\nEND TEST 4\n"
+	print("\nEND TEST 4\n")
 
 
 
@@ -246,9 +246,9 @@ def test5():
 	Test active_slice.
 	"""
 	## import
-	import xhorizon2 as xh
+	import xhorizon as xh
 	## start
-	print "\nTEST 6\n"
+	print("\nTEST 6\n")
 	## define func and region
 	func = xh.mf.schwarzschild()
 	reg = xh.reg.MAXreg(func,rlines=True)
@@ -270,7 +270,7 @@ def test5():
 		plt.plot(slc.uvdl_u0[1], slc.UV_u0[1], 'bx')
 		plt.show()
 	## done
-	print "\nEND TEST 5\n"
+	print("\nEND TEST 5\n")
 
 
 
@@ -280,9 +280,9 @@ def test6():
 	Test active_slice.
 	Schwarzschild with slice outside horizon.
 	"""
-	import xhorizon2 as xh
+	import xhorizon as xh
 	##
-	print "\nTEST 6\n"
+	print("\nTEST 6\n")
 	## define func and region
 	func = xh.mf.schwarzschild()
 	reg = xh.reg.MAXreg(func,rlines=True)
@@ -353,7 +353,7 @@ def test6():
 			plt.scatter(slc.uvdl_v0[0], slc.UV_v0[0], marker='x', s=10 , c=cvals, cmap=cmaps[1], zorder=5100)
 		##
 		plt.show()
-	print "\nEND TEST 6\n"
+	print("\nEND TEST 6\n")
 
 
 
@@ -363,9 +363,9 @@ def test7():
 	Test active_slice.
 	Schwarzschild with slice inside horizon.
 	"""
-	import xhorizon2 as xh
+	import xhorizon as xh
 	##
-	print "\nTEST 7\n"
+	print("\nTEST 7\n")
 	## define func and region
 	func = xh.mf.schwarzschild()
 	reg = xh.reg.MAXreg(func,rlines=True)
@@ -439,7 +439,7 @@ def test7():
 			plt.scatter(slc.uvdl_v0[0], slc.UV_v0[0], marker='x', s=10 , c=cvals, cmap=cmaps[1], zorder=5100)
 		##
 		plt.show()
-	print "\nEND TEST 7\n"
+	print("\nEND TEST 7\n")
 
 
 
@@ -448,9 +448,9 @@ def test8():
 	Test active_slice.
 	Hayward with slice outside horizons.
 	"""
-	import xhorizon2 as xh
+	import xhorizon as xh
 	##
-	print "\nTEST 8\n"
+	print("\nTEST 8\n")
 	## define func and region
 	func = xh.mf.hayward()
 	reg = xh.reg.MAXreg(func,rlines=True)
@@ -524,7 +524,7 @@ def test8():
 			plt.scatter(slc.uvdl_v0[0], slc.UV_v0[0], marker='x', s=10 , c=cvals, cmap=cmaps[1], zorder=5100)
 		##
 		plt.show()
-	print "\nEND TEST 8\n"
+	print("\nEND TEST 8\n")
 
 
 
@@ -535,9 +535,9 @@ def test9():
 	Seems to be working perfectly.
 	Both None leaves UV=uvdl. One or the other does the shell transformation. Both does corner.
 	"""
-	import xhorizon2 as xh
+	import xhorizon as xh
 	##
-	print "\nTEST 9\n"
+	print("\nTEST 9\n")
 	## define func and region
 	func = xh.mf.schwarzschild()
 	reg = xh.reg.MAXreg(func,rlines=True)
@@ -608,7 +608,7 @@ def test9():
 			plt.scatter(slc.uvdl_v0[0], slc.UV_v0[0], marker='x', s=10 , c=cvals, cmap=cmaps[1], zorder=5100)
 		##
 		plt.show()
-	print "\nEND TEST 9\n"
+	print("\nEND TEST 9\n")
 
 
 
@@ -619,9 +619,9 @@ def test10():
 	Schwarz, inside horizon: working fine.
 	Hayward, outside horizon: working fine.
 	"""
-	import xhorizon2 as xh
+	import xhorizon as xh
 	##
-	print "\nTEST 10\n"
+	print("\nTEST 10\n")
 	## define func and region
 	func = xh.mf.hayward()   ##schwarzschild()
 	reg = xh.reg.MAXreg(func,rlines=True)
@@ -690,7 +690,7 @@ def test10():
 			plt.scatter(slc.r, slc.UV_v0[0], marker='x', s=10 , c=cvals, cmap=cmaps[1], zorder=5100)
 		##
 		plt.show()
-	print "\nEND TEST 10\n"
+	print("\nEND TEST 10\n")
 
 
 
@@ -699,8 +699,8 @@ if __name__=="__main__":
 
 	import matplotlib.pyplot as plt
 
-	print "\n\nTESTS\n"
+	print("\n\nTESTS\n")
 	test10()
-	print "\nEND TESTS\n"
+	print("\nEND TESTS\n")
 
 
