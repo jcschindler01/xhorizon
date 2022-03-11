@@ -6,13 +6,12 @@ plt.style.use("classic")
 from xhorizon import tortoise
 from xhorizon import diagram_tools
 from xhorizon import shell_junction
-from xhorizon import evap
-
 
 from xhorizon.tortoise import metfunc_factory as mf
 from xhorizon.diagram_tools import region_factory as reg
 from xhorizon.diagram_tools import curvemakers as cm
 
+from xhorizon import evap
 
 #from diagram_tools.plotstyle import *
 

@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from draw import *
+from xhorizon.evap.draw import *
 import matplotlib.colors
 
 

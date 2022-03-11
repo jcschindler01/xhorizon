@@ -3,8 +3,8 @@ def demo():
 	import numpy as np
 	import matplotlib.pyplot as plt
 	import xhorizon as xh
-	from massplot import massplot
-	import helpers
+	from xhorizon.evap.massplot import massplot
+	from xhorizon.evap import helpers
 
 	"""
 	"""

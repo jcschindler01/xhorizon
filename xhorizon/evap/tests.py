@@ -11,8 +11,8 @@ import xhorizon as xh
 import pprint
 import datetime
 
-from evap import *
-from helpers import *
+from xhorizon.evap.evap import *
+from xhorizon.evap.helpers import *
 
 
 def main():

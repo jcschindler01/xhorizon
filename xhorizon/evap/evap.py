@@ -12,7 +12,7 @@ import copy, pprint
 import scipy.optimize as opt
 
 import xhorizon as xh
-from helpers import *
+from xhorizon.evap.helpers import *
 
 
 

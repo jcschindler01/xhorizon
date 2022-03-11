@@ -11,7 +11,7 @@ import matplotlib.colors
 
 import xhorizon as xh
 from xhorizon.shell_junction import interpolators as interp
-from helpers import irr
+from xhorizon.evap.helpers import irr
 
 
 ############## plot reglist ####################

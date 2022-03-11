@@ -15,18 +15,8 @@ from xhorizon.evap import massplot
 from xhorizon.evap import legend
 from xhorizon.evap import tests
 
+from xhorizon.evap.evap import *
+from xhorizon.evap.draw import drawreg
+from xhorizon.evap.demo import demo
+from xhorizon.evap import schwarzparams as SSp
 
-
-# from evap import *
-
-# from draw import drawreg
-
-# from demo import demo
-
-# import draw
-# import draw_dS
-
-# import massplot
-
-
-# import schwarzparams as SSp
