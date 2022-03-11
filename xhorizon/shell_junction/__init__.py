@@ -7,10 +7,6 @@ from xhorizon.shell_junction import passive_slice_class
 
 
 
-
-
-
-
 from .active_slice_class import active_slice as aslice
 from .passive_slice_class import passive_slice as pslice
 
