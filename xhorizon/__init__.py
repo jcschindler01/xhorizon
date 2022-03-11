@@ -6,6 +6,7 @@ plt.style.use("classic")
 from xhorizon import tortoise
 from xhorizon import diagram_tools
 from xhorizon import shell_junction
+from xhorizon import evap
 
 
 from xhorizon.tortoise import metfunc_factory as mf

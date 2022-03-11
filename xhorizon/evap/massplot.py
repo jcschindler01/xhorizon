@@ -160,20 +160,20 @@ def massplot(chainparams, params):
 
 
 	## more checks
-	print "r1-Rh"
-	print repr(r1-Rh)
-	print "Rh/2m"
-	print repr(Rh/2*m)
-	print "mcrit/M"
-	print repr(mcrit/M)
+	print("r1-Rh")
+	print(repr(r1-Rh))
+	print("Rh/2m")
+	print(repr(Rh/2*m))
+	print("mcrit/M")
+	print(repr(mcrit/M))
 
 	## print checks
-	print "m evap"
-	print repr(mevap)
-	print "du evap"
-	print repr(duevap)
-	print "dv evap"
-	print repr(dvevap)
+	print("m evap")
+	print(repr(mevap))
+	print("du evap")
+	print(repr(duevap))
+	print("dv evap")
+	print(repr(dvevap))
 
 
 

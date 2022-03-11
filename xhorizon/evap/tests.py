@@ -31,7 +31,8 @@ def main():
 	#test13()
 	#test14()
 	#test15()
-	test16()
+	#test16()
+	pass
 
 
 
@@ -40,7 +41,7 @@ def test1():
 	Test functionality of get_rinf_uv0.
 	"""
 	##
-	print "\nTEST 1\n"
+	print("\nTEST 1\n")
 	## regions
 	reg1 = xh.reg.EFreg(xh.mf.schwarzschild())
 	reg2 = xh.reg.EFreg(xh.mf.hayward())
@@ -51,9 +52,9 @@ def test1():
 	## get
 	rinf = get_rinf_uv0(reglist,v0=v0)
 	## print
-	print rinf
+	print(rinf)
 	##
-	print "\nEND TEST 1\n"
+	print("\nEND TEST 1\n")
 
 
 
@@ -62,7 +63,7 @@ def test2():
 	Test functionality of accrete.
 	"""
 	##
-	print "\nTEST 2\n"
+	print("\nTEST 2\n")
 	## create initial region
 	reglist = [xh.reg.EFreg(xh.mf.minkowski(),rlines=False,boundary=False)]
 	## create accreted regions
@@ -79,7 +80,7 @@ def test2():
 		reg.rplot()
 	plt.show()
 	##
-	print "\nEND TEST 2\n"
+	print("\nEND TEST 2\n")
 
 
 
@@ -88,7 +89,7 @@ def test3():
 	Test functionality of accretion.
 	"""
 	##
-	print "\nTEST 3\n"
+	print("\nTEST 3\n")
 	## params
 	v = np.linspace(0,1,5)
 	m = .2 + .8*v
@@ -104,7 +105,7 @@ def test3():
 		reg.rplot()
 	plt.show()
 	##
-	print "\nEND TEST 3\n"
+	print("\nEND TEST 3\n")
 
 
 
@@ -115,7 +116,7 @@ def test4():
 	Test functionality of evap.
 	"""
 	##
-	print "\nTEST 4\n"
+	print("\nTEST 4\n")
 	## create initial region
 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
 	reglist = [reg0]
@@ -140,7 +141,7 @@ def test4():
 		## show plot
 		plt.savefig("temp-figs/test4.png", dpi=400)
 		##
-	print "\nEND TEST 4\n"
+	print("\nEND TEST 4\n")
 
 
 def test5():
@@ -148,7 +149,7 @@ def test5():
 	Test functionality of evaporation().
 	"""
 	##
-	print "\nTEST 5\n"
+	print("\nTEST 5\n")
 	## create initial region
 	reg0 = xh.reg.EFreg(xh.mf.hayward(R=1.,l=0.1),rlines=False,boundary=False)
 	reglist = [reg0]
@@ -180,7 +181,7 @@ def test5():
 		## show plot
 		plt.savefig("temp-figs/test5.png", dpi=200)
 		##
-	print "\nEND TEST 5\n"
+	print("\nEND TEST 5\n")
 	## return
 	return reglist
 
@@ -190,7 +191,7 @@ def test6():
 	Test functionality of formevap().
 	"""
 	##
-	print "\nTEST 6\n"
+	print("\nTEST 6\n")
 	## accrete params
 	N = 4.
 	R0, R = .8, 1.
@@ -224,7 +225,7 @@ def test6():
 	## show plot
 	plt.savefig("temp-figs/test6.png", dpi=600)
 	##
-	print "\nEND TEST 6\n"
+	print("\nEND TEST 6\n")
 
 
 def test7():
@@ -232,7 +233,7 @@ def test7():
 	Test functionality of get_uvdl_of_UV().
 	"""
 	##
-	print "\nTEST 7\n"
+	print("\nTEST 7\n")
 	## create evaporated regions
 	reglist = xh.evap.formevap(rparams=dict(s0=10.))
 	## resquish
@@ -259,7 +260,7 @@ def test7():
 	plt.show()
 	plt.savefig("temp-figs/test7.png", dpi=400)
 	##
-	print "\nEND TEST 7\n"
+	print("\nEND TEST 7\n")
 
 
 
@@ -268,7 +269,7 @@ def test8():
 	Test functionality of EF cornermask.
 	"""
 	##
-	print "\nTEST 8\n"
+	print("\nTEST 8\n")
 	## make region
 	func = xh.mf.schwarzschild()
 	reg = xh.reg.EFreg(func)
@@ -283,7 +284,7 @@ def test8():
 	reg.rplot()
 	plt.show()
 	##
-	print "\nEND TEST 8\n"
+	print("\nEND TEST 8\n")
 
 
 
@@ -293,7 +294,7 @@ def test9():
 	Test functionality of split abcd helper.
 	"""
 	##
-	print "\nTEST 9\n"
+	print("\nTEST 9\n")
 	## make region
 	func = xh.mf.schwarzschild()
 	reg = xh.reg.EFreg(func)
@@ -302,8 +303,8 @@ def test9():
 		abcd = 'bcd'
 		reglist = xh.evap.split_reg_abcd(reg, abcd=abcd, u0=0., v0=0.)
 	##
-	print len(reglist)
-	print reglist
+	print(len(reglist))
+	print(reglist)
 	##
 	plt.figure()
 	plt.xlim(-3,3)
@@ -312,7 +313,7 @@ def test9():
 		reg.rplot()
 	plt.show()
 	##
-	print "\nEND TEST 9\n"
+	print("\nEND TEST 9\n")
 
 
 
@@ -321,7 +322,7 @@ def test10():
 	Test direct formation of joint. Formerly was evap.debug.go().
 	"""
 	##
-	print "\nTEST 10\n"
+	print("\nTEST 10\n")
 	for ux in [15.]:
 		## params
 		R1 = 1.
@@ -350,8 +351,8 @@ def test10():
 		aslice = xh.junc.aslice(reg2, ublocks=[-1], vblocks=range(len(reg2.blocks)), r0=pslice.r0, u0=u2, U0=pslice.U_of_r_at_v0, V0=pslice.V_of_r_at_u0, r_refs=[pslice.reg.metfunc.r_ref])
 		## plot slice
 		if False:
-			print 'REG1 PSLICE U(r,v0)=red, V(r,u0)=blue'
-			print 'REG2 ASLICE U(r,v0)=red, V(r,u0)=blue'
+			print('REG1 PSLICE U(r,v0)=red, V(r,u0)=blue')
+			print('REG2 ASLICE U(r,v0)=red, V(r,u0)=blue')
 			plt.figure()
 			plt.title('REG1 PSLICE U(r,v0)=red, V(r,u0)=blue\nREG2 ASLICE U(r,v0)=mag, V(r,u0)=cyan')
 			plt.xlabel('r')
@@ -369,17 +370,17 @@ def test10():
 			## junction radius
 			plt.plot([pslice.r0, pslice.r0], [-1.,1.], 'k-' )
 		## print slice params
-		print "\n"
-		print "                          %22r, %22r, %22r, %22r, %22r"%('Rh', 'r', 'r/Rh', 'u', 'v')
-		print "Pslice Inputs:"
-		print "Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, r1, r1/Rh1, u1, v1)
-		print "From PSlice:"
-		print "Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, pslice.r0, pslice.r0/Rh1, pslice.u0, pslice.v0)
-		print "Aslice Inputs:"
-		print "Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, pslice.r0, pslice.r0/Rh2, u2, '?')
-		print "From ASlice:"
-		print "Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, aslice.r0, aslice.r0/Rh2, aslice.u0, aslice.v0)
-		print "\n"
+		print("\n")
+		print("                          %22r, %22r, %22r, %22r, %22r"%('Rh', 'r', 'r/Rh', 'u', 'v'))
+		print("Pslice Inputs:")
+		print("Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, r1, r1/Rh1, u1, v1))
+		print("From PSlice:")
+		print("Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, pslice.r0, pslice.r0/Rh1, pslice.u0, pslice.v0))
+		print("Aslice Inputs:")
+		print("Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, pslice.r0, pslice.r0/Rh2, u2, '?'))
+		print("From ASlice:")
+		print("Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, aslice.r0, aslice.r0/Rh2, aslice.u0, aslice.v0))
+		print("\n")
 		## reglist
 		reglist = []
 		## split regions
@@ -393,13 +394,13 @@ def test10():
 		reglist += reglist1
 		reglist += reglist2
 		## print block uvbounds
-		print "\n"
-		print '%22r, %22r, %22r, %22r, %22r, %22r'%('R', 'b.rj', 'vmin', 'vmax', 'umin', 'umax')
+		print("\n")
+		print('%22r, %22r, %22r, %22r, %22r, %22r'%('R', 'b.rj', 'vmin', 'vmax', 'umin', 'umax'))
 		for i in range(len(reglist)):
 			reg = reglist[i]
 			for b in reg.blocks:
-					print '%22s, %22s, %22r, %22r, %22r, %22r'%(reg.metfunc.fparams['R'], b.rj, b.uvbounds['vmin'], b.uvbounds['vmax'], b.uvbounds['umin'], b.uvbounds['umax'])
-		print "\n"
+					print('%22s, %22s, %22r, %22r, %22r, %22r'%(reg.metfunc.fparams['R'], b.rj, b.uvbounds['vmin'], b.uvbounds['vmax'], b.uvbounds['umin'], b.uvbounds['umax']))
+		print("\n")
 		## draw diagram
 		if True:
 			## add lines
@@ -417,7 +418,7 @@ def test10():
 	## show plots
 	plt.show()
 	##
-	print "\nEND TEST 10\n"
+	print("\nEND TEST 10\n")
 
 
 
@@ -430,7 +431,7 @@ def test11(u0=-12., v0=0., du=.5, dv=.3, R=np.array([1.,.98,.96])):
 	Build from bottom.
 	"""
 	##
-	print "\nTEST 11\n"
+	print("\nTEST 11\n")
 	## reglist
 	reglist = []
 	## funcs
@@ -468,7 +469,7 @@ def test11(u0=-12., v0=0., du=.5, dv=.3, R=np.array([1.,.98,.96])):
 	## show
 	plt.show()
 	##
-	print "\nEND TEST 11\n"
+	print("\nEND TEST 11\n")
 
 
 
@@ -479,7 +480,7 @@ def test12(u0=12., dr0=.1, du=.5, R=np.array([1.,.98,.96])):
 	Build from top.
 	"""
 	##
-	print "\nTEST 12\n"
+	print("\nTEST 12\n")
 	## reglist
 	reglist = []
 	## funcs
@@ -519,7 +520,7 @@ def test12(u0=12., dr0=.1, du=.5, R=np.array([1.,.98,.96])):
 	## show
 	plt.show()
 	##
-	print "\nEND TEST 12\n"
+	print("\nEND TEST 12\n")
 
 
 
@@ -530,7 +531,7 @@ def test13():
 	Test evap.evap.funclist_chain().
 	"""
 	##
-	print "\nTEST 13\n"
+	print("\nTEST 13\n")
 	## make funclist
 	R=np.array([0.,.5,1.,.7,0.])
 	funclist  = xh.evap.formevap_funclist(R=R)
@@ -555,7 +556,7 @@ def test13():
 	rgp(reglist)
 	plt.show()
 	##
-	print "\nEND TEST 13\n"
+	print("\nEND TEST 13\n")
 
 
 
@@ -565,7 +566,7 @@ def test14():
 	Test evap.evap.shellparams_list().
 	"""
 	##
-	print "\nTEST 14\n"
+	print("\nTEST 14\n")
 	##
 	## shellparams
 	sp = xh.evap.shellparams_list(Rmin=.2, Rmax=1., dv=1., l=.1, A=10., functype=xh.mf.schwarzschild, fparams=dict())
@@ -611,7 +612,7 @@ def test14():
 	plt.show()
 	##
 	##
-	print "\nEND TEST 14\n"
+	print("\nEND TEST 14\n")
 
 
 
@@ -621,7 +622,7 @@ def test15():
 	Test evap.evap.shellparams_list().
 	"""
 	##
-	print "\nTEST 15\n"
+	print("\nTEST 15\n")
 	##
 	## shellparams
 	sp = xh.evap.shellparams_list(Rmin=.2, Rmax=1., dv=1., l=.1, A=1., functype=xh.mf.schwarzschild, fparams=dict())
@@ -634,19 +635,19 @@ def test15():
 	r0p = np.roll(r0f,1)
 	v0 = 0.*np.linspace(-4, 4, len(funclist))
 	##
-	print "chain"
+	print("chain")
 	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=0, du=1.*du, dv=1.*dv, r0p=1.*r0p, r0f=1.*r0f, v0=1.*v0)
 	pprint.pprint(chainparams)
 	##
-	print "mask"
+	print("mask")
 	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
 	pprint.pprint(chainparams)
 	##
-	print "plot"
+	print("plot")
 	rgp(reglist)
 	plt.savefig('temp-figs/test15.png', dpi=200)
 	##
-	print "\nEND TEST 15\n"
+	print("\nEND TEST 15\n")
 
 
 
@@ -655,7 +656,7 @@ def test16():
 	Test evap.evap.formevap_input() with funclist_chain().
 	"""
 	##
-	print "\nTEST 16\n"
+	print("\nTEST 16\n")
 	## params
 	params = dict()
 	## funcs
@@ -669,27 +670,27 @@ def test16():
 	## seed
 	seed = 0
 	##
-	print "inputs"
+	print("inputs")
 	funclist, cp = formevap_input(**params)
 	##
-	print "chain"
+	print("chain")
 	reglist, chainparams = funclist_chain(funclist, seed=seed, **cp)
 	##
-	print "mask"
+	print("mask")
 	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
 	pprint.pprint(chainparams)
 	##
-	print "plot"
+	print("plot")
 	rgp(reglist[:])
 	plt.xlim(0,3)
 	plt.ylim(-1.5,1.5)
 	##
-	print "save fig"
+	print("save fig")
 	fname =  datetime.datetime.now().strftime("Test16_%Y-%m-%d_%H-%M-%S-%f")
 	plt.title(fname)
 	plt.savefig("temp-figs/%s.png"%(fname), dpi=400)
 	##
-	print "save txt"
+	print("save txt")
 	ff = open("temp-figs/%s.txt"%(fname), 'w')
 	ff.write("%s\n"%(fname))
 	ff.write('\n')
@@ -697,7 +698,7 @@ def test16():
 	ff.write('\n')
 	ff.write('Output:\nchainparams=\n%s\n'%(pprint.pformat(chainparams)))
 	##
-	print "\nEND TEST 16\n"
+	print("\nEND TEST 16\n")
 
 
 main()

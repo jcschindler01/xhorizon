@@ -39,10 +39,10 @@ def funclist_chain(funclist, seed=0, du=None, dv=None, r0p=None, r0f=None, u0=No
 		ps_matchmode = list of strings, each either 'ru' or 'rv', to determine how past slice is sliced when pslice is active
 		ps_matchmode = list of strings, each either 'ru' or 'rv', to determine how future slice is sliced when fslice is active
 	"""
-	print "du funclist_chain"
-	print repr(du)
-	print "dv funclist_chain"
-	print repr(dv)
+	print("du funclist_chain")
+	print(repr(du))
+	print("dv funclist_chain")
+	print(repr(dv))
 	## init default values
 	if u0==None:
 		u0 = np.zeros(len(funclist))
@@ -80,7 +80,7 @@ def funclist_chain(funclist, seed=0, du=None, dv=None, r0p=None, r0f=None, u0=No
 		## get past passive slice location from inputs and matchpop
 		sliceloc = dict(u0=ps_u0[i], v0=ps_v0[i], r0=ps_r0[i])
 		sliceloc.pop(ps_matchpop[i])
-		print "i=%s pslice loc: %s"%(i,sliceloc)
+		print("i=%s pslice loc: %s"%(i,sliceloc))
 		## execute past passive slice at sliceloc
 		pslice[i] = xh.junc.pslice(reglist[i], ublocks=[-1], vblocks=range(len(reglist[i].blocks)), **sliceloc)
 		## update past passive slice location to true values
@@ -93,7 +93,7 @@ def funclist_chain(funclist, seed=0, du=None, dv=None, r0p=None, r0f=None, u0=No
 		## get future passive slice location from inputs and matchpop
 		sliceloc = dict(u0=fs_u0[i], v0=fs_v0[i], r0=fs_r0[i])
 		sliceloc.pop(fs_matchpop[i])
-		print "i=%s fslice loc: %s"%(i,sliceloc)
+		print("i=%s fslice loc: %s"%(i,sliceloc))
 		## execute future passive slice at sliceloc
 		fslice[i] = xh.junc.pslice(reglist[i], ublocks=[-1], vblocks=range(len(reglist[i].blocks)), **sliceloc)
 		## update future passive slice location to true values
@@ -109,7 +109,7 @@ def funclist_chain(funclist, seed=0, du=None, dv=None, r0p=None, r0f=None, u0=No
 		## get past active slice location from inputs and matchpop
 		sliceloc = dict(u0=ps_u0[i], v0=ps_v0[i], r0=ps_r0[i])
 		sliceloc.pop(ps_matchpop[i])
-		print "i=%s pslice loc: %s"%(i,sliceloc)
+		print("i=%s pslice loc: %s"%(i,sliceloc))
 		## execute past active slice at sliceloc
 		pslice[i] = xh.junc.aslice(reglist[i], ublocks=[-1], vblocks=range(len(reglist[i].blocks)), U0=fslice[i-1].U_of_r_at_v0, V0=fslice[i-1].V_of_r_at_u0, r_refs=[fslice[i-1].reg.metfunc.r_ref], **sliceloc)
 		## update past active slice location to true values
@@ -126,7 +126,7 @@ def funclist_chain(funclist, seed=0, du=None, dv=None, r0p=None, r0f=None, u0=No
 		## get past active slice location from inputs and matchpop
 		sliceloc = dict(u0=fs_u0[i], v0=fs_v0[i], r0=fs_r0[i])
 		sliceloc.pop(fs_matchpop[i])
-		print "i=%s fslice loc: %s"%(i,sliceloc)
+		print("i=%s fslice loc: %s"%(i,sliceloc))
 		## execute future passive slice at sliceloc
 		fslice[i] = xh.junc.pslice(reglist[i], ublocks=[-1], vblocks=range(len(reglist[i].blocks)), **sliceloc)
 		## update future passive slice location to true values
@@ -145,7 +145,7 @@ def funclist_chain(funclist, seed=0, du=None, dv=None, r0p=None, r0f=None, u0=No
 		## get future active slice location from inputs and matchpop
 		sliceloc = dict(u0=fs_u0[i], v0=fs_v0[i], r0=fs_r0[i])
 		sliceloc.pop(fs_matchpop[i])
-		print "i=%s fslice loc: %s"%(i,sliceloc)
+		print("i=%s fslice loc: %s"%(i,sliceloc))
 		## execute future active slice at sliceloc
 		fslice[i] = xh.junc.aslice(reglist[i], ublocks=[-1], vblocks=range(len(reglist[i].blocks)), U0=pslice[i+1].U_of_r_at_v0, V0=pslice[i+1].V_of_r_at_u0, r_refs=[pslice[i+1].reg.metfunc.r_ref], **sliceloc)
 		## update future active slice location to true values
@@ -162,7 +162,7 @@ def funclist_chain(funclist, seed=0, du=None, dv=None, r0p=None, r0f=None, u0=No
 		## get past passive slice location from inputs and matchpop
 		sliceloc = dict(u0=ps_u0[i], v0=ps_v0[i], r0=ps_r0[i])
 		sliceloc.pop(ps_matchpop[i])
-		print "i=%s pslice loc: %s"%(i,sliceloc)
+		print("i=%s pslice loc: %s"%(i,sliceloc))
 		## execute past passive slice at sliceloc
 		pslice[i] = xh.junc.pslice(reglist[i], ublocks=[-1], vblocks=range(len(reglist[i].blocks)), **sliceloc)
 		## update future passive slice location to true values
@@ -173,9 +173,9 @@ def funclist_chain(funclist, seed=0, du=None, dv=None, r0p=None, r0f=None, u0=No
 	## make sliceparams dict
 	chainparams = dict(Rh=1.*np.array(Rh), ps_u0=1.*np.array(ps_u0), ps_v0=1.*np.array(ps_v0), ps_r0=1.*np.array(ps_r0), fs_u0=1.*np.array(fs_u0), fs_v0=1.*np.array(fs_v0), fs_r0=1.*np.array(fs_r0), i0=1*i0, ps_matchmode=ps_matchmode, fs_matchmode=fs_matchmode, funclist=funclist)
 	##
-	print "\n"
+	print("\n")
 	pprint.pprint(chainparams)
-	print "\n"
+	print("\n")
 	## return
 	return reglist, chainparams
 
@@ -273,7 +273,7 @@ def cp_from_fdudv(funclist, du=None, dv=None, le=None, uoff=0., voff=0., ueta=1.
 	for i in ii:
 		ia, ib = max(0, i-1), min(i+2, len(ii))
 		rinf[i] = get_rinf_uv0(reglist[ia:ib], v0=1.*v0)
-	print rinf	
+	print(rinf)
 	## correct first and last r0 values
 	r0p[0]  = 1.*rinf[0]
 	r0f[-1] = 1.*rinf[-1]
@@ -360,13 +360,13 @@ def create_evap(params, seed=0):
 	pprint.pprint("params = %s"%(params))
 	pprint.pprint("seed = %s"%(seed))
 	## formevap_input
-	print "inputs"
+	print("inputs")
 	funclist, cp = xh.evap.formevap_input(**params)
 	## funclist_chain
-	print "chain"
+	print("chain")
 	reglist, chainparams = xh.evap.funclist_chain(funclist, seed=seed, **cp)
 	## chain_masker
-	print "mask"
+	print("mask")
 	reglist, chainparams = xh.evap.chain_masker(reglist, chainparams)
 	## print
 	pprint.pprint(chainparams)

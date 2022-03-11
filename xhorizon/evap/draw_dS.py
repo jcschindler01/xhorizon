@@ -460,8 +460,8 @@ def tticks(reglist, dt=1., inf1=1., inf2=50.+irr, sty={}):
 							remainder = remainder - (tmax-tmin)
 						## if big enough go
 						if toosmall==False:
-							print "HELLLOOOOOOOOO tticks"
-							print tmin, tmax, dt
+							print("HELLLOOOOOOOOO tticks")
+							print(tmin, tmax, dt)
 							## make array
 							tt = remainder + np.arange(tmin, tmax, dt)
 							## get new remainder

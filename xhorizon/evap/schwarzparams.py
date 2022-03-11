@@ -70,8 +70,8 @@ def SSduvm(Nevap=1e4, Tevap=1e4, M=.5, le=1e-4):
 	## zero
 	zero = dv-du-2.*drstar
 	## print 
-	print "|dv-du-2.*drstar| (mean) = %s"%(np.mean(np.abs(zero)))
-	print "|dv-du-2.*drstar| (total) = %s"%(Nevap*np.mean(np.abs(zero)))
+	print("|dv-du-2.*drstar| (mean) = %s"%(np.mean(np.abs(zero))))
+	print("|dv-du-2.*drstar| (total) = %s"%(Nevap*np.mean(np.abs(zero))))
 	## return
 	return mself, du, dv
 

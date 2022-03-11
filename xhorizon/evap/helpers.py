@@ -205,8 +205,8 @@ def fillcols_by_R(reglist):
 	## get colvals
 	norm = np.max(Rvals)
 	colvals = 0.2 + 0.7 * Rvals / norm
-	#print "Rvals = %s"%(Rvals)
-	#print "colvals = %s"%(colvals)
+	#print("Rvals = %s"%(Rvals))
+	#print("colvals = %s"%(colvals))
 	## return
 	return colvals
 
@@ -259,10 +259,10 @@ def evaporation_input_good(R, du, dv):
 	good = True
 	## check
 	if not (len(R)==len(du) and len(R)==len(dv)):
-		print "MISMATCHED INPUT ARRAY LENGTHS"
+		print("MISMATCHED INPUT ARRAY LENGTHS")
 		good = False
 	if not np.all(R>0.):
-		print "RADIUS MUST BE POSITIVE"
+		print("RADIUS MUST BE POSITIVE")
 		good = False
 	## return
 	return good
@@ -318,18 +318,18 @@ def check_uvr(reglist):
 	## array
 	iu,iv,uu,vv,rru,rrv,RRu,RRv = np.array(iu),np.array(iv),np.array(uu),np.array(vv),np.array(rru),np.array(rrv),np.array(RRu),np.array(RRv)
 	## print
-	print "\n"
-	print "CHECK_UVR:"
-	print "iu  = %r"%(iu)
-	print "iv  = %r"%(iv)
-	print "uu  = %r"%(uu)
-	print "vv  = %r"%(vv)
-	print "rru = %r"%(rru)
-	print "rrv = %r"%(rrv)
-	print "RRu = %r"%(RRu)
-	print "RRv = %r"%(RRv)
-	print "rru/RRu = " + repr(rru/RRu)
-	print "\n"
+	print("\n")
+	print("CHECK_UVR:")
+	print("iu  = %r"%(iu))
+	print("iv  = %r"%(iv))
+	print("uu  = %r"%(uu))
+	print("vv  = %r"%(vv))
+	print("rru = %r"%(rru))
+	print("rrv = %r"%(rrv))
+	print("RRu = %r"%(RRu))
+	print("RRv = %r"%(RRv))
+	print("rru/RRu = " + repr(rru/RRu))
+	print("\n")
 
 
 ############################################################################
@@ -369,13 +369,13 @@ def split_reg_abcd(reg, abcd='abcd', u0=0., v0=0.):
 
 
 def sliceprint(pslice, aslice, Rh1, Rh2):
-	print "\n"
-	print "                          %22r, %22r, %22r, %22r, %22r"%('Rh', 'r', 'r-Rh', 'u', 'v')
-	print "PSlice:"
-	print "Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, pslice.r0, pslice.r0-Rh1, pslice.u0, pslice.v0)
-	print "ASlice:"
-	print "Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, aslice.r0, aslice.r0-Rh2, aslice.u0, aslice.v0)
-	print "\n"
+	print("\n")
+	print("                          %22r, %22r, %22r, %22r, %22r"%('Rh', 'r', 'r-Rh', 'u', 'v'))
+	print("PSlice:")
+	print("Rh1, r1, r1/Rh1, u1, v1 = %22r, %22r, %22r, %22r, %22r"%(Rh1, pslice.r0, pslice.r0-Rh1, pslice.u0, pslice.v0))
+	print("ASlice:")
+	print("Rh2, r2, r2/Rh2, u2, v2 = %22r, %22r, %22r, %22r, %22r"%(Rh2, aslice.r0, aslice.r0-Rh2, aslice.u0, aslice.v0))
+	print("\n")
 
 
 def mp(matchmode):
