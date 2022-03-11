@@ -22,7 +22,6 @@ def test1():
 	"""
 	Test uvdl_of_r_at_uv0.
 	"""
-	import xhorizon as xh
 	##
 	print("\nTEST 1\n")
 	## params
@@ -86,7 +85,6 @@ def test2():
 	"""
 	Test set_ruv0.
 	"""
-	import xhorizon as xh
 	##
 	print("\nTEST 2\n")
 	##
@@ -104,7 +102,6 @@ def test3():
 	"""
 	Test active_slice plotting uvdl ref values.
 	"""
-	import xhorizon as xh
 	##
 	print("\nTEST 3\n")
 	## define func and region
@@ -173,7 +170,6 @@ def test4():
 	"""
 	Test active_slice UV ref values.
 	"""
-	import xhorizon as xh
 	##
 	print("\nTEST 4\n")
 	## define func and region
@@ -246,7 +242,6 @@ def test5():
 	Test active_slice.
 	"""
 	## import
-	import xhorizon as xh
 	## start
 	print("\nTEST 6\n")
 	## define func and region
@@ -280,7 +275,6 @@ def test6():
 	Test active_slice.
 	Schwarzschild with slice outside horizon.
 	"""
-	import xhorizon as xh
 	##
 	print("\nTEST 6\n")
 	## define func and region
@@ -363,7 +357,6 @@ def test7():
 	Test active_slice.
 	Schwarzschild with slice inside horizon.
 	"""
-	import xhorizon as xh
 	##
 	print("\nTEST 7\n")
 	## define func and region
@@ -448,7 +441,6 @@ def test8():
 	Test active_slice.
 	Hayward with slice outside horizons.
 	"""
-	import xhorizon as xh
 	##
 	print("\nTEST 8\n")
 	## define func and region
@@ -535,7 +527,6 @@ def test9():
 	Seems to be working perfectly.
 	Both None leaves UV=uvdl. One or the other does the shell transformation. Both does corner.
 	"""
-	import xhorizon as xh
 	##
 	print("\nTEST 9\n")
 	## define func and region
@@ -619,7 +610,6 @@ def test10():
 	Schwarz, inside horizon: working fine.
 	Hayward, outside horizon: working fine.
 	"""
-	import xhorizon as xh
 	##
 	print("\nTEST 10\n")
 	## define func and region
@@ -698,9 +688,10 @@ def test10():
 if __name__=="__main__":
 
 	import matplotlib.pyplot as plt
+	import xhorizon as xh
 
 	print("\n\nTESTS\n")
-	test10()
+	test9()
 	print("\nEND TESTS\n")
 
 
