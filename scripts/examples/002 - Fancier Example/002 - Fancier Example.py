@@ -54,7 +54,7 @@ reg.rplot()
 # Add an annotation with the metric function info.
 # Note that the label is made by extracting strings from the dictionary f.info and separating with linebreaks.
 nice_label = '\n'.join([f.info['Type'], f.info['Metric Function'], f.info['Parameters']])
-plt.annotate(s=nice_label, xy=(.035,.03), xycoords='axes fraction', ha='left', va='bottom', size=8)
+plt.annotate(text=nice_label, xy=(.035,.03), xycoords='axes fraction', ha='left', va='bottom', size=8)
 
 # Save the plot.
 plt.savefig("out.png", dpi=300)
