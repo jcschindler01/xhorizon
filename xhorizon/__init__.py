@@ -5,6 +5,7 @@ plt.style.use("classic")
 
 from xhorizon import tortoise
 from xhorizon import diagram_tools
+from xhorizon import shell_junction
 
 
 #from diagram_tools.plotstyle import *
