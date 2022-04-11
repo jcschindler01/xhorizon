@@ -1,12 +1,5 @@
 
 -------------------------------------------------
-XHORIZON
-Jan 2018
-Joseph C Schindler
-jcschind@ucsc.edu
--------------------------------------------------
-
--------------------------------------------------
 xhorizon: A python package for the explicit computation and drawing of Penrose diagrams.
 
 XHORIZON has MOVED!
